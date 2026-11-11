@@ -1,15 +1,15 @@
 {
   "v": 1,
-  "release": "v2.0.0-kit.2",
+  "release": "v2.0.0-kit.3",
   "sdkVersion": "2.0.0",
-  "source": "ff21e62c8405d0d4bb789f50c322972925162702",
-  "generatorSource": "1a17510684e7cee0095a19b9af26f3977b67d79d",
+  "source": "a0ba86a696e761a3586a2485340b8943e7c498e9",
+  "generatorSource": "a0ba86a696e761a3586a2485340b8943e7c498e9",
   "engine": {
-    "file": "clunkyard-engine-v2.0.0-kit.2.tar.gz",
-    "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/clunkyard-engine-v2.0.0-kit.2.tar.gz",
-    "bytes": 7071301,
-    "sha256": "0b9cfa6958a952c32388602821ec4275e61400255f91b212f9c2a9220f8a0d86",
-    "expandedBytes": 33794538
+    "file": "clunkyard-engine-v2.0.0-kit.3.tar.gz",
+    "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-engine-v2.0.0-kit.3.tar.gz",
+    "bytes": 7307424,
+    "sha256": "26e21611792e6a255df1adf24a163a9cbaea72f52d4077d51c02c47a0f542f15",
+    "expandedBytes": 35539202
   },
   "npmSDK": {
     "name": "@clunkyard/sdk",
@@ -23,11 +23,11 @@
       "language": "javascript",
       "portable": true,
       "engine": {
-        "file": "clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "bytes": 7071301,
-        "sha256": "0b9cfa6958a952c32388602821ec4275e61400255f91b212f9c2a9220f8a0d86",
-        "expandedBytes": 33794538
+        "file": "clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "bytes": 7307424,
+        "sha256": "26e21611792e6a255df1adf24a163a9cbaea72f52d4077d51c02c47a0f542f15",
+        "expandedBytes": 35539202
       },
       "sdk": {
         "file": "clunkyard-sdk-javascript-portable-v2.0.0-kit.2.tar.gz",
@@ -67,11 +67,11 @@
       "language": "typescript",
       "portable": false,
       "engine": {
-        "file": "clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "bytes": 7071301,
-        "sha256": "0b9cfa6958a952c32388602821ec4275e61400255f91b212f9c2a9220f8a0d86",
-        "expandedBytes": 33794538
+        "file": "clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "bytes": 7307424,
+        "sha256": "26e21611792e6a255df1adf24a163a9cbaea72f52d4077d51c02c47a0f542f15",
+        "expandedBytes": 35539202
       },
       "sdk": {
         "file": "clunkyard-sdk-typescript-linux-x64-v2.0.0-kit.2.tar.gz",
@@ -124,11 +124,11 @@
       "language": "python",
       "portable": false,
       "engine": {
-        "file": "clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "bytes": 7071301,
-        "sha256": "0b9cfa6958a952c32388602821ec4275e61400255f91b212f9c2a9220f8a0d86",
-        "expandedBytes": 33794538
+        "file": "clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "bytes": 7307424,
+        "sha256": "26e21611792e6a255df1adf24a163a9cbaea72f52d4077d51c02c47a0f542f15",
+        "expandedBytes": 35539202
       },
       "sdk": {
         "file": "clunkyard-sdk-python-linux-x64-v2.0.0-kit.2.tar.gz",
@@ -162,6 +162,46 @@
         ".gitignore": "217e0fb356990d296c3d031f78f013157da8897b2b19f8545e66ca9da4acb207",
         "Dockerfile": "4541b11f645e7f46873694bf9276202b23fe3175f47d8d51c9447b109b3b7ae7",
         ".dockerignore": "42bec36c9d4ba42ddbeb8c715b6c0ce0cc5dd9711ef7fb8ed034f78d944da57c"
+      },
+      "sdkPlatforms": {
+        "darwin-arm64": {
+          "file": "clunkyard-sdk-python-darwin-arm64-v2.0.0-kit.3.tar.gz",
+          "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-sdk-python-darwin-arm64-v2.0.0-kit.3.tar.gz",
+          "bytes": 680317,
+          "sha256": "0391d8abc96a424c568c0fd137171e9bda6e38506d5d9471edbb88c21b55b539",
+          "expandedBytes": 4261244,
+          "platform": "darwin-arm64",
+          "library": "libclunkyard.2.dylib",
+          "minimumOS": "11.0",
+          "portableBindingInstallers": [
+            "python"
+          ]
+        },
+        "win32-x64": {
+          "file": "clunkyard-sdk-python-win32-x64-v2.0.0-kit.3.tar.gz",
+          "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-sdk-python-win32-x64-v2.0.0-kit.3.tar.gz",
+          "bytes": 320237,
+          "sha256": "74711dd8a1b3258089755d83bd5287adcd2cd1e9b66c10ccbb05712f0c073d05",
+          "expandedBytes": 2692160,
+          "platform": "win32-x64",
+          "library": "clunkyard.dll",
+          "portableBindingInstallers": [
+            "python"
+          ]
+        },
+        "darwin-x64": {
+          "file": "clunkyard-sdk-python-darwin-x64-v2.0.0-kit.3.tar.gz",
+          "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-sdk-python-darwin-x64-v2.0.0-kit.3.tar.gz",
+          "bytes": 708614,
+          "sha256": "e8e1202482b792c5817a11fc833682eb17534be081acc08b6666c1db5258601f",
+          "expandedBytes": 4386636,
+          "platform": "darwin-x64",
+          "library": "libclunkyard.2.dylib",
+          "minimumOS": "11.0",
+          "portableBindingInstallers": [
+            "python"
+          ]
+        }
       }
     },
     "c": {
@@ -170,11 +210,11 @@
       "language": "c",
       "portable": false,
       "engine": {
-        "file": "clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "bytes": 7071301,
-        "sha256": "0b9cfa6958a952c32388602821ec4275e61400255f91b212f9c2a9220f8a0d86",
-        "expandedBytes": 33794538
+        "file": "clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "bytes": 7307424,
+        "sha256": "26e21611792e6a255df1adf24a163a9cbaea72f52d4077d51c02c47a0f542f15",
+        "expandedBytes": 35539202
       },
       "sdk": {
         "file": "clunkyard-sdk-c-linux-x64-v2.0.0-kit.2.tar.gz",
@@ -208,6 +248,46 @@
         ".gitignore": "217e0fb356990d296c3d031f78f013157da8897b2b19f8545e66ca9da4acb207",
         "Dockerfile": "45548ab3e193fa0195f591d20bfe330bce9f798665b2cb81356b10d8f42bad2c",
         ".dockerignore": "42bec36c9d4ba42ddbeb8c715b6c0ce0cc5dd9711ef7fb8ed034f78d944da57c"
+      },
+      "sdkPlatforms": {
+        "darwin-arm64": {
+          "file": "clunkyard-sdk-c-darwin-arm64-v2.0.0-kit.3.tar.gz",
+          "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-sdk-c-darwin-arm64-v2.0.0-kit.3.tar.gz",
+          "bytes": 7515387,
+          "sha256": "260eb08febc6648d1e280e7142f09977f53c27afbc7832aac7376ad81290f26f",
+          "expandedBytes": 44567588,
+          "platform": "darwin-arm64",
+          "library": "libclunkyard.2.dylib",
+          "minimumOS": "11.0",
+          "portableBindingInstallers": [
+            "c"
+          ]
+        },
+        "win32-x64": {
+          "file": "clunkyard-sdk-c-win32-x64-v2.0.0-kit.3.tar.gz",
+          "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-sdk-c-win32-x64-v2.0.0-kit.3.tar.gz",
+          "bytes": 5321415,
+          "sha256": "6e0352f920577e1f58b8b63fc906f2ea1a74774355fa87e76ea83791872dbf86",
+          "expandedBytes": 33451200,
+          "platform": "win32-x64",
+          "library": "clunkyard.dll",
+          "portableBindingInstallers": [
+            "c"
+          ]
+        },
+        "darwin-x64": {
+          "file": "clunkyard-sdk-c-darwin-x64-v2.0.0-kit.3.tar.gz",
+          "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-sdk-c-darwin-x64-v2.0.0-kit.3.tar.gz",
+          "bytes": 7689479,
+          "sha256": "52b0d0c7262da7874896431332a0952057b726878e2f904d153f3ef54bfa1f8a",
+          "expandedBytes": 45045268,
+          "platform": "darwin-x64",
+          "library": "libclunkyard.2.dylib",
+          "minimumOS": "11.0",
+          "portableBindingInstallers": [
+            "c"
+          ]
+        }
       }
     },
     "cpp": {
@@ -216,11 +296,11 @@
       "language": "cpp",
       "portable": false,
       "engine": {
-        "file": "clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "bytes": 7071301,
-        "sha256": "0b9cfa6958a952c32388602821ec4275e61400255f91b212f9c2a9220f8a0d86",
-        "expandedBytes": 33794538
+        "file": "clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "bytes": 7307424,
+        "sha256": "26e21611792e6a255df1adf24a163a9cbaea72f52d4077d51c02c47a0f542f15",
+        "expandedBytes": 35539202
       },
       "sdk": {
         "file": "clunkyard-sdk-cpp-linux-x64-v2.0.0-kit.2.tar.gz",
@@ -252,6 +332,46 @@
         "package.json": "898121c60f7dc4e20a5c5fa6a804f1cf8a4c8ac8d5e0f9ef48ac6d8053959e62",
         "README.md": "ad58e541acbea81c21b06839c2f9c233d7b01c29f404e273040df613c145a312",
         ".gitignore": "217e0fb356990d296c3d031f78f013157da8897b2b19f8545e66ca9da4acb207"
+      },
+      "sdkPlatforms": {
+        "darwin-arm64": {
+          "file": "clunkyard-sdk-cpp-darwin-arm64-v2.0.0-kit.3.tar.gz",
+          "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-sdk-cpp-darwin-arm64-v2.0.0-kit.3.tar.gz",
+          "bytes": 7525643,
+          "sha256": "5b57ee9bf6e08dcb44fc3877de4c0b34ea54363746f5a039a5533afb43d1970f",
+          "expandedBytes": 44755474,
+          "platform": "darwin-arm64",
+          "library": "libclunkyard.2.dylib",
+          "minimumOS": "11.0",
+          "portableBindingInstallers": [
+            "cpp"
+          ]
+        },
+        "win32-x64": {
+          "file": "clunkyard-sdk-cpp-win32-x64-v2.0.0-kit.3.tar.gz",
+          "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-sdk-cpp-win32-x64-v2.0.0-kit.3.tar.gz",
+          "bytes": 5334315,
+          "sha256": "012fdc8986f3c3a5e694b04682323a534f0d740eb0f6f6e35966711043dac8d3",
+          "expandedBytes": 33639086,
+          "platform": "win32-x64",
+          "library": "clunkyard.dll",
+          "portableBindingInstallers": [
+            "cpp"
+          ]
+        },
+        "darwin-x64": {
+          "file": "clunkyard-sdk-cpp-darwin-x64-v2.0.0-kit.3.tar.gz",
+          "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-sdk-cpp-darwin-x64-v2.0.0-kit.3.tar.gz",
+          "bytes": 7696809,
+          "sha256": "ba46da48b8382f46cfaedf80d9f73bc138bfab5092aa8a5e6e1bb0557a5a346f",
+          "expandedBytes": 45233154,
+          "platform": "darwin-x64",
+          "library": "libclunkyard.2.dylib",
+          "minimumOS": "11.0",
+          "portableBindingInstallers": [
+            "cpp"
+          ]
+        }
       }
     },
     "go": {
@@ -260,11 +380,11 @@
       "language": "go",
       "portable": false,
       "engine": {
-        "file": "clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "bytes": 7071301,
-        "sha256": "0b9cfa6958a952c32388602821ec4275e61400255f91b212f9c2a9220f8a0d86",
-        "expandedBytes": 33794538
+        "file": "clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "bytes": 7307424,
+        "sha256": "26e21611792e6a255df1adf24a163a9cbaea72f52d4077d51c02c47a0f542f15",
+        "expandedBytes": 35539202
       },
       "sdk": {
         "file": "clunkyard-sdk-go-linux-x64-v2.0.0-kit.2.tar.gz",
@@ -305,11 +425,11 @@
       "language": "rust",
       "portable": false,
       "engine": {
-        "file": "clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "bytes": 7071301,
-        "sha256": "0b9cfa6958a952c32388602821ec4275e61400255f91b212f9c2a9220f8a0d86",
-        "expandedBytes": 33794538
+        "file": "clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "bytes": 7307424,
+        "sha256": "26e21611792e6a255df1adf24a163a9cbaea72f52d4077d51c02c47a0f542f15",
+        "expandedBytes": 35539202
       },
       "sdk": {
         "file": "clunkyard-sdk-rust-linux-x64-v2.0.0-kit.2.tar.gz",
@@ -344,6 +464,46 @@
         "package.json": "e64d9ea274237ff9f83889664c007c0d4c9412ece3aba65f62b8050f629b9e49",
         "README.md": "f3f201081733df50c2c7c4fc7e65d02066e6f3b0feb446f8e4979dc263170dff",
         ".gitignore": "217e0fb356990d296c3d031f78f013157da8897b2b19f8545e66ca9da4acb207"
+      },
+      "sdkPlatforms": {
+        "darwin-arm64": {
+          "file": "clunkyard-sdk-rust-darwin-arm64-v2.0.0-kit.3.tar.gz",
+          "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-sdk-rust-darwin-arm64-v2.0.0-kit.3.tar.gz",
+          "bytes": 7526447,
+          "sha256": "82c5ae17ca009c15b62e390bf5635b3959a11d6375a25c55ffd12f61ad4f4039",
+          "expandedBytes": 44783504,
+          "platform": "darwin-arm64",
+          "library": "libclunkyard.2.dylib",
+          "minimumOS": "11.0",
+          "portableBindingInstallers": [
+            "rust"
+          ]
+        },
+        "win32-x64": {
+          "file": "clunkyard-sdk-rust-win32-x64-v2.0.0-kit.3.tar.gz",
+          "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-sdk-rust-win32-x64-v2.0.0-kit.3.tar.gz",
+          "bytes": 5335255,
+          "sha256": "8b64e3687d2f5192e5d0a5b596dc2a0d5f0e0946d5da69e2050fd58af6b2df9a",
+          "expandedBytes": 33667116,
+          "platform": "win32-x64",
+          "library": "clunkyard.dll",
+          "portableBindingInstallers": [
+            "rust"
+          ]
+        },
+        "darwin-x64": {
+          "file": "clunkyard-sdk-rust-darwin-x64-v2.0.0-kit.3.tar.gz",
+          "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-sdk-rust-darwin-x64-v2.0.0-kit.3.tar.gz",
+          "bytes": 7699236,
+          "sha256": "0743146c8babf2db7f71549fa3d993fdfef478a589ee2967e65901bf20e8c29e",
+          "expandedBytes": 45261184,
+          "platform": "darwin-x64",
+          "library": "libclunkyard.2.dylib",
+          "minimumOS": "11.0",
+          "portableBindingInstallers": [
+            "rust"
+          ]
+        }
       }
     },
     "hew": {
@@ -352,11 +512,11 @@
       "language": "hew",
       "portable": false,
       "engine": {
-        "file": "clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "bytes": 7071301,
-        "sha256": "0b9cfa6958a952c32388602821ec4275e61400255f91b212f9c2a9220f8a0d86",
-        "expandedBytes": 33794538
+        "file": "clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "bytes": 7307424,
+        "sha256": "26e21611792e6a255df1adf24a163a9cbaea72f52d4077d51c02c47a0f542f15",
+        "expandedBytes": 35539202
       },
       "sdk": {
         "file": "clunkyard-sdk-hew-linux-x64-v2.0.0-kit.2.tar.gz",
@@ -403,11 +563,11 @@
       "language": "elixir",
       "portable": false,
       "engine": {
-        "file": "clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "bytes": 7071301,
-        "sha256": "0b9cfa6958a952c32388602821ec4275e61400255f91b212f9c2a9220f8a0d86",
-        "expandedBytes": 33794538
+        "file": "clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "bytes": 7307424,
+        "sha256": "26e21611792e6a255df1adf24a163a9cbaea72f52d4077d51c02c47a0f542f15",
+        "expandedBytes": 35539202
       },
       "sdk": {
         "file": "clunkyard-sdk-elixir-linux-x64-v2.0.0-kit.2.tar.gz",
@@ -456,11 +616,11 @@
       "language": "erlang",
       "portable": false,
       "engine": {
-        "file": "clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "bytes": 7071301,
-        "sha256": "0b9cfa6958a952c32388602821ec4275e61400255f91b212f9c2a9220f8a0d86",
-        "expandedBytes": 33794538
+        "file": "clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "bytes": 7307424,
+        "sha256": "26e21611792e6a255df1adf24a163a9cbaea72f52d4077d51c02c47a0f542f15",
+        "expandedBytes": 35539202
       },
       "sdk": {
         "file": "clunkyard-sdk-erlang-linux-x64-v2.0.0-kit.2.tar.gz",
@@ -508,11 +668,11 @@
       "language": "csharp",
       "portable": false,
       "engine": {
-        "file": "clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "bytes": 7071301,
-        "sha256": "0b9cfa6958a952c32388602821ec4275e61400255f91b212f9c2a9220f8a0d86",
-        "expandedBytes": 33794538
+        "file": "clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "bytes": 7307424,
+        "sha256": "26e21611792e6a255df1adf24a163a9cbaea72f52d4077d51c02c47a0f542f15",
+        "expandedBytes": 35539202
       },
       "sdk": {
         "file": "clunkyard-sdk-csharp-linux-x64-v2.0.0-kit.2.tar.gz",
@@ -546,6 +706,33 @@
         "package.json": "ad82df571d8dbf4ea9042d0299cfa6119029002c7bee6d18598b871706448b22",
         "README.md": "7e7e90728c987fb23adb8b2834ceaca7d3d509cd3baedd41359363a7afae4060",
         ".gitignore": "217e0fb356990d296c3d031f78f013157da8897b2b19f8545e66ca9da4acb207"
+      },
+      "sdkPlatforms": {
+        "darwin-arm64": {
+          "file": "clunkyard-sdk-csharp-darwin-arm64-v2.0.0-kit.3.tar.gz",
+          "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-sdk-csharp-darwin-arm64-v2.0.0-kit.3.tar.gz",
+          "bytes": 675691,
+          "sha256": "ce4a1bae2e3dcbe8d9ab51a7c23075e9a98751302893d8d2787307ba17eea90e",
+          "expandedBytes": 4230088,
+          "platform": "darwin-arm64",
+          "library": "libclunkyard.2.dylib",
+          "minimumOS": "11.0",
+          "portableBindingInstallers": [
+            "csharp"
+          ]
+        },
+        "win32-x64": {
+          "file": "clunkyard-sdk-csharp-win32-x64-v2.0.0-kit.3.tar.gz",
+          "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-sdk-csharp-win32-x64-v2.0.0-kit.3.tar.gz",
+          "bytes": 315746,
+          "sha256": "f77d087926f50d5c9dcc6d685be7321ba85f7f4efeb4d7f03b5c92470d9ddc67",
+          "expandedBytes": 2661004,
+          "platform": "win32-x64",
+          "library": "clunkyard.dll",
+          "portableBindingInstallers": [
+            "csharp"
+          ]
+        }
       }
     },
     "fsharp": {
@@ -554,11 +741,11 @@
       "language": "fsharp",
       "portable": false,
       "engine": {
-        "file": "clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "bytes": 7071301,
-        "sha256": "0b9cfa6958a952c32388602821ec4275e61400255f91b212f9c2a9220f8a0d86",
-        "expandedBytes": 33794538
+        "file": "clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "bytes": 7307424,
+        "sha256": "26e21611792e6a255df1adf24a163a9cbaea72f52d4077d51c02c47a0f542f15",
+        "expandedBytes": 35539202
       },
       "sdk": {
         "file": "clunkyard-sdk-fsharp-linux-x64-v2.0.0-kit.2.tar.gz",
@@ -601,11 +788,11 @@
       "language": "java",
       "portable": false,
       "engine": {
-        "file": "clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "bytes": 7071301,
-        "sha256": "0b9cfa6958a952c32388602821ec4275e61400255f91b212f9c2a9220f8a0d86",
-        "expandedBytes": 33794538
+        "file": "clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "bytes": 7307424,
+        "sha256": "26e21611792e6a255df1adf24a163a9cbaea72f52d4077d51c02c47a0f542f15",
+        "expandedBytes": 35539202
       },
       "sdk": {
         "file": "clunkyard-sdk-java-linux-x64-v2.0.0-kit.2.tar.gz",
@@ -653,6 +840,18 @@
         "package.json": "bf03d9ff7d14f2337cbe206c394392757d35462ea0c9cad70f4a18b19b879464",
         "README.md": "31270440b986f76b630ee22b7bd4d4271d861327e772724c095bfdee3bc32c61",
         ".gitignore": "217e0fb356990d296c3d031f78f013157da8897b2b19f8545e66ca9da4acb207"
+      },
+      "sdkPlatforms": {
+        "darwin-arm64": {
+          "file": "clunkyard-sdk-java-darwin-arm64-v2.0.0-kit.3.tar.gz",
+          "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-sdk-java-darwin-arm64-v2.0.0-kit.3.tar.gz",
+          "bytes": 685935,
+          "sha256": "8f380dbe387260aca22744cfc998b3c1b1956a44c2e2ec85b0e1dfeded628c98",
+          "expandedBytes": 4427354,
+          "platform": "darwin-arm64",
+          "library": "libclunkyard.2.dylib",
+          "minimumOS": "11.0"
+        }
       }
     },
     "kotlin": {
@@ -661,11 +860,11 @@
       "language": "kotlin",
       "portable": false,
       "engine": {
-        "file": "clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "bytes": 7071301,
-        "sha256": "0b9cfa6958a952c32388602821ec4275e61400255f91b212f9c2a9220f8a0d86",
-        "expandedBytes": 33794538
+        "file": "clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "bytes": 7307424,
+        "sha256": "26e21611792e6a255df1adf24a163a9cbaea72f52d4077d51c02c47a0f542f15",
+        "expandedBytes": 35539202
       },
       "sdk": {
         "file": "clunkyard-sdk-kotlin-linux-x64-v2.0.0-kit.2.tar.gz",
@@ -723,11 +922,11 @@
       "language": "scala",
       "portable": false,
       "engine": {
-        "file": "clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "bytes": 7071301,
-        "sha256": "0b9cfa6958a952c32388602821ec4275e61400255f91b212f9c2a9220f8a0d86",
-        "expandedBytes": 33794538
+        "file": "clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "bytes": 7307424,
+        "sha256": "26e21611792e6a255df1adf24a163a9cbaea72f52d4077d51c02c47a0f542f15",
+        "expandedBytes": 35539202
       },
       "sdk": {
         "file": "clunkyard-sdk-scala-linux-x64-v2.0.0-kit.2.tar.gz",
@@ -788,11 +987,11 @@
       "language": "clojure",
       "portable": false,
       "engine": {
-        "file": "clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "bytes": 7071301,
-        "sha256": "0b9cfa6958a952c32388602821ec4275e61400255f91b212f9c2a9220f8a0d86",
-        "expandedBytes": 33794538
+        "file": "clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "bytes": 7307424,
+        "sha256": "26e21611792e6a255df1adf24a163a9cbaea72f52d4077d51c02c47a0f542f15",
+        "expandedBytes": 35539202
       },
       "sdk": {
         "file": "clunkyard-sdk-clojure-linux-x64-v2.0.0-kit.2.tar.gz",
@@ -852,11 +1051,11 @@
       "language": "dart",
       "portable": false,
       "engine": {
-        "file": "clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "bytes": 7071301,
-        "sha256": "0b9cfa6958a952c32388602821ec4275e61400255f91b212f9c2a9220f8a0d86",
-        "expandedBytes": 33794538
+        "file": "clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "bytes": 7307424,
+        "sha256": "26e21611792e6a255df1adf24a163a9cbaea72f52d4077d51c02c47a0f542f15",
+        "expandedBytes": 35539202
       },
       "sdk": {
         "file": "clunkyard-sdk-dart-linux-x64-v2.0.0-kit.2.tar.gz",
@@ -896,11 +1095,11 @@
       "language": "swift",
       "portable": false,
       "engine": {
-        "file": "clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "bytes": 7071301,
-        "sha256": "0b9cfa6958a952c32388602821ec4275e61400255f91b212f9c2a9220f8a0d86",
-        "expandedBytes": 33794538
+        "file": "clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "bytes": 7307424,
+        "sha256": "26e21611792e6a255df1adf24a163a9cbaea72f52d4077d51c02c47a0f542f15",
+        "expandedBytes": 35539202
       },
       "sdk": {
         "file": "clunkyard-sdk-swift-linux-x64-v2.0.0-kit.2.tar.gz",
@@ -934,6 +1133,18 @@
         "package.json": "acde4f0bf6e1f7cc3f45665d17507d52410ce772a3871391d4b749a50b1a4bcd",
         "README.md": "37c61b31617a4d1a79c80862387bc893d3f682d7d2f6b11c6006b2ba09cd5add",
         ".gitignore": "217e0fb356990d296c3d031f78f013157da8897b2b19f8545e66ca9da4acb207"
+      },
+      "sdkPlatforms": {
+        "darwin-arm64": {
+          "file": "clunkyard-sdk-swift-darwin-arm64-v2.0.0-kit.3.tar.gz",
+          "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-sdk-swift-darwin-arm64-v2.0.0-kit.3.tar.gz",
+          "bytes": 7525105,
+          "sha256": "2f8de62e2839cacec719933962aa67aacdfdc4be62b30b2ef7328ed14bcb551e",
+          "expandedBytes": 44754554,
+          "platform": "darwin-arm64",
+          "library": "libclunkyard.2.dylib",
+          "minimumOS": "11.0"
+        }
       }
     },
     "zig": {
@@ -942,11 +1153,11 @@
       "language": "zig",
       "portable": false,
       "engine": {
-        "file": "clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "bytes": 7071301,
-        "sha256": "0b9cfa6958a952c32388602821ec4275e61400255f91b212f9c2a9220f8a0d86",
-        "expandedBytes": 33794538
+        "file": "clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "bytes": 7307424,
+        "sha256": "26e21611792e6a255df1adf24a163a9cbaea72f52d4077d51c02c47a0f542f15",
+        "expandedBytes": 35539202
       },
       "sdk": {
         "file": "clunkyard-sdk-zig-linux-x64-v2.0.0-kit.2.tar.gz",
@@ -990,11 +1201,11 @@
       "language": "haskell",
       "portable": false,
       "engine": {
-        "file": "clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "bytes": 7071301,
-        "sha256": "0b9cfa6958a952c32388602821ec4275e61400255f91b212f9c2a9220f8a0d86",
-        "expandedBytes": 33794538
+        "file": "clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "bytes": 7307424,
+        "sha256": "26e21611792e6a255df1adf24a163a9cbaea72f52d4077d51c02c47a0f542f15",
+        "expandedBytes": 35539202
       },
       "sdk": {
         "file": "clunkyard-sdk-haskell-linux-x64-v2.0.0-kit.2.tar.gz",
@@ -1037,11 +1248,11 @@
       "language": "ocaml",
       "portable": false,
       "engine": {
-        "file": "clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "bytes": 7071301,
-        "sha256": "0b9cfa6958a952c32388602821ec4275e61400255f91b212f9c2a9220f8a0d86",
-        "expandedBytes": 33794538
+        "file": "clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "bytes": 7307424,
+        "sha256": "26e21611792e6a255df1adf24a163a9cbaea72f52d4077d51c02c47a0f542f15",
+        "expandedBytes": 35539202
       },
       "sdk": {
         "file": "clunkyard-sdk-ocaml-linux-x64-v2.0.0-kit.2.tar.gz",
@@ -1085,11 +1296,11 @@
       "language": "common-lisp",
       "portable": false,
       "engine": {
-        "file": "clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "bytes": 7071301,
-        "sha256": "0b9cfa6958a952c32388602821ec4275e61400255f91b212f9c2a9220f8a0d86",
-        "expandedBytes": 33794538
+        "file": "clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "bytes": 7307424,
+        "sha256": "26e21611792e6a255df1adf24a163a9cbaea72f52d4077d51c02c47a0f542f15",
+        "expandedBytes": 35539202
       },
       "sdk": {
         "file": "clunkyard-sdk-common-lisp-linux-x64-v2.0.0-kit.2.tar.gz",
@@ -1131,11 +1342,11 @@
       "language": "perl",
       "portable": false,
       "engine": {
-        "file": "clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "bytes": 7071301,
-        "sha256": "0b9cfa6958a952c32388602821ec4275e61400255f91b212f9c2a9220f8a0d86",
-        "expandedBytes": 33794538
+        "file": "clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "bytes": 7307424,
+        "sha256": "26e21611792e6a255df1adf24a163a9cbaea72f52d4077d51c02c47a0f542f15",
+        "expandedBytes": 35539202
       },
       "sdk": {
         "file": "clunkyard-sdk-perl-linux-x64-v2.0.0-kit.2.tar.gz",
@@ -1194,11 +1405,11 @@
       "language": "lua",
       "portable": false,
       "engine": {
-        "file": "clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "bytes": 7071301,
-        "sha256": "0b9cfa6958a952c32388602821ec4275e61400255f91b212f9c2a9220f8a0d86",
-        "expandedBytes": 33794538
+        "file": "clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "bytes": 7307424,
+        "sha256": "26e21611792e6a255df1adf24a163a9cbaea72f52d4077d51c02c47a0f542f15",
+        "expandedBytes": 35539202
       },
       "sdk": {
         "file": "clunkyard-sdk-lua-linux-x64-v2.0.0-kit.2.tar.gz",
@@ -1257,11 +1468,11 @@
       "language": "ruby",
       "portable": false,
       "engine": {
-        "file": "clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "bytes": 7071301,
-        "sha256": "0b9cfa6958a952c32388602821ec4275e61400255f91b212f9c2a9220f8a0d86",
-        "expandedBytes": 33794538
+        "file": "clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "bytes": 7307424,
+        "sha256": "26e21611792e6a255df1adf24a163a9cbaea72f52d4077d51c02c47a0f542f15",
+        "expandedBytes": 35539202
       },
       "sdk": {
         "file": "clunkyard-sdk-ruby-linux-x64-v2.0.0-kit.2.tar.gz",
@@ -1293,6 +1504,18 @@
         "package.json": "20a9efc33271c285500680e491ed50df6523fec3a57b797ea064759ede24305a",
         "README.md": "a094ffbc4d342023ed1e2ac254970383fdbe6c125d39c2a8400c35bf68649d01",
         ".gitignore": "217e0fb356990d296c3d031f78f013157da8897b2b19f8545e66ca9da4acb207"
+      },
+      "sdkPlatforms": {
+        "darwin-arm64": {
+          "file": "clunkyard-sdk-ruby-darwin-arm64-v2.0.0-kit.3.tar.gz",
+          "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-sdk-ruby-darwin-arm64-v2.0.0-kit.3.tar.gz",
+          "bytes": 700345,
+          "sha256": "416fc0402030e6451c1e787b0c30e976d5f2fa9d2bea37f19ecfe024ed6527e4",
+          "expandedBytes": 4573076,
+          "platform": "darwin-arm64",
+          "library": "libclunkyard.2.dylib",
+          "minimumOS": "11.0"
+        }
       }
     },
     "julia": {
@@ -1301,11 +1524,11 @@
       "language": "julia",
       "portable": false,
       "engine": {
-        "file": "clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "bytes": 7071301,
-        "sha256": "0b9cfa6958a952c32388602821ec4275e61400255f91b212f9c2a9220f8a0d86",
-        "expandedBytes": 33794538
+        "file": "clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "bytes": 7307424,
+        "sha256": "26e21611792e6a255df1adf24a163a9cbaea72f52d4077d51c02c47a0f542f15",
+        "expandedBytes": 35539202
       },
       "sdk": {
         "file": "clunkyard-sdk-julia-linux-x64-v2.0.0-kit.2.tar.gz",
@@ -1345,11 +1568,11 @@
       "language": "r",
       "portable": false,
       "engine": {
-        "file": "clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "bytes": 7071301,
-        "sha256": "0b9cfa6958a952c32388602821ec4275e61400255f91b212f9c2a9220f8a0d86",
-        "expandedBytes": 33794538
+        "file": "clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "bytes": 7307424,
+        "sha256": "26e21611792e6a255df1adf24a163a9cbaea72f52d4077d51c02c47a0f542f15",
+        "expandedBytes": 35539202
       },
       "sdk": {
         "file": "clunkyard-sdk-r-linux-x64-v2.0.0-kit.2.tar.gz",
@@ -1397,11 +1620,11 @@
       "language": "php",
       "portable": false,
       "engine": {
-        "file": "clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "bytes": 7071301,
-        "sha256": "0b9cfa6958a952c32388602821ec4275e61400255f91b212f9c2a9220f8a0d86",
-        "expandedBytes": 33794538
+        "file": "clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "bytes": 7307424,
+        "sha256": "26e21611792e6a255df1adf24a163a9cbaea72f52d4077d51c02c47a0f542f15",
+        "expandedBytes": 35539202
       },
       "sdk": {
         "file": "clunkyard-sdk-php-linux-x64-v2.0.0-kit.2.tar.gz",
@@ -1455,11 +1678,11 @@
       "language": "fortran",
       "portable": false,
       "engine": {
-        "file": "clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "bytes": 7071301,
-        "sha256": "0b9cfa6958a952c32388602821ec4275e61400255f91b212f9c2a9220f8a0d86",
-        "expandedBytes": 33794538
+        "file": "clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "bytes": 7307424,
+        "sha256": "26e21611792e6a255df1adf24a163a9cbaea72f52d4077d51c02c47a0f542f15",
+        "expandedBytes": 35539202
       },
       "sdk": {
         "file": "clunkyard-sdk-fortran-linux-x64-v2.0.0-kit.2.tar.gz",
@@ -1501,11 +1724,11 @@
       "language": "d",
       "portable": false,
       "engine": {
-        "file": "clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "bytes": 7071301,
-        "sha256": "0b9cfa6958a952c32388602821ec4275e61400255f91b212f9c2a9220f8a0d86",
-        "expandedBytes": 33794538
+        "file": "clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "bytes": 7307424,
+        "sha256": "26e21611792e6a255df1adf24a163a9cbaea72f52d4077d51c02c47a0f542f15",
+        "expandedBytes": 35539202
       },
       "sdk": {
         "file": "clunkyard-sdk-d-linux-x64-v2.0.0-kit.2.tar.gz",
@@ -1548,11 +1771,11 @@
       "language": "ada",
       "portable": false,
       "engine": {
-        "file": "clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "bytes": 7071301,
-        "sha256": "0b9cfa6958a952c32388602821ec4275e61400255f91b212f9c2a9220f8a0d86",
-        "expandedBytes": 33794538
+        "file": "clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "bytes": 7307424,
+        "sha256": "26e21611792e6a255df1adf24a163a9cbaea72f52d4077d51c02c47a0f542f15",
+        "expandedBytes": 35539202
       },
       "sdk": {
         "file": "clunkyard-sdk-ada-linux-x64-v2.0.0-kit.2.tar.gz",
@@ -1594,11 +1817,11 @@
       "language": "nim",
       "portable": false,
       "engine": {
-        "file": "clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "bytes": 7071301,
-        "sha256": "0b9cfa6958a952c32388602821ec4275e61400255f91b212f9c2a9220f8a0d86",
-        "expandedBytes": 33794538
+        "file": "clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "bytes": 7307424,
+        "sha256": "26e21611792e6a255df1adf24a163a9cbaea72f52d4077d51c02c47a0f542f15",
+        "expandedBytes": 35539202
       },
       "sdk": {
         "file": "clunkyard-sdk-nim-linux-x64-v2.0.0-kit.2.tar.gz",
@@ -1639,11 +1862,11 @@
       "language": "mercury",
       "portable": false,
       "engine": {
-        "file": "clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "bytes": 7071301,
-        "sha256": "0b9cfa6958a952c32388602821ec4275e61400255f91b212f9c2a9220f8a0d86",
-        "expandedBytes": 33794538
+        "file": "clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "bytes": 7307424,
+        "sha256": "26e21611792e6a255df1adf24a163a9cbaea72f52d4077d51c02c47a0f542f15",
+        "expandedBytes": 35539202
       },
       "sdk": {
         "file": "clunkyard-sdk-mercury-linux-x64-v2.0.0-kit.2.tar.gz",
@@ -1686,11 +1909,11 @@
       "language": "pascal",
       "portable": false,
       "engine": {
-        "file": "clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "bytes": 7071301,
-        "sha256": "0b9cfa6958a952c32388602821ec4275e61400255f91b212f9c2a9220f8a0d86",
-        "expandedBytes": 33794538
+        "file": "clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "bytes": 7307424,
+        "sha256": "26e21611792e6a255df1adf24a163a9cbaea72f52d4077d51c02c47a0f542f15",
+        "expandedBytes": 35539202
       },
       "sdk": {
         "file": "clunkyard-sdk-pascal-linux-x64-v2.0.0-kit.2.tar.gz",
@@ -1730,11 +1953,11 @@
       "language": "basic",
       "portable": false,
       "engine": {
-        "file": "clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "bytes": 7071301,
-        "sha256": "0b9cfa6958a952c32388602821ec4275e61400255f91b212f9c2a9220f8a0d86",
-        "expandedBytes": 33794538
+        "file": "clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "bytes": 7307424,
+        "sha256": "26e21611792e6a255df1adf24a163a9cbaea72f52d4077d51c02c47a0f542f15",
+        "expandedBytes": 35539202
       },
       "sdk": {
         "file": "clunkyard-sdk-basic-linux-x64-v2.0.0-kit.2.tar.gz",
@@ -1776,11 +1999,11 @@
       "language": "cobol",
       "portable": false,
       "engine": {
-        "file": "clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "bytes": 7071301,
-        "sha256": "0b9cfa6958a952c32388602821ec4275e61400255f91b212f9c2a9220f8a0d86",
-        "expandedBytes": 33794538
+        "file": "clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "bytes": 7307424,
+        "sha256": "26e21611792e6a255df1adf24a163a9cbaea72f52d4077d51c02c47a0f542f15",
+        "expandedBytes": 35539202
       },
       "sdk": {
         "file": "clunkyard-sdk-cobol-linux-x64-v2.0.0-kit.2.tar.gz",
@@ -1822,11 +2045,11 @@
       "language": "powershell",
       "portable": false,
       "engine": {
-        "file": "clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "bytes": 7071301,
-        "sha256": "0b9cfa6958a952c32388602821ec4275e61400255f91b212f9c2a9220f8a0d86",
-        "expandedBytes": 33794538
+        "file": "clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "bytes": 7307424,
+        "sha256": "26e21611792e6a255df1adf24a163a9cbaea72f52d4077d51c02c47a0f542f15",
+        "expandedBytes": 35539202
       },
       "sdk": {
         "file": "clunkyard-sdk-powershell-linux-x64-v2.0.0-kit.2.tar.gz",
@@ -1870,11 +2093,11 @@
       "language": "prolog",
       "portable": false,
       "engine": {
-        "file": "clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "bytes": 7071301,
-        "sha256": "0b9cfa6958a952c32388602821ec4275e61400255f91b212f9c2a9220f8a0d86",
-        "expandedBytes": 33794538
+        "file": "clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "bytes": 7307424,
+        "sha256": "26e21611792e6a255df1adf24a163a9cbaea72f52d4077d51c02c47a0f542f15",
+        "expandedBytes": 35539202
       },
       "sdk": {
         "file": "clunkyard-sdk-prolog-linux-x64-v2.0.0-kit.2.tar.gz",
@@ -1917,11 +2140,11 @@
       "language": "chr",
       "portable": false,
       "engine": {
-        "file": "clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "bytes": 7071301,
-        "sha256": "0b9cfa6958a952c32388602821ec4275e61400255f91b212f9c2a9220f8a0d86",
-        "expandedBytes": 33794538
+        "file": "clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "bytes": 7307424,
+        "sha256": "26e21611792e6a255df1adf24a163a9cbaea72f52d4077d51c02c47a0f542f15",
+        "expandedBytes": 35539202
       },
       "sdk": {
         "file": "clunkyard-sdk-chr-linux-x64-v2.0.0-kit.2.tar.gz",
@@ -1965,11 +2188,11 @@
       "language": "clips",
       "portable": false,
       "engine": {
-        "file": "clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "bytes": 7071301,
-        "sha256": "0b9cfa6958a952c32388602821ec4275e61400255f91b212f9c2a9220f8a0d86",
-        "expandedBytes": 33794538
+        "file": "clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "bytes": 7307424,
+        "sha256": "26e21611792e6a255df1adf24a163a9cbaea72f52d4077d51c02c47a0f542f15",
+        "expandedBytes": 35539202
       },
       "sdk": {
         "file": "clunkyard-sdk-clips-linux-x64-v2.0.0-kit.2.tar.gz",
@@ -2024,11 +2247,11 @@
       "language": "minizinc",
       "portable": false,
       "engine": {
-        "file": "clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "bytes": 7071301,
-        "sha256": "0b9cfa6958a952c32388602821ec4275e61400255f91b212f9c2a9220f8a0d86",
-        "expandedBytes": 33794538
+        "file": "clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "bytes": 7307424,
+        "sha256": "26e21611792e6a255df1adf24a163a9cbaea72f52d4077d51c02c47a0f542f15",
+        "expandedBytes": 35539202
       },
       "sdk": {
         "file": "clunkyard-sdk-minizinc-linux-x64-v2.0.0-kit.2.tar.gz",
@@ -2074,11 +2297,11 @@
       "language": "forth",
       "portable": false,
       "engine": {
-        "file": "clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "bytes": 7071301,
-        "sha256": "0b9cfa6958a952c32388602821ec4275e61400255f91b212f9c2a9220f8a0d86",
-        "expandedBytes": 33794538
+        "file": "clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "bytes": 7307424,
+        "sha256": "26e21611792e6a255df1adf24a163a9cbaea72f52d4077d51c02c47a0f542f15",
+        "expandedBytes": 35539202
       },
       "sdk": {
         "file": "clunkyard-sdk-forth-linux-x64-v2.0.0-kit.2.tar.gz",
@@ -2123,11 +2346,11 @@
       "language": "apl",
       "portable": false,
       "engine": {
-        "file": "clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "bytes": 7071301,
-        "sha256": "0b9cfa6958a952c32388602821ec4275e61400255f91b212f9c2a9220f8a0d86",
-        "expandedBytes": 33794538
+        "file": "clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "bytes": 7307424,
+        "sha256": "26e21611792e6a255df1adf24a163a9cbaea72f52d4077d51c02c47a0f542f15",
+        "expandedBytes": 35539202
       },
       "sdk": {
         "file": "clunkyard-sdk-apl-linux-x64-v2.0.0-kit.2.tar.gz",
@@ -2172,11 +2395,11 @@
       "language": "bqn",
       "portable": false,
       "engine": {
-        "file": "clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "bytes": 7071301,
-        "sha256": "0b9cfa6958a952c32388602821ec4275e61400255f91b212f9c2a9220f8a0d86",
-        "expandedBytes": 33794538
+        "file": "clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "bytes": 7307424,
+        "sha256": "26e21611792e6a255df1adf24a163a9cbaea72f52d4077d51c02c47a0f542f15",
+        "expandedBytes": 35539202
       },
       "sdk": {
         "file": "clunkyard-sdk-bqn-linux-x64-v2.0.0-kit.2.tar.gz",
@@ -2220,11 +2443,11 @@
       "language": "shell",
       "portable": false,
       "engine": {
-        "file": "clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "bytes": 7071301,
-        "sha256": "0b9cfa6958a952c32388602821ec4275e61400255f91b212f9c2a9220f8a0d86",
-        "expandedBytes": 33794538
+        "file": "clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "bytes": 7307424,
+        "sha256": "26e21611792e6a255df1adf24a163a9cbaea72f52d4077d51c02c47a0f542f15",
+        "expandedBytes": 35539202
       },
       "sdk": {
         "file": "clunkyard-sdk-shell-linux-x64-v2.0.0-kit.2.tar.gz",
@@ -2265,11 +2488,11 @@
       "language": "wat",
       "portable": false,
       "engine": {
-        "file": "clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "bytes": 7071301,
-        "sha256": "0b9cfa6958a952c32388602821ec4275e61400255f91b212f9c2a9220f8a0d86",
-        "expandedBytes": 33794538
+        "file": "clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "bytes": 7307424,
+        "sha256": "26e21611792e6a255df1adf24a163a9cbaea72f52d4077d51c02c47a0f542f15",
+        "expandedBytes": 35539202
       },
       "sdk": {
         "file": "clunkyard-sdk-wat-linux-x64-v2.0.0-kit.2.tar.gz",
@@ -2309,11 +2532,11 @@
       "language": "assemblyscript-wasm",
       "portable": false,
       "engine": {
-        "file": "clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "bytes": 7071301,
-        "sha256": "0b9cfa6958a952c32388602821ec4275e61400255f91b212f9c2a9220f8a0d86",
-        "expandedBytes": 33794538
+        "file": "clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "bytes": 7307424,
+        "sha256": "26e21611792e6a255df1adf24a163a9cbaea72f52d4077d51c02c47a0f542f15",
+        "expandedBytes": 35539202
       },
       "sdk": {
         "file": "clunkyard-sdk-assemblyscript-wasm-linux-x64-v2.0.0-kit.2.tar.gz",
@@ -2357,11 +2580,11 @@
       "language": "c-wasm",
       "portable": false,
       "engine": {
-        "file": "clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "bytes": 7071301,
-        "sha256": "0b9cfa6958a952c32388602821ec4275e61400255f91b212f9c2a9220f8a0d86",
-        "expandedBytes": 33794538
+        "file": "clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "bytes": 7307424,
+        "sha256": "26e21611792e6a255df1adf24a163a9cbaea72f52d4077d51c02c47a0f542f15",
+        "expandedBytes": 35539202
       },
       "sdk": {
         "file": "clunkyard-sdk-c-wasm-linux-x64-v2.0.0-kit.2.tar.gz",
@@ -2406,11 +2629,11 @@
       "language": "rust-wasm",
       "portable": false,
       "engine": {
-        "file": "clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "bytes": 7071301,
-        "sha256": "0b9cfa6958a952c32388602821ec4275e61400255f91b212f9c2a9220f8a0d86",
-        "expandedBytes": 33794538
+        "file": "clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "bytes": 7307424,
+        "sha256": "26e21611792e6a255df1adf24a163a9cbaea72f52d4077d51c02c47a0f542f15",
+        "expandedBytes": 35539202
       },
       "sdk": {
         "file": "clunkyard-sdk-rust-wasm-linux-x64-v2.0.0-kit.2.tar.gz",
@@ -2454,11 +2677,11 @@
       "language": "zig-wasm",
       "portable": false,
       "engine": {
-        "file": "clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "bytes": 7071301,
-        "sha256": "0b9cfa6958a952c32388602821ec4275e61400255f91b212f9c2a9220f8a0d86",
-        "expandedBytes": 33794538
+        "file": "clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "bytes": 7307424,
+        "sha256": "26e21611792e6a255df1adf24a163a9cbaea72f52d4077d51c02c47a0f542f15",
+        "expandedBytes": 35539202
       },
       "sdk": {
         "file": "clunkyard-sdk-zig-wasm-linux-x64-v2.0.0-kit.2.tar.gz",
@@ -2502,11 +2725,11 @@
       "language": "vane",
       "portable": true,
       "engine": {
-        "file": "clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "bytes": 7071301,
-        "sha256": "0b9cfa6958a952c32388602821ec4275e61400255f91b212f9c2a9220f8a0d86",
-        "expandedBytes": 33794538
+        "file": "clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "bytes": 7307424,
+        "sha256": "26e21611792e6a255df1adf24a163a9cbaea72f52d4077d51c02c47a0f542f15",
+        "expandedBytes": 35539202
       },
       "sdk": {
         "file": "clunkyard-sdk-vane-portable-v2.0.0-kit.2.tar.gz",
@@ -2546,11 +2769,11 @@
       "language": "cadence",
       "portable": true,
       "engine": {
-        "file": "clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "bytes": 7071301,
-        "sha256": "0b9cfa6958a952c32388602821ec4275e61400255f91b212f9c2a9220f8a0d86",
-        "expandedBytes": 33794538
+        "file": "clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "bytes": 7307424,
+        "sha256": "26e21611792e6a255df1adf24a163a9cbaea72f52d4077d51c02c47a0f542f15",
+        "expandedBytes": 35539202
       },
       "sdk": {
         "file": "clunkyard-sdk-cadence-portable-v2.0.0-kit.2.tar.gz",
@@ -2590,11 +2813,11 @@
       "language": "glyph",
       "portable": true,
       "engine": {
-        "file": "clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "bytes": 7071301,
-        "sha256": "0b9cfa6958a952c32388602821ec4275e61400255f91b212f9c2a9220f8a0d86",
-        "expandedBytes": 33794538
+        "file": "clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "bytes": 7307424,
+        "sha256": "26e21611792e6a255df1adf24a163a9cbaea72f52d4077d51c02c47a0f542f15",
+        "expandedBytes": 35539202
       },
       "sdk": {
         "file": "clunkyard-sdk-glyph-portable-v2.0.0-kit.2.tar.gz",
@@ -2634,11 +2857,11 @@
       "language": "vane-wasm",
       "portable": false,
       "engine": {
-        "file": "clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "bytes": 7071301,
-        "sha256": "0b9cfa6958a952c32388602821ec4275e61400255f91b212f9c2a9220f8a0d86",
-        "expandedBytes": 33794538
+        "file": "clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "bytes": 7307424,
+        "sha256": "26e21611792e6a255df1adf24a163a9cbaea72f52d4077d51c02c47a0f542f15",
+        "expandedBytes": 35539202
       },
       "sdk": {
         "file": "clunkyard-sdk-vane-wasm-linux-x64-v2.0.0-kit.2.tar.gz",
@@ -2678,11 +2901,11 @@
       "language": "cadence-wasm",
       "portable": false,
       "engine": {
-        "file": "clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "bytes": 7071301,
-        "sha256": "0b9cfa6958a952c32388602821ec4275e61400255f91b212f9c2a9220f8a0d86",
-        "expandedBytes": 33794538
+        "file": "clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "bytes": 7307424,
+        "sha256": "26e21611792e6a255df1adf24a163a9cbaea72f52d4077d51c02c47a0f542f15",
+        "expandedBytes": 35539202
       },
       "sdk": {
         "file": "clunkyard-sdk-cadence-wasm-linux-x64-v2.0.0-kit.2.tar.gz",
@@ -2722,11 +2945,11 @@
       "language": "glyph-wasm",
       "portable": false,
       "engine": {
-        "file": "clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/clunkyard-engine-v2.0.0-kit.2.tar.gz",
-        "bytes": 7071301,
-        "sha256": "0b9cfa6958a952c32388602821ec4275e61400255f91b212f9c2a9220f8a0d86",
-        "expandedBytes": 33794538
+        "file": "clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-engine-v2.0.0-kit.3.tar.gz",
+        "bytes": 7307424,
+        "sha256": "26e21611792e6a255df1adf24a163a9cbaea72f52d4077d51c02c47a0f542f15",
+        "expandedBytes": 35539202
       },
       "sdk": {
         "file": "clunkyard-sdk-glyph-wasm-linux-x64-v2.0.0-kit.2.tar.gz",
@@ -2760,5 +2983,12 @@
         ".gitignore": "217e0fb356990d296c3d031f78f013157da8897b2b19f8545e66ca9da4acb207"
       }
     }
+  },
+  "notices": {
+    "file": "clunkyard-core-notices-v2.0.0-kit.3.tar.gz",
+    "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-core-notices-v2.0.0-kit.3.tar.gz",
+    "bytes": 19159,
+    "sha256": "f34e037e3f71cc0cbb0d72c4ccbd6660cbf1deddebefd5a2f1c048118939c485",
+    "expandedBytes": 1048576
   }
 }

@@ -1,6 +1,6 @@
 {
   "v": 1,
-  "sourceCommit": "a0ba86a696e761a3586a2485340b8943e7c498e9",
+  "sourceCommit": "2920bbcc5abbddae8478b851f7debbca1e702350",
   "sourceDirty": false,
   "packages": [
     "git",
@@ -12,6 +12,11 @@
       "path": ".gitattributes",
       "bytes": 45,
       "sha256": "96695717cc7dae5d62e4b31bd3b954c32a820b1ec22d7f5a8a5b184e2455e055"
+    },
+    {
+      "path": ".github/workflows/native-archive-qualification.yml",
+      "bytes": 1715,
+      "sha256": "3e950e445e2ac3df6c1a8408889101a24dbbe95d7349dadb141afa08941e7e75"
     },
     {
       "path": ".github/workflows/native-qualification.yml",
@@ -50,8 +55,8 @@
     },
     {
       "path": "packages/cli/catalogue.json",
-      "bytes": 128292,
-      "sha256": "70b5db525e2ee8c6c6f8f5e358b9eb95243ad4549d9cff133c697ecdb70cc969"
+      "bytes": 138394,
+      "sha256": "e4d2e2727e76af202469692a69c4585198e79b7176e3a16895dd4f20b6bdb83e"
     },
     {
       "path": "packages/cli/cli.cjs",
@@ -70,13 +75,13 @@
     },
     {
       "path": "packages/cli/project.cjs",
-      "bytes": 11386,
-      "sha256": "2318a4ec92629ecd11fa2a362b7bae888bede6e22d8883772e804f28259a030b"
+      "bytes": 11453,
+      "sha256": "4c7b4d4424ac4806c591b9ecfce4b8e066f1258874f1d1bcc82b0299f53d275f"
     },
     {
       "path": "packages/cli/README.md",
-      "bytes": 3025,
-      "sha256": "4272c7495438128a3b37cf9fb5bfebaca9e7f93f5f63c2d9d3a7e76035aadbec"
+      "bytes": 3390,
+      "sha256": "a35470e87cd6af626ce6d67f9f9266e1cd26d904f0cd585e38da97cddbf9012b"
     },
     {
       "path": "packages/cli/runtime.cjs",
@@ -475,13 +480,18 @@
     },
     {
       "path": "RELEASING.md",
-      "bytes": 6045,
-      "sha256": "d792b75c6389f17be3938389c9375f5794706386b84f46a447ecbbf8c02ce235"
+      "bytes": 6899,
+      "sha256": "914b79e459ef8c57d2843f1d6dac54baf6ba087a54525271adaa5415eb963aec"
     },
     {
       "path": "scripts/core-notices.cjs",
       "bytes": 2579,
       "sha256": "d12ecb93b3d3c2763620f1a88a347fb9b1a430e82759841ad2ac9d420d93db8f"
+    },
+    {
+      "path": "scripts/native-archive-smoke.cjs",
+      "bytes": 5891,
+      "sha256": "edc3900dc33f098fc58fb0e61d893f72c824477c845cae553e43111aee451497"
     },
     {
       "path": "scripts/native-smoke.cjs",

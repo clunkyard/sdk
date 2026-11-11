@@ -41,12 +41,11 @@ function makefile() {
 
 function readme(language,entry) {
   const row=catalogue.languages[language],portable=nodeLanguage(language)||row.portable;
-  const tools=row.tools.filter(tool=>!['node','make'].includes(tool));
   const guide=language==='typescript'?'javascript':language==='wat'||language.endsWith('-wasm')?'wasm':language;
   return `# A Clunkyard robot in ${language}
 
-Edit \`${entry}\`, build, play a real local match and inspect its replay. Install Node 20+ with npm${tools.length?' and your existing language tools: '+tools.map(tool=>'\`'+tool+'\`').join(', '):''}.
-${portable?'This language uses the portable Node/WebAssembly route.':'Native SDK assets require Linux x86-64 and glibc 2.39+ (Ubuntu 24.04+ or WSL2 Ubuntu 24.04+).'}
+Edit \`${entry}\`, build, play a real local match and inspect its replay. Install [Node 20+ with npm](https://nodejs.org/en/download) and your language's normal compiler or interpreter.
+${portable?'This language uses the portable Node/WebAssembly route.':'Check the [supported operating systems and toolchain installers](https://clunkyard.com/sdk/player-kit#supported-platforms) for this language. Hosted builds and trials are available when its local toolchain or SDK is unavailable on your computer.'}
 
 \`\`\`sh
 git clone https://github.com/clunkyard/starter-${language}.git
@@ -72,7 +71,7 @@ npx --yes @clunkyard/cli@2 match 77 3d zero-g
 
 Keep a baseline commit. Repeat several seeds and rulesets; compare contacts, battery, aim, shots, hits and eliminations in the replay. Local trials run programs as your user. Use hosted trials to measure arena budgets before a tournament.
 
-The CLI packages SDK ${catalogue.sdkVersion}/protocol 2 asset identities from the immutable [${catalogue.release} release](https://github.com/clunkyard/game-kit/releases/tag/${catalogue.release}). \`@2\` receives compatible tooling fixes without copying scripts into your robot repository. To reproduce an exact tool version, use \`npx --yes @clunkyard/cli@2.0.1\` or set \`CLUNKYARD='npx --yes @clunkyard/cli@2.0.1'\` with Make. SDK/engine caches are identified by their content hashes and remain reusable across CLI updates.
+The CLI packages SDK ${catalogue.sdkVersion}/protocol 2 asset identities from the immutable [${catalogue.release} release](https://github.com/clunkyard/game-kit/releases/tag/${catalogue.release}). \`@2\` receives compatible tooling fixes without copying scripts into your robot repository. To reproduce an exact tool version, use \`npx --yes @clunkyard/cli@2.1.0\` or set \`CLUNKYARD='npx --yes @clunkyard/cli@2.1.0'\` with Make. SDK/engine caches are identified by their content hashes and remain reusable across CLI updates.
 
 ## Play online
 

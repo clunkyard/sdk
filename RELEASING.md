@@ -116,3 +116,15 @@ commit, actual public checkout commit and export-manifest SHA-256. This explicit
 mapping lets the private release assembler bind SDK bytes to their canonical
 inputs without silently relabelling a different source tree. Public package
 contents and existing npm SDK notice bytes are unaffected by the extra CI files.
+
+For an exact prepublication Intel archive gate, prepare one reviewed bundle with
+`release/assets/`, the candidate `tools/player-cli/` and
+`scripts/player-kit/{validate,verify,archive}.cjs`. Upload its `.tar.gz` once to a
+public prerelease in `clunkyard/sdk`; retain its SHA-256 and never replace it.
+Dispatch **Exact native archive qualification** with that tag, exact asset name
+and hash. The read-only Intel job verifies the hash before safe extraction, then
+runs the existing native validator against those exact SDK and engine archives.
+It strips custom SDK overrides and GitHub tokens from validation subprocesses,
+and uploads the matching results, logs and replays. The workflow publishes
+nothing. A passing receipt closes archive selection/extraction separately from
+the earlier installed-SDK bootstrap and later anonymous registry installation.

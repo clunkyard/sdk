@@ -1,0 +1,49 @@
+name: Exact native archive qualification
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: Reviewed public prerelease tag in clunkyard/sdk
+        type: string
+        required: true
+      bundle_name:
+        description: Exact qualification bundle asset name (.tar.gz)
+        type: string
+        required: true
+      bundle_sha256:
+        description: Reviewed qualification bundle SHA-256
+        type: string
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  intel:
+    runs-on: macos-15-intel
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: 24
+          package-manager-cache: false
+      - name: Select the normal Rust toolchain for qualification
+        run: rustup toolchain install 1.96.0 --profile minimal --no-self-update
+      - name: Download the reviewed bundle and qualify exact archives
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NATIVE_RELEASE_TAG: ${{ inputs.release_tag }}
+          NATIVE_BUNDLE_NAME: ${{ inputs.bundle_name }}
+          NATIVE_BUNDLE_SHA256: ${{ inputs.bundle_sha256 }}
+          RUSTUP_TOOLCHAIN: 1.96.0
+        run: node scripts/native-archive-smoke.cjs --out "${{ runner.temp }}/native-archive-qualification"
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
+        with:
+          name: exact-native-darwin-x64
+          path: ${{ runner.temp }}/native-archive-qualification/artifacts/
+          if-no-files-found: error

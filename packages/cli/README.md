@@ -19,7 +19,8 @@ tooling; it does not copy a bootstrapper, archive reader or custom lock file
 into every repository. `--project DIRECTORY` works from another directory.
 
 The package contains the reviewed SDK 2.0.0/protocol 2 catalogue, checksums and
-build recipes from the immutable `v2.0.0-kit.2` release. It downloads only the
+build recipes from immutable game-kit releases, including native desktop
+SDKs in `v2.0.0-kit.3`. It downloads only the
 engine and selected language SDK. It never downloads compilers or the
 all-language builder. SDK/engine caches under ignored `.clunkyard/` are keyed
 by their content hashes and remain reusable across CLI updates. Other
@@ -33,8 +34,12 @@ JavaScript/TypeScript projects use the ordinary npm alias
 `clunkyard@npm:@clunkyard/sdk@2.0.0`. `package-lock.json` pins the reviewed
 integrity. The first build runs `npm ci --ignore-scripts`; the package has no
 install hooks or runtime dependencies. TypeScript uses your installed
-TypeScript 6+ compiler, preferring a project-local installation. Native SDK
-assets currently require Linux x86-64/glibc 2.39+ (Ubuntu 24.04+ or WSL2).
+TypeScript 6+ compiler, preferring a project-local installation. Native SDKs
+support Linux x86-64/glibc 2.39+, selected languages on macOS arm64/x86-64,
+and C/C++/Python/Rust/C# on Windows x86-64. See the
+[supported platform table and official toolchain installers](https://clunkyard.com/sdk/player-kit#supported-platforms).
+Use MSVC's Developer Shell or a working Clang toolchain for Windows C/C++.
+Python, Rust and .NET binding installation needs no Unix shell or GNU Make.
 JavaScript, TypeScript and the Vane/Cadence/Glyph Node routes use WebAssembly.
 
 `@2` receives compatible tooling updates. For an exact tool version, run
