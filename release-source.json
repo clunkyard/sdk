@@ -1,6 +1,6 @@
 {
   "v": 1,
-  "sourceCommit": "b0a40abb837e9c576aa472d06092b30fec1cffb9",
+  "sourceCommit": "c49cd646b0102b2e0bc8b3cf8156264fe1d8c679",
   "sourceDirty": false,
   "packages": [
     "git",
@@ -61,22 +61,22 @@
     {
       "path": "packages/cli/package.json",
       "bytes": 728,
-      "sha256": "7f5bd9e94666e81ee270182318e88c315cd572ca74f82a9e2e3d6d5b9c79e7d0"
+      "sha256": "0f0cbbba2e62d5c381bf9e95418481b76ba1c34125e646f86e816dd4c8d6e6c2"
     },
     {
       "path": "packages/cli/project.cjs",
       "bytes": 11386,
-      "sha256": "d0ac159fae3c884a54e27eb1b2cd902cf01a3faf945ea80efb1295ff7960a20e"
+      "sha256": "2318a4ec92629ecd11fa2a362b7bae888bede6e22d8883772e804f28259a030b"
     },
     {
       "path": "packages/cli/README.md",
-      "bytes": 2823,
-      "sha256": "0f85928ca60aad7eee2332ff9bf433bfad5fd4c9fbbcb39f0ab6cc479449f172"
+      "bytes": 3025,
+      "sha256": "96a191e87f696f26312e5814ae5b13c19b36a47ee40865d681b92de8e5d61e61"
     },
     {
       "path": "packages/cli/runtime.cjs",
-      "bytes": 15496,
-      "sha256": "7c9caebe3d9cfaf5680bb0a5a12628b347c7a6433f9e6fad58f2efa6d55cfefe"
+      "bytes": 17145,
+      "sha256": "2da775613f375643d2ccbcc12adf41a9911dff03752df4bd9b9ea8f0669f86ac"
     },
     {
       "path": "packages/git/client.cjs",
@@ -511,7 +511,7 @@
     {
       "path": "scripts/smoke-cli.cjs",
       "bytes": 5162,
-      "sha256": "ecc9c95cbe9b5c40804fee88bf3ea9f0d10e8b0cf812b1008d3e9e111dccca4c"
+      "sha256": "2d17d4004097bc8d1a128157e4d6a06bce28fefca35cba8682a973676ee6eedd"
     },
     {
       "path": "scripts/smoke-git.cjs",

@@ -72,7 +72,7 @@ npx --yes @clunkyard/cli@2 match 77 3d zero-g
 
 Keep a baseline commit. Repeat several seeds and rulesets; compare contacts, battery, aim, shots, hits and eliminations in the replay. Local trials run programs as your user. Use hosted trials to measure arena budgets before a tournament.
 
-The CLI packages SDK ${catalogue.sdkVersion}/protocol 2 asset identities from the immutable [${catalogue.release} release](https://github.com/clunkyard/game-kit/releases/tag/${catalogue.release}). \`@2\` receives compatible tooling fixes without copying scripts into your robot repository. To reproduce an exact tool version, use \`npx --yes @clunkyard/cli@2.0.0\` or set \`CLUNKYARD='npx --yes @clunkyard/cli@2.0.0'\` with Make. SDK/engine caches are identified by their content hashes and remain reusable across CLI updates.
+The CLI packages SDK ${catalogue.sdkVersion}/protocol 2 asset identities from the immutable [${catalogue.release} release](https://github.com/clunkyard/game-kit/releases/tag/${catalogue.release}). \`@2\` receives compatible tooling fixes without copying scripts into your robot repository. To reproduce an exact tool version, use \`npx --yes @clunkyard/cli@2.0.1\` or set \`CLUNKYARD='npx --yes @clunkyard/cli@2.0.1'\` with Make. SDK/engine caches are identified by their content hashes and remain reusable across CLI updates.
 
 ## Play online
 

@@ -6,6 +6,13 @@ const {extract,readAsset}=require('./archive.cjs');
 const catalogue=require('./catalogue.json');
 const {readManifest}=require('./project.cjs');
 
+function selectLocalResourceMode(bot,supported) {
+  if(supported.includes('open'))return 'open';
+  const metered=supported.find(mode=>mode==='dsl'||mode==='wasm');
+  if(metered)return metered;
+  throw new Error(`${bot.name} supports resource modes [${supported.join(', ')}]. Local trials need open, dsl or wasm; use a hosted trial for trusted budgets.`);
+}
+
 function createRuntime(project,entry=path.join(__dirname,'cli.cjs')) {
 const root=path.resolve(project),initial=readManifest(root),lock=catalogue.languages[initial.language];
 const cache=path.join(root,'.clunkyard');
@@ -136,7 +143,24 @@ async function match(args) {
   await build();
   fs.mkdirSync(path.join(root,'replays'),{recursive:true});
   const replay=path.join(root,'replays',`trial-${seed}.json`);
-  run(process.execPath,[path.join(engine,'src','cli.js'),'match','--bot','@'+path.join(cache,'local-bot.json'),'--bot','@'+path.join(engine,'bots','practice','bot.json'),'--mode',mode,'--ruleset',ruleset,'--seed',seed,'--ticks','360','--turn-ms','2000','--startup-ms','60000','--replay',replay]);
+  const {supportedResourceModes}=require(path.join(engine,'src','resources.js'));
+  const m=manifest(),resourceMode=selectLocalResourceMode(m,supportedResourceModes(m));
+  if(resourceMode==='open'){
+    run(process.execPath,[path.join(engine,'src','cli.js'),'match','--bot','@'+path.join(cache,'local-bot.json'),'--bot','@'+path.join(engine,'bots','practice','bot.json'),'--mode',mode,'--ruleset',ruleset,'--resource-mode',resourceMode,'--seed',seed,'--ticks','360','--turn-ms','2000','--startup-ms','60000','--replay',replay]);
+  }else{
+    // The pinned engine already supports mixed Reflex entries: the player's
+    // Wasm/DSL robot and the bundled Vane rival each keep their own meter.
+    const {resolveBot,validateSelection}=require(path.join(engine,'src','roster.js'));
+    const {runMatch,saveReplay}=require(path.join(engine,'src','match.js'));
+    const player=resolveBot('@'+path.join(cache,'local-bot.json'),[],engine,mode,ruleset);
+    const rival=resolveBot('@'+path.join(engine,'bots','practice','bot.json'),[],engine,mode,ruleset);
+    player.resourcePolicy={mode:resourceMode};rival.resourcePolicy={mode:'dsl'};
+    const bots=[player,rival];validateSelection(bots,mode,ruleset);
+    const result=await runMatch(bots,{mode,ruleset,seed:Number(seed),maxTicks:360,turnMs:2000,startupMs:60000,resourcePolicy:{v:3,class:'reflex',policy:'fair-compute-v1'}});
+    saveReplay(result.replay,replay);
+    console.log(`Result: ${result.result?.winners?.join(', ')||'draw'} (${result.result?.reason||'unknown'})`);
+    console.log(`Replay: ${replay}`);
+  }
   const failures=JSON.parse(fs.readFileSync(replay,'utf8')).failures||[];
   if(failures.length)throw new Error(`Match recorded ${failures.map(value=>`${value.botId}: ${value.code}`).join(', ')}. Inspect ${replay}.`);
 }
@@ -198,4 +222,4 @@ async function main(action='build',args=[]){
 return {main};
 }
 
-module.exports={createRuntime};
+module.exports={createRuntime,selectLocalResourceMode};

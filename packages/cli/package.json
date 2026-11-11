@@ -1,6 +1,6 @@
 {
   "name": "@clunkyard/cli",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Shared local builds, matches and replays for Clunkyard robots",
   "license": "MIT",
   "engines": {

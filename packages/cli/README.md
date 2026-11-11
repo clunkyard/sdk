@@ -25,6 +25,10 @@ all-language builder. SDK/engine caches under ignored `.clunkyard/` are keyed
 by their content hashes and remain reusable across CLI updates. Other
 commands are `list`, `setup`, `clean` and `migrate`.
 
+Local matches use a resource mode supported by `bot.json`. Open-capable robots
+use Open; Wasm- or DSL-only robots keep their fuel or operation meter and play
+the bundled Vane rival with its DSL meter.
+
 JavaScript/TypeScript projects use the ordinary npm alias
 `clunkyard@npm:@clunkyard/sdk@2.0.0`. `package-lock.json` pins the reviewed
 integrity. The first build runs `npm ci --ignore-scripts`; the package has no
@@ -34,8 +38,8 @@ assets currently require Linux x86-64/glibc 2.39+ (Ubuntu 24.04+ or WSL2).
 JavaScript, TypeScript and the Vane/Cadence/Glyph Node routes use WebAssembly.
 
 `@2` receives compatible tooling updates. For an exact tool version, run
-`npx --yes @clunkyard/cli@2.0.0` or set
-`CLUNKYARD='npx --yes @clunkyard/cli@2.0.0'` with Make. Commit the npm lockfile
+`npx --yes @clunkyard/cli@2.0.1` or set
+`CLUNKYARD='npx --yes @clunkyard/cli@2.0.1'` with Make. Commit the npm lockfile
 for reproducible JavaScript/TypeScript dependencies. Match replays record the
 game rules and robot actions; local timings do not qualify hosted budgets.
 
