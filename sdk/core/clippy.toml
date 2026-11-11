@@ -1,0 +1,32 @@
+# The core's maths must give the same bits on every target: transcendental
+# functions come from the libm crate, and min, max and clamp are
+# JavaScript's (src/maths.rs).
+disallowed-methods = [
+  { path = "f64::sin", reason = "use maths::sin (libm)" },
+  { path = "f64::cos", reason = "use maths::cos (libm)" },
+  { path = "f64::tan", reason = "use libm" },
+  { path = "f64::asin", reason = "use libm" },
+  { path = "f64::acos", reason = "use libm" },
+  { path = "f64::atan", reason = "use libm" },
+  { path = "f64::atan2", reason = "use maths::atan2 (libm)" },
+  { path = "f64::sin_cos", reason = "use libm" },
+  { path = "f64::exp", reason = "use libm" },
+  { path = "f64::exp2", reason = "use libm" },
+  { path = "f64::exp_m1", reason = "use libm" },
+  { path = "f64::ln", reason = "use libm" },
+  { path = "f64::ln_1p", reason = "use libm" },
+  { path = "f64::log", reason = "use libm" },
+  { path = "f64::log2", reason = "use libm" },
+  { path = "f64::log10", reason = "use libm" },
+  { path = "f64::powf", reason = "use libm" },
+  { path = "f64::powi", reason = "its result differs by target" },
+  { path = "f64::cbrt", reason = "use libm" },
+  { path = "f64::hypot", reason = "use libm" },
+  { path = "f64::sinh", reason = "use libm" },
+  { path = "f64::cosh", reason = "use libm" },
+  { path = "f64::tanh", reason = "use libm" },
+  { path = "f64::mul_add", reason = "fused on some targets only" },
+  { path = "f64::max", reason = "use maths::max, which is Math.max" },
+  { path = "f64::min", reason = "use maths::min, which is Math.min" },
+  { path = "f64::clamp", reason = "use maths::between, which is Math.min(high, Math.max(low, value))" },
+]

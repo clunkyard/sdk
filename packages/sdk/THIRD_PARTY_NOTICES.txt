@@ -1,0 +1,31 @@
+Third-party notices for the Clunkyard JavaScript/TypeScript SDK
+
+The bundled WebAssembly core is built from the public sdk/core source.
+
+libm 0.2.16
+  licenses/libm/LICENSE.txt
+
+serde_core 1.0.229
+  licenses/serde_core/LICENSE-APACHE
+  licenses/serde_core/LICENSE-MIT
+
+serde_json 1.0.154
+  licenses/serde_json/LICENSE-APACHE
+  licenses/serde_json/LICENSE-MIT
+
+itoa 1.0.19
+  licenses/itoa/LICENSE-APACHE
+  licenses/itoa/LICENSE-MIT
+
+memchr 2.8.3
+  licenses/memchr/COPYING
+  licenses/memchr/LICENSE-MIT
+  licenses/memchr/UNLICENSE
+
+zmij 1.0.23
+  licenses/zmij/LICENSE-MIT
+
+Rust standard library 1.96.0
+  licenses/rust-stdlib-1.96.0.html contains the toolchain library copyright
+  and licence inventory, including platform alternatives that need not be
+  linked into this WebAssembly target. MIT and Apache texts accompany it.

@@ -1,0 +1,52 @@
+{
+  "name": "@clunkyard/sdk",
+  "version": "2.0.0",
+  "description": "The Clunkyard robot API for Node.js and TypeScript, with the portable WebAssembly core",
+  "license": "MIT",
+  "type": "commonjs",
+  "main": "./index.js",
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "require": "./index.js",
+      "default": "./index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.js",
+    "api.js",
+    "index.d.ts",
+    "core.js",
+    "words.js",
+    "clunkyard-core.wasm",
+    "README.md",
+    "LICENSE",
+    "THIRD_PARTY_NOTICES.txt",
+    "licenses/"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/clunkyard/sdk.git",
+    "directory": "packages/sdk"
+  },
+  "homepage": "https://clunkyard.com/sdk/javascript",
+  "bugs": {
+    "url": "https://github.com/clunkyard/sdk/issues"
+  },
+  "keywords": [
+    "clunkyard",
+    "robot",
+    "robotics",
+    "typescript",
+    "webassembly"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  }
+}

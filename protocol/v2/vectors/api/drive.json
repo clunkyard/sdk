@@ -1,0 +1,183 @@
+{
+  "description": "The drive facts; its controls are in controls.json.",
+  "encoding": "A case gives the call, its args (none for a property) and one outcome: value (CY_OK and the result), ok: true (CY_OK from a call with no result), none: true (CY_NONE, absent) or error (the status name, such as E_RANGE). A stream's configure gives the args of tracker.configure, called after the hello and before its cases. Records use the canonical snake_case field names. A number argument written {\"f64\": \"NaN\"} is that non-finite double (NaN, Infinity, -Infinity or -0). slots lists the id of each robot slot after the state: slot n is slots[n - 1], and you are slot 1.",
+  "tolerance": 1e-12,
+  "rule": "|actual - expected| <= tolerance * max(1, |expected|), field by field; a case's tolerance is the file's unless tolerances names its call",
+  "streams": [
+    {"input": "fixtures/2d-classic.ndjson",
+     "hello": [
+      {"call":"drive.hover_lift","value":0}
+     ],
+     "states": [
+
+     ]},
+    {"input": "fixtures/2d-inertial-2d.ndjson",
+     "hello": [
+      {"call":"drive.hover_lift","value":0}
+     ],
+     "states": [
+
+     ]},
+    {"input": "fixtures/3d-classic.ndjson",
+     "hello": [
+      {"call":"drive.hover_lift","value":0}
+     ],
+     "states": [
+
+     ]},
+    {"input": "fixtures/3d-gravity-flat.ndjson",
+     "hello": [
+      {"call":"drive.hover_lift","value":0.85}
+     ],
+     "states": [
+
+     ]},
+    {"input": "fixtures/3d-gravity-hills.ndjson",
+     "hello": [
+      {"call":"drive.hover_lift","value":0.85}
+     ],
+     "states": [
+
+     ]},
+    {"input": "fixtures/3d-zero-g.ndjson",
+     "hello": [
+      {"call":"drive.hover_lift","value":0}
+     ],
+     "states": [
+
+     ]},
+    {"input": "fixtures/mechanics/2d-classic.ndjson",
+     "hello": [
+      {"call":"drive.hover_lift","value":0}
+     ],
+     "states": [
+
+     ]},
+    {"input": "fixtures/mechanics/3d-zero-g.ndjson",
+     "hello": [
+      {"call":"drive.hover_lift","value":0}
+     ],
+     "states": [
+
+     ]},
+    {"input": "fixtures/off/2d-classic.ndjson",
+     "hello": [
+      {"call":"drive.hover_lift","value":0}
+     ],
+     "states": [
+
+     ]},
+    {"input": "fixtures/off/2d-inertial-2d.ndjson",
+     "hello": [
+      {"call":"drive.hover_lift","value":0}
+     ],
+     "states": [
+
+     ]},
+    {"input": "fixtures/off/3d-classic.ndjson",
+     "hello": [
+      {"call":"drive.hover_lift","value":0}
+     ],
+     "states": [
+
+     ]},
+    {"input": "fixtures/off/3d-gravity-flat.ndjson",
+     "hello": [
+      {"call":"drive.hover_lift","value":0.85}
+     ],
+     "states": [
+
+     ]},
+    {"input": "fixtures/off/3d-gravity-hills.ndjson",
+     "hello": [
+      {"call":"drive.hover_lift","value":0.85}
+     ],
+     "states": [
+
+     ]},
+    {"input": "fixtures/off/3d-zero-g.ndjson",
+     "hello": [
+      {"call":"drive.hover_lift","value":0}
+     ],
+     "states": [
+
+     ]},
+    {"input": "fixtures/compute/2d-classic.ndjson",
+     "hello": [
+      {"call":"drive.hover_lift","value":0}
+     ],
+     "states": [
+
+     ]},
+    {"input": "fixtures/compute/3d-zero-g.ndjson",
+     "hello": [
+      {"call":"drive.hover_lift","value":0}
+     ],
+     "states": [
+
+     ]},
+    {"input": "vectors/api/inputs/tape-2d-classic.ndjson",
+     "hello": [
+      {"call":"drive.hover_lift","value":0}
+     ],
+     "states": [
+
+     ]},
+    {"input": "vectors/api/inputs/tape-2d-inertial-2d.ndjson",
+     "hello": [
+      {"call":"drive.hover_lift","value":0}
+     ],
+     "states": [
+
+     ]},
+    {"input": "vectors/api/inputs/tape-3d-classic.ndjson",
+     "hello": [
+      {"call":"drive.hover_lift","value":0}
+     ],
+     "states": [
+
+     ]},
+    {"input": "vectors/api/inputs/tape-3d-gravity-flat.ndjson",
+     "hello": [
+      {"call":"drive.hover_lift","value":0.85}
+     ],
+     "states": [
+
+     ]},
+    {"input": "vectors/api/inputs/tape-3d-gravity-hills.ndjson",
+     "hello": [
+      {"call":"drive.hover_lift","value":0.85}
+     ],
+     "states": [
+
+     ]},
+    {"input": "vectors/api/inputs/tape-3d-zero-g.ndjson",
+     "hello": [
+      {"call":"drive.hover_lift","value":0}
+     ],
+     "states": [
+
+     ]},
+    {"input": "vectors/api/inputs/mechanics-2d-classic.ndjson",
+     "hello": [
+      {"call":"drive.hover_lift","value":0}
+     ],
+     "states": [
+
+     ]},
+    {"input": "vectors/api/inputs/mechanics-3d-zero-g.ndjson",
+     "hello": [
+      {"call":"drive.hover_lift","value":0}
+     ],
+     "states": [
+
+     ]},
+    {"input": "vectors/api/inputs/cue-window.ndjson",
+     "hello": [
+      {"call":"drive.hover_lift","value":0}
+     ],
+     "states": [
+
+     ]}
+  ]
+}

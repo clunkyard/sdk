@@ -1,0 +1,16 @@
+{
+  "description": "The replies the core writes: the ready reply with its sdk, the empty act and the forfeit (code cut to 64 code points, message to 300, and left out when empty; a forfeit needs a code).",
+  "encoding": "A case gives the call, its args (none for a property) and one outcome: value (CY_OK and the result), ok: true (CY_OK from a call with no result), none: true (CY_NONE, absent) or error (the status name, such as E_RANGE). A stream's configure gives the args of tracker.configure, called after the hello and before its cases. Records use the canonical snake_case field names. A number argument written {\"f64\": \"NaN\"} is that non-finite double (NaN, Infinity, -Infinity or -0). slots lists the id of each robot slot after the state: slot n is slots[n - 1], and you are slot 1.",
+  "tolerance": 0,
+  "rule": "|actual - expected| <= tolerance * max(1, |expected|), field by field; a case's tolerance is the file's unless tolerances names its call",
+  "cases": [
+    {"call":"session.ready","args":["clunkyard-python","2.0.0"],"value":{"v":2,"type":"ready","sdk":{"name":"clunkyard-python","version":"2.0.0"}}},
+    {"call":"session.act","args":[0],"value":{"v":2,"type":"act","tick":0}},
+    {"call":"session.act","args":[12],"value":{"v":2,"type":"act","tick":12}},
+    {"call":"session.act","args":[1799],"value":{"v":2,"type":"act","tick":1799}},
+    {"call":"session.forfeit","args":[45,"LOST_TRACK","no contact for 200 ticks"],"value":{"v":2,"type":"forfeit","tick":45,"code":"LOST_TRACK","message":"no contact for 200 ticks"}},
+    {"call":"session.forfeit","args":[3,"GIVE_UP",""],"value":{"v":2,"type":"forfeit","tick":3,"code":"GIVE_UP"}},
+    {"call":"session.forfeit","args":[7,"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA","éééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééé"],"value":{"v":2,"type":"forfeit","tick":7,"code":"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA","message":"éééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééééé"}},
+    {"call":"session.forfeit","args":[9,"","no code"],"error":"E_ARGUMENT"}
+  ]
+}

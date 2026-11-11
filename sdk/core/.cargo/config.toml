@@ -1,0 +1,14 @@
+# Builds offline from the vendored crates (`cargo vendor vendor`), resolved
+# for the minimum Rust, 1.82.
+[resolver]
+incompatible-rust-versions = "fallback"
+
+[source.crates-io]
+replace-with = "vendored-sources"
+
+[source.vendored-sources]
+directory = "vendor"
+
+# cargo test --target wasm32-wasip1 runs the tests under wasmtime.
+[target.wasm32-wasip1]
+runner = "tests/wasi-runner.sh"

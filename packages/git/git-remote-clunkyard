@@ -1,0 +1,121 @@
+#!/usr/bin/env node
+'use strict';
+
+const fs = require('node:fs');
+const path = require('node:path');
+const readline = require('node:readline');
+const crypto = require('node:crypto');
+const { execFileSync } = require('node:child_process');
+const { origin, request } = require('./client.cjs');
+
+const OID = /^[0-9a-f]{40}$/;
+function git(args, options = {}) { return execFileSync('git', ['-c', 'core.hooksPath=', ...args], { stdio:['pipe', 'pipe', 'pipe'], maxBuffer:40 * 1024 * 1024, ...options }); }
+function objectId(type, data) { return crypto.createHash('sha1').update(`${type} ${data.length}\0`).update(data).digest('hex'); }
+function objectRefs(value) {
+  if (value.type === 'blob') return [];
+  if (value.type === 'commit') { const end = value.data.indexOf('\n\n'); return value.data.subarray(0, end).toString('utf8').split('\n').filter(line => /^(tree|parent) /.test(line)).map(line => line.split(' ')[1]); }
+  const ids = []; let offset = 0;
+  while (offset < value.data.length) { const nul = value.data.indexOf(0, offset); if (nul < 0 || nul + 21 > value.data.length) throw Error('Invalid Git tree received.'); ids.push(value.data.subarray(nul + 1, nul + 21).toString('hex')); offset = nul + 21; }
+  return ids;
+}
+const raw = process.argv[3];
+let url;
+try { url = new URL(String(raw).replace(/^clunkyard::/, '')); } catch { throw Error('Use clunkyard::https://clunkyard.com/bots/BOT_ID'); }
+if (url.username || url.password || url.search || url.hash || !/^\/bots\/[0-9a-f-]{36}$/.test(url.pathname)) throw Error('Invalid private bot remote.');
+const site = origin(url.origin), botId = url.pathname.split('/').at(-1), route = `/api/bots/${botId}/git`;
+const ask = (suffix = '', options) => request(site, route + suffix, options);
+let advertised;
+const say = text => process.stdout.write(text + '\n');
+const cleanError = error => String(error.message || 'Private Git operation failed.').replace(/[\r\n]/g, ' ').slice(0, 240);
+
+async function fetchObjects(ids) {
+  const visited = new Set(), queue = [...ids];
+  while (queue.length) {
+    const batch = [...new Set(queue.splice(0, 128))].filter(id => !visited.has(id));
+    if (!batch.length) continue;
+    for (const id of batch) if (!OID.test(id)) throw Error('Invalid Git object requested.');
+    const answer = await ask('/objects', { method:'POST', body:{ oids:batch } });
+    for (const wire of answer.objects || []) {
+      if (!batch.includes(wire.oid) || !['blob', 'tree', 'commit'].includes(wire.type) || typeof wire.data !== 'string') throw Error('Invalid Git object received.');
+      const data = Buffer.from(wire.data, 'base64');
+      if (data.toString('base64') !== wire.data || objectId(wire.type, data) !== wire.oid) throw Error('Git object failed verification.');
+      const actual = git(['hash-object', '-w', '-t', wire.type, '--stdin'], { input:data }).toString().trim();
+      if (actual !== wire.oid) throw Error('Git rejected an object.');
+      visited.add(wire.oid); queue.push(...objectRefs({ ...wire, data }));
+    }
+    if (!Array.isArray(answer.objects) || !answer.objects.length) throw Error('Missing Git objects in response.');
+    queue.push(...(answer.remaining || []));
+  }
+}
+function localObjects(head, base, maxCommits) {
+  const commits = git(['rev-list', `--max-count=${maxCommits + 1}`, head, `^${base}`]).toString().trim().split('\n').filter(Boolean);
+  if (commits.length > maxCommits) throw Error(`Push at most ${maxCommits} commits at a time.`);
+  const ids = git(['rev-list', '--objects', head, `^${base}`]).toString().split('\n').filter(Boolean).map(line => line.slice(0, 40));
+  if (ids.some(id => !OID.test(id))) throw Error('Cannot list the local Git objects.');
+  const data = git(['cat-file', '--batch'], { input:ids.join('\n') + '\n' }), objects = []; let offset = 0;
+  for (const expected of ids) {
+    const newline = data.indexOf(10, offset), line = data.subarray(offset, newline).toString('ascii'), parsed = line.match(/^([0-9a-f]{40}) (blob|tree|commit) ([0-9]+)$/);
+    if (!parsed || parsed[1] !== expected) throw Error('Cannot read a local Git object.');
+    const size = Number(parsed[3]), bytes = data.subarray(newline + 1, newline + 1 + size);
+    if (bytes.length !== size || data[newline + 1 + size] !== 10) throw Error('Invalid local Git object size.');
+    objects.push({ oid:expected, type:parsed[2], data:bytes.toString('base64') }); offset = newline + size + 2;
+  }
+  return objects;
+}
+function pushReceipt(head, base) {
+  const directory = git(['rev-parse', '--absolute-git-dir']).toString().trim(), file = path.join(directory, 'clunkyard-push.json');
+  let receipt; try { const stat = fs.lstatSync(file); if (!stat.isFile() || stat.isSymbolicLink() || stat.size > 4096) throw Error('Invalid private Git push receipt.'); receipt = JSON.parse(fs.readFileSync(file, 'utf8')); } catch (error) { if (error.code !== 'ENOENT') throw error; }
+  if (!receipt || receipt.site !== site || receipt.botId !== botId || receipt.head !== head || receipt.base !== base) {
+    receipt = { site, botId, head, base, operationId:crypto.randomUUID() };
+    fs.writeFileSync(file, JSON.stringify(receipt) + '\n', { mode:0o600, flag:'w' });
+  }
+  return { receipt, clear:() => fs.rmSync(file, { force:true }) };
+}
+async function waitForPush(value) {
+  for (let attempt = 0; value.state === 'pending' && attempt < 10; attempt++) {
+    await new Promise(resolve => setTimeout(resolve, 500));
+    value = await ask(`/push/${value.operationId}`, { method:'POST' });
+  }
+  return value;
+}
+async function push(spec) {
+  let target = spec.split(':').at(-1);
+  try {
+    const match = spec.match(/^([^:]+):(refs\/heads\/main)$/);
+    if (!match || spec.startsWith('+')) throw Error('Only fast-forward pushes to main are supported; branches, tags and deletion are unavailable.');
+    target = match[2]; let state = await ask();
+    if (state.pending) { const settled = await waitForPush(await ask(`/push/${state.pending.operationId}`, { method:'POST' })); if (settled.state === 'pending') throw Error(`An earlier push is still resolving (${state.pending.operationId}). Retry later.`); state = await ask(); }
+    const head = git(['rev-parse', '--verify', `${match[1]}^{commit}`]).toString().trim();
+    try { git(['merge-base', '--is-ancestor', state.head, head]); } catch { throw Error('The remote branch changed. Fetch and merge before pushing.'); }
+    if (head === state.head) { say(`ok ${target}`); return; }
+    const objects = localObjects(head, state.head, state.limits.maxCommits), journal = pushReceipt(head, state.head);
+    let result;
+    try { result = await waitForPush(await ask('/push', { method:'POST', body:{ base:state.head, head, objects }, operationId:journal.receipt.operationId })); }
+    catch (error) {
+      // A lost response is not proof of failure. Ask the durable operation,
+      // retaining the same ID until the server confirms its outcome.
+      try { result = await waitForPush(await ask(`/push/${journal.receipt.operationId}`, { method:'POST' })); } catch { throw error; }
+    }
+    if (result.state === 'not-saved') { journal.clear(); throw Error('The interrupted push was cancelled before sending. Retry git push.'); }
+    if (result.state !== 'committed' || result.head !== head) throw Error(`Push still resolving (${journal.receipt.operationId}). Retry git push to reconcile it.`);
+    journal.clear(); say(`ok ${target}`);
+  } catch (error) { say(`error ${target || 'refs/heads/main'} ${cleanError(error)}`); }
+}
+
+(async () => {
+  const input = readline.createInterface({ input:process.stdin, crlfDelay:Infinity }), lines = input[Symbol.asyncIterator]();
+  for await (const line of lines) {
+    if (line === 'capabilities') { say('fetch'); say('push'); say('option'); say(''); }
+    else if (line.startsWith('option ')) say('unsupported');
+    else if (line === 'list' || line === 'list for-push') { advertised = await ask(); say('@refs/heads/main HEAD'); say(`${advertised.head} refs/heads/main`); say(''); }
+    else if (line.startsWith('fetch ')) {
+      const batch = [line]; for (;;) { const next = await lines.next(); if (next.done || !next.value) break; batch.push(next.value); }
+      await fetchObjects(batch.map(value => value.split(' ')[1])); say('');
+    } else if (line.startsWith('push ')) {
+      const batch = [line]; for (;;) { const next = await lines.next(); if (next.done || !next.value) break; batch.push(next.value); }
+      if (batch.length !== 1) { for (const item of batch) say(`error ${item.split(':').at(-1)} Push one main branch at a time.`); }
+      else await push(batch[0].slice(5)); say('');
+    } else if (!line) break;
+    else throw Error('Unsupported private Git helper command.');
+  }
+})().catch(error => { process.stderr.write(`Clunkyard: ${cleanError(error)}\n`); process.exitCode = 1; process.stdin.destroy(); });

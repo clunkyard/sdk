@@ -1,0 +1,492 @@
+{
+  "description": "The tick, in ticks and seconds, and the ticks left.",
+  "encoding": "A case gives the call, its args (none for a property) and one outcome: value (CY_OK and the result), ok: true (CY_OK from a call with no result), none: true (CY_NONE, absent) or error (the status name, such as E_RANGE). A stream's configure gives the args of tracker.configure, called after the hello and before its cases. Records use the canonical snake_case field names. A number argument written {\"f64\": \"NaN\"} is that non-finite double (NaN, Infinity, -Infinity or -0). slots lists the id of each robot slot after the state: slot n is slots[n - 1], and you are slot 1.",
+  "tolerance": 1e-12,
+  "rule": "|actual - expected| <= tolerance * max(1, |expected|), field by field; a case's tolerance is the file's unless tolerances names its call",
+  "streams": [
+    {"input": "fixtures/2d-classic.ndjson",
+     "hello": [
+      {"call":"clock.tick","error":"E_PHASE"}
+     ],
+     "states": [
+      {"tick":0,"slots":["scout"],"cases":[{"call":"clock.tick","value":0},{"call":"clock.seconds","value":0},{"call":"clock.remaining_ticks","value":120}]},
+      {"tick":12,"slots":["scout","target"],"cases":[{"call":"clock.tick","value":12},{"call":"clock.seconds","value":0.6},{"call":"clock.remaining_ticks","value":108}]},
+      {"tick":45,"slots":["scout","target"],"cases":[{"call":"clock.tick","value":45},{"call":"clock.seconds","value":2.25},{"call":"clock.remaining_ticks","value":75}]}
+     ]},
+    {"input": "fixtures/2d-inertial-2d.ndjson",
+     "hello": [
+      {"call":"clock.tick","error":"E_PHASE"}
+     ],
+     "states": [
+      {"tick":0,"slots":["scout"],"cases":[{"call":"clock.tick","value":0},{"call":"clock.seconds","value":0},{"call":"clock.remaining_ticks","value":120}]},
+      {"tick":12,"slots":["scout","target"],"cases":[{"call":"clock.tick","value":12},{"call":"clock.seconds","value":0.6},{"call":"clock.remaining_ticks","value":108}]},
+      {"tick":45,"slots":["scout","target"],"cases":[{"call":"clock.tick","value":45},{"call":"clock.seconds","value":2.25},{"call":"clock.remaining_ticks","value":75}]}
+     ]},
+    {"input": "fixtures/3d-classic.ndjson",
+     "hello": [
+      {"call":"clock.tick","error":"E_PHASE"}
+     ],
+     "states": [
+      {"tick":0,"slots":["scout"],"cases":[{"call":"clock.tick","value":0},{"call":"clock.seconds","value":0},{"call":"clock.remaining_ticks","value":120}]},
+      {"tick":12,"slots":["scout","target"],"cases":[{"call":"clock.tick","value":12},{"call":"clock.seconds","value":0.6},{"call":"clock.remaining_ticks","value":108}]},
+      {"tick":45,"slots":["scout","target"],"cases":[{"call":"clock.tick","value":45},{"call":"clock.seconds","value":2.25},{"call":"clock.remaining_ticks","value":75}]}
+     ]},
+    {"input": "fixtures/3d-gravity-flat.ndjson",
+     "hello": [
+      {"call":"clock.tick","error":"E_PHASE"}
+     ],
+     "states": [
+      {"tick":0,"slots":["scout"],"cases":[{"call":"clock.tick","value":0},{"call":"clock.seconds","value":0},{"call":"clock.remaining_ticks","value":120}]},
+      {"tick":12,"slots":["scout","target"],"cases":[{"call":"clock.tick","value":12},{"call":"clock.seconds","value":0.6},{"call":"clock.remaining_ticks","value":108}]},
+      {"tick":45,"slots":["scout","target"],"cases":[{"call":"clock.tick","value":45},{"call":"clock.seconds","value":2.25},{"call":"clock.remaining_ticks","value":75}]}
+     ]},
+    {"input": "fixtures/3d-gravity-hills.ndjson",
+     "hello": [
+      {"call":"clock.tick","error":"E_PHASE"}
+     ],
+     "states": [
+      {"tick":0,"slots":["scout"],"cases":[{"call":"clock.tick","value":0},{"call":"clock.seconds","value":0},{"call":"clock.remaining_ticks","value":120}]},
+      {"tick":12,"slots":["scout","target"],"cases":[{"call":"clock.tick","value":12},{"call":"clock.seconds","value":0.6},{"call":"clock.remaining_ticks","value":108}]},
+      {"tick":45,"slots":["scout","target"],"cases":[{"call":"clock.tick","value":45},{"call":"clock.seconds","value":2.25},{"call":"clock.remaining_ticks","value":75}]}
+     ]},
+    {"input": "fixtures/3d-zero-g.ndjson",
+     "hello": [
+      {"call":"clock.tick","error":"E_PHASE"}
+     ],
+     "states": [
+      {"tick":0,"slots":["scout"],"cases":[{"call":"clock.tick","value":0},{"call":"clock.seconds","value":0},{"call":"clock.remaining_ticks","value":120}]},
+      {"tick":12,"slots":["scout","target"],"cases":[{"call":"clock.tick","value":12},{"call":"clock.seconds","value":0.6},{"call":"clock.remaining_ticks","value":108}]},
+      {"tick":45,"slots":["scout","target"],"cases":[{"call":"clock.tick","value":45},{"call":"clock.seconds","value":2.25},{"call":"clock.remaining_ticks","value":75}]}
+     ]},
+    {"input": "fixtures/mechanics/2d-classic.ndjson",
+     "hello": [
+      {"call":"clock.tick","error":"E_PHASE"}
+     ],
+     "states": [
+      {"tick":0,"slots":["scout"],"cases":[{"call":"clock.tick","value":0},{"call":"clock.seconds","value":0},{"call":"clock.remaining_ticks","value":120}]},
+      {"tick":12,"slots":["scout","target"],"cases":[{"call":"clock.tick","value":12},{"call":"clock.seconds","value":0.6},{"call":"clock.remaining_ticks","value":108}]},
+      {"tick":45,"slots":["scout","target"],"cases":[{"call":"clock.tick","value":45},{"call":"clock.seconds","value":2.25},{"call":"clock.remaining_ticks","value":75}]}
+     ]},
+    {"input": "fixtures/mechanics/3d-zero-g.ndjson",
+     "hello": [
+      {"call":"clock.tick","error":"E_PHASE"}
+     ],
+     "states": [
+      {"tick":0,"slots":["scout"],"cases":[{"call":"clock.tick","value":0},{"call":"clock.seconds","value":0},{"call":"clock.remaining_ticks","value":120}]},
+      {"tick":12,"slots":["scout","target"],"cases":[{"call":"clock.tick","value":12},{"call":"clock.seconds","value":0.6},{"call":"clock.remaining_ticks","value":108}]},
+      {"tick":45,"slots":["scout","target"],"cases":[{"call":"clock.tick","value":45},{"call":"clock.seconds","value":2.25},{"call":"clock.remaining_ticks","value":75}]}
+     ]},
+    {"input": "fixtures/off/2d-classic.ndjson",
+     "hello": [
+      {"call":"clock.tick","error":"E_PHASE"}
+     ],
+     "states": [
+      {"tick":0,"slots":["scout"],"cases":[{"call":"clock.tick","value":0},{"call":"clock.seconds","value":0},{"call":"clock.remaining_ticks","value":120}]},
+      {"tick":12,"slots":["scout","target"],"cases":[{"call":"clock.tick","value":12},{"call":"clock.seconds","value":0.6},{"call":"clock.remaining_ticks","value":108}]},
+      {"tick":45,"slots":["scout","target"],"cases":[{"call":"clock.tick","value":45},{"call":"clock.seconds","value":2.25},{"call":"clock.remaining_ticks","value":75}]}
+     ]},
+    {"input": "fixtures/off/2d-inertial-2d.ndjson",
+     "hello": [
+      {"call":"clock.tick","error":"E_PHASE"}
+     ],
+     "states": [
+      {"tick":0,"slots":["scout"],"cases":[{"call":"clock.tick","value":0},{"call":"clock.seconds","value":0},{"call":"clock.remaining_ticks","value":120}]},
+      {"tick":12,"slots":["scout","target"],"cases":[{"call":"clock.tick","value":12},{"call":"clock.seconds","value":0.6},{"call":"clock.remaining_ticks","value":108}]},
+      {"tick":45,"slots":["scout","target"],"cases":[{"call":"clock.tick","value":45},{"call":"clock.seconds","value":2.25},{"call":"clock.remaining_ticks","value":75}]}
+     ]},
+    {"input": "fixtures/off/3d-classic.ndjson",
+     "hello": [
+      {"call":"clock.tick","error":"E_PHASE"}
+     ],
+     "states": [
+      {"tick":0,"slots":["scout"],"cases":[{"call":"clock.tick","value":0},{"call":"clock.seconds","value":0},{"call":"clock.remaining_ticks","value":120}]},
+      {"tick":12,"slots":["scout","target"],"cases":[{"call":"clock.tick","value":12},{"call":"clock.seconds","value":0.6},{"call":"clock.remaining_ticks","value":108}]},
+      {"tick":45,"slots":["scout","target"],"cases":[{"call":"clock.tick","value":45},{"call":"clock.seconds","value":2.25},{"call":"clock.remaining_ticks","value":75}]}
+     ]},
+    {"input": "fixtures/off/3d-gravity-flat.ndjson",
+     "hello": [
+      {"call":"clock.tick","error":"E_PHASE"}
+     ],
+     "states": [
+      {"tick":0,"slots":["scout"],"cases":[{"call":"clock.tick","value":0},{"call":"clock.seconds","value":0},{"call":"clock.remaining_ticks","value":120}]},
+      {"tick":12,"slots":["scout","target"],"cases":[{"call":"clock.tick","value":12},{"call":"clock.seconds","value":0.6},{"call":"clock.remaining_ticks","value":108}]},
+      {"tick":45,"slots":["scout","target"],"cases":[{"call":"clock.tick","value":45},{"call":"clock.seconds","value":2.25},{"call":"clock.remaining_ticks","value":75}]}
+     ]},
+    {"input": "fixtures/off/3d-gravity-hills.ndjson",
+     "hello": [
+      {"call":"clock.tick","error":"E_PHASE"}
+     ],
+     "states": [
+      {"tick":0,"slots":["scout"],"cases":[{"call":"clock.tick","value":0},{"call":"clock.seconds","value":0},{"call":"clock.remaining_ticks","value":120}]},
+      {"tick":12,"slots":["scout","target"],"cases":[{"call":"clock.tick","value":12},{"call":"clock.seconds","value":0.6},{"call":"clock.remaining_ticks","value":108}]},
+      {"tick":45,"slots":["scout","target"],"cases":[{"call":"clock.tick","value":45},{"call":"clock.seconds","value":2.25},{"call":"clock.remaining_ticks","value":75}]}
+     ]},
+    {"input": "fixtures/off/3d-zero-g.ndjson",
+     "hello": [
+      {"call":"clock.tick","error":"E_PHASE"}
+     ],
+     "states": [
+      {"tick":0,"slots":["scout"],"cases":[{"call":"clock.tick","value":0},{"call":"clock.seconds","value":0},{"call":"clock.remaining_ticks","value":120}]},
+      {"tick":12,"slots":["scout","target"],"cases":[{"call":"clock.tick","value":12},{"call":"clock.seconds","value":0.6},{"call":"clock.remaining_ticks","value":108}]},
+      {"tick":45,"slots":["scout","target"],"cases":[{"call":"clock.tick","value":45},{"call":"clock.seconds","value":2.25},{"call":"clock.remaining_ticks","value":75}]}
+     ]},
+    {"input": "fixtures/compute/2d-classic.ndjson",
+     "hello": [
+      {"call":"clock.tick","error":"E_PHASE"}
+     ],
+     "states": [
+      {"tick":0,"slots":["scout"],"cases":[{"call":"clock.tick","value":0},{"call":"clock.seconds","value":0},{"call":"clock.remaining_ticks","value":120}]},
+      {"tick":12,"slots":["scout","target"],"cases":[{"call":"clock.tick","value":12},{"call":"clock.seconds","value":0.6},{"call":"clock.remaining_ticks","value":108}]},
+      {"tick":45,"slots":["scout","target"],"cases":[{"call":"clock.tick","value":45},{"call":"clock.seconds","value":2.25},{"call":"clock.remaining_ticks","value":75}]}
+     ]},
+    {"input": "fixtures/compute/3d-zero-g.ndjson",
+     "hello": [
+      {"call":"clock.tick","error":"E_PHASE"}
+     ],
+     "states": [
+      {"tick":0,"slots":["scout"],"cases":[{"call":"clock.tick","value":0},{"call":"clock.seconds","value":0},{"call":"clock.remaining_ticks","value":120}]},
+      {"tick":12,"slots":["scout","target"],"cases":[{"call":"clock.tick","value":12},{"call":"clock.seconds","value":0.6},{"call":"clock.remaining_ticks","value":108}]},
+      {"tick":45,"slots":["scout","target"],"cases":[{"call":"clock.tick","value":45},{"call":"clock.seconds","value":2.25},{"call":"clock.remaining_ticks","value":75}]}
+     ]},
+    {"input": "vectors/api/inputs/tape-2d-classic.ndjson",
+     "hello": [
+      {"call":"clock.tick","error":"E_PHASE"}
+     ],
+     "states": [
+      {"tick":0,"slots":["tape-scout"],"cases":[{"call":"clock.tick","value":0},{"call":"clock.seconds","value":0},{"call":"clock.remaining_ticks","value":1800}]},
+      {"tick":1,"slots":["tape-scout","tape-target"],"cases":[{"call":"clock.tick","value":1},{"call":"clock.seconds","value":0.05},{"call":"clock.remaining_ticks","value":1799}]},
+      {"tick":2,"slots":["tape-scout","tape-target"],"cases":[{"call":"clock.tick","value":2},{"call":"clock.seconds","value":0.1},{"call":"clock.remaining_ticks","value":1798}]},
+      {"tick":3,"slots":["tape-scout","tape-target"],"cases":[{"call":"clock.tick","value":3},{"call":"clock.seconds","value":0.15},{"call":"clock.remaining_ticks","value":1797}]},
+      {"tick":4,"slots":["tape-scout","tape-target"],"cases":[{"call":"clock.tick","value":4},{"call":"clock.seconds","value":0.2},{"call":"clock.remaining_ticks","value":1796}]},
+      {"tick":5,"slots":["tape-scout","tape-target"],"cases":[{"call":"clock.tick","value":5},{"call":"clock.seconds","value":0.25},{"call":"clock.remaining_ticks","value":1795}]},
+      {"tick":6,"slots":["tape-scout","tape-target"],"cases":[{"call":"clock.tick","value":6},{"call":"clock.seconds","value":0.3},{"call":"clock.remaining_ticks","value":1794}]},
+      {"tick":7,"slots":["tape-scout","tape-target"],"cases":[{"call":"clock.tick","value":7},{"call":"clock.seconds","value":0.35},{"call":"clock.remaining_ticks","value":1793}]},
+      {"tick":1200,"slots":["tape-scout","tape-target"],"cases":[{"call":"clock.tick","value":1200},{"call":"clock.seconds","value":60},{"call":"clock.remaining_ticks","value":600}]},
+      {"tick":1201,"slots":["tape-scout","tape-target"],"cases":[{"call":"clock.tick","value":1201},{"call":"clock.seconds","value":60.05},{"call":"clock.remaining_ticks","value":599}]},
+      {"tick":1202,"slots":["tape-scout","tape-target"],"cases":[{"call":"clock.tick","value":1202},{"call":"clock.seconds","value":60.1},{"call":"clock.remaining_ticks","value":598}]},
+      {"tick":1203,"slots":["tape-scout","tape-target"],"cases":[{"call":"clock.tick","value":1203},{"call":"clock.seconds","value":60.15},{"call":"clock.remaining_ticks","value":597}]},
+      {"tick":1204,"slots":["tape-scout","tape-target"],"cases":[{"call":"clock.tick","value":1204},{"call":"clock.seconds","value":60.2},{"call":"clock.remaining_ticks","value":596}]},
+      {"tick":1205,"slots":["tape-scout","tape-target"],"cases":[{"call":"clock.tick","value":1205},{"call":"clock.seconds","value":60.25},{"call":"clock.remaining_ticks","value":595}]},
+      {"tick":1206,"slots":["tape-scout","tape-target"],"cases":[{"call":"clock.tick","value":1206},{"call":"clock.seconds","value":60.3},{"call":"clock.remaining_ticks","value":594}]},
+      {"tick":1207,"slots":["tape-scout","tape-target"],"cases":[{"call":"clock.tick","value":1207},{"call":"clock.seconds","value":60.35},{"call":"clock.remaining_ticks","value":593}]}
+     ]},
+    {"input": "vectors/api/inputs/tape-2d-inertial-2d.ndjson",
+     "hello": [
+      {"call":"clock.tick","error":"E_PHASE"}
+     ],
+     "states": [
+      {"tick":0,"slots":["tape-scout"],"cases":[{"call":"clock.tick","value":0},{"call":"clock.seconds","value":0},{"call":"clock.remaining_ticks","value":1800}]},
+      {"tick":1,"slots":["tape-scout","tape-target"],"cases":[{"call":"clock.tick","value":1},{"call":"clock.seconds","value":0.05},{"call":"clock.remaining_ticks","value":1799}]},
+      {"tick":2,"slots":["tape-scout","tape-target"],"cases":[{"call":"clock.tick","value":2},{"call":"clock.seconds","value":0.1},{"call":"clock.remaining_ticks","value":1798}]},
+      {"tick":3,"slots":["tape-scout","tape-target"],"cases":[{"call":"clock.tick","value":3},{"call":"clock.seconds","value":0.15},{"call":"clock.remaining_ticks","value":1797}]},
+      {"tick":4,"slots":["tape-scout","tape-target"],"cases":[{"call":"clock.tick","value":4},{"call":"clock.seconds","value":0.2},{"call":"clock.remaining_ticks","value":1796}]},
+      {"tick":5,"slots":["tape-scout","tape-target"],"cases":[{"call":"clock.tick","value":5},{"call":"clock.seconds","value":0.25},{"call":"clock.remaining_ticks","value":1795}]},
+      {"tick":6,"slots":["tape-scout","tape-target"],"cases":[{"call":"clock.tick","value":6},{"call":"clock.seconds","value":0.3},{"call":"clock.remaining_ticks","value":1794}]},
+      {"tick":7,"slots":["tape-scout","tape-target"],"cases":[{"call":"clock.tick","value":7},{"call":"clock.seconds","value":0.35},{"call":"clock.remaining_ticks","value":1793}]},
+      {"tick":1200,"slots":["tape-scout","tape-target"],"cases":[{"call":"clock.tick","value":1200},{"call":"clock.seconds","value":60},{"call":"clock.remaining_ticks","value":600}]},
+      {"tick":1201,"slots":["tape-scout","tape-target"],"cases":[{"call":"clock.tick","value":1201},{"call":"clock.seconds","value":60.05},{"call":"clock.remaining_ticks","value":599}]},
+      {"tick":1202,"slots":["tape-scout","tape-target"],"cases":[{"call":"clock.tick","value":1202},{"call":"clock.seconds","value":60.1},{"call":"clock.remaining_ticks","value":598}]},
+      {"tick":1203,"slots":["tape-scout","tape-target"],"cases":[{"call":"clock.tick","value":1203},{"call":"clock.seconds","value":60.15},{"call":"clock.remaining_ticks","value":597}]},
+      {"tick":1204,"slots":["tape-scout","tape-target"],"cases":[{"call":"clock.tick","value":1204},{"call":"clock.seconds","value":60.2},{"call":"clock.remaining_ticks","value":596}]},
+      {"tick":1205,"slots":["tape-scout","tape-target"],"cases":[{"call":"clock.tick","value":1205},{"call":"clock.seconds","value":60.25},{"call":"clock.remaining_ticks","value":595}]},
+      {"tick":1206,"slots":["tape-scout","tape-target"],"cases":[{"call":"clock.tick","value":1206},{"call":"clock.seconds","value":60.3},{"call":"clock.remaining_ticks","value":594}]},
+      {"tick":1207,"slots":["tape-scout","tape-target"],"cases":[{"call":"clock.tick","value":1207},{"call":"clock.seconds","value":60.35},{"call":"clock.remaining_ticks","value":593}]}
+     ]},
+    {"input": "vectors/api/inputs/tape-3d-classic.ndjson",
+     "hello": [
+      {"call":"clock.tick","error":"E_PHASE"}
+     ],
+     "states": [
+      {"tick":0,"slots":["tape-scout"],"cases":[{"call":"clock.tick","value":0},{"call":"clock.seconds","value":0},{"call":"clock.remaining_ticks","value":1800}]},
+      {"tick":1,"slots":["tape-scout"],"cases":[{"call":"clock.tick","value":1},{"call":"clock.seconds","value":0.05},{"call":"clock.remaining_ticks","value":1799}]},
+      {"tick":2,"slots":["tape-scout"],"cases":[{"call":"clock.tick","value":2},{"call":"clock.seconds","value":0.1},{"call":"clock.remaining_ticks","value":1798}]},
+      {"tick":3,"slots":["tape-scout"],"cases":[{"call":"clock.tick","value":3},{"call":"clock.seconds","value":0.15},{"call":"clock.remaining_ticks","value":1797}]},
+      {"tick":4,"slots":["tape-scout"],"cases":[{"call":"clock.tick","value":4},{"call":"clock.seconds","value":0.2},{"call":"clock.remaining_ticks","value":1796}]},
+      {"tick":5,"slots":["tape-scout"],"cases":[{"call":"clock.tick","value":5},{"call":"clock.seconds","value":0.25},{"call":"clock.remaining_ticks","value":1795}]},
+      {"tick":6,"slots":["tape-scout"],"cases":[{"call":"clock.tick","value":6},{"call":"clock.seconds","value":0.3},{"call":"clock.remaining_ticks","value":1794}]},
+      {"tick":7,"slots":["tape-scout"],"cases":[{"call":"clock.tick","value":7},{"call":"clock.seconds","value":0.35},{"call":"clock.remaining_ticks","value":1793}]},
+      {"tick":1200,"slots":["tape-scout","tape-target"],"cases":[{"call":"clock.tick","value":1200},{"call":"clock.seconds","value":60},{"call":"clock.remaining_ticks","value":600}]},
+      {"tick":1201,"slots":["tape-scout","tape-target"],"cases":[{"call":"clock.tick","value":1201},{"call":"clock.seconds","value":60.05},{"call":"clock.remaining_ticks","value":599}]},
+      {"tick":1202,"slots":["tape-scout","tape-target"],"cases":[{"call":"clock.tick","value":1202},{"call":"clock.seconds","value":60.1},{"call":"clock.remaining_ticks","value":598}]},
+      {"tick":1203,"slots":["tape-scout","tape-target"],"cases":[{"call":"clock.tick","value":1203},{"call":"clock.seconds","value":60.15},{"call":"clock.remaining_ticks","value":597}]},
+      {"tick":1204,"slots":["tape-scout","tape-target"],"cases":[{"call":"clock.tick","value":1204},{"call":"clock.seconds","value":60.2},{"call":"clock.remaining_ticks","value":596}]},
+      {"tick":1205,"slots":["tape-scout","tape-target"],"cases":[{"call":"clock.tick","value":1205},{"call":"clock.seconds","value":60.25},{"call":"clock.remaining_ticks","value":595}]},
+      {"tick":1206,"slots":["tape-scout","tape-target"],"cases":[{"call":"clock.tick","value":1206},{"call":"clock.seconds","value":60.3},{"call":"clock.remaining_ticks","value":594}]},
+      {"tick":1207,"slots":["tape-scout","tape-target"],"cases":[{"call":"clock.tick","value":1207},{"call":"clock.seconds","value":60.35},{"call":"clock.remaining_ticks","value":593}]}
+     ]},
+    {"input": "vectors/api/inputs/tape-3d-gravity-flat.ndjson",
+     "hello": [
+      {"call":"clock.tick","error":"E_PHASE"}
+     ],
+     "states": [
+      {"tick":0,"slots":["tape-scout"],"cases":[{"call":"clock.tick","value":0},{"call":"clock.seconds","value":0},{"call":"clock.remaining_ticks","value":1800}]},
+      {"tick":1,"slots":["tape-scout"],"cases":[{"call":"clock.tick","value":1},{"call":"clock.seconds","value":0.05},{"call":"clock.remaining_ticks","value":1799}]},
+      {"tick":2,"slots":["tape-scout"],"cases":[{"call":"clock.tick","value":2},{"call":"clock.seconds","value":0.1},{"call":"clock.remaining_ticks","value":1798}]},
+      {"tick":3,"slots":["tape-scout"],"cases":[{"call":"clock.tick","value":3},{"call":"clock.seconds","value":0.15},{"call":"clock.remaining_ticks","value":1797}]},
+      {"tick":4,"slots":["tape-scout"],"cases":[{"call":"clock.tick","value":4},{"call":"clock.seconds","value":0.2},{"call":"clock.remaining_ticks","value":1796}]},
+      {"tick":5,"slots":["tape-scout"],"cases":[{"call":"clock.tick","value":5},{"call":"clock.seconds","value":0.25},{"call":"clock.remaining_ticks","value":1795}]},
+      {"tick":6,"slots":["tape-scout"],"cases":[{"call":"clock.tick","value":6},{"call":"clock.seconds","value":0.3},{"call":"clock.remaining_ticks","value":1794}]},
+      {"tick":7,"slots":["tape-scout"],"cases":[{"call":"clock.tick","value":7},{"call":"clock.seconds","value":0.35},{"call":"clock.remaining_ticks","value":1793}]},
+      {"tick":1200,"slots":["tape-scout","tape-target"],"cases":[{"call":"clock.tick","value":1200},{"call":"clock.seconds","value":60},{"call":"clock.remaining_ticks","value":600}]},
+      {"tick":1201,"slots":["tape-scout","tape-target"],"cases":[{"call":"clock.tick","value":1201},{"call":"clock.seconds","value":60.05},{"call":"clock.remaining_ticks","value":599}]},
+      {"tick":1202,"slots":["tape-scout","tape-target"],"cases":[{"call":"clock.tick","value":1202},{"call":"clock.seconds","value":60.1},{"call":"clock.remaining_ticks","value":598}]},
+      {"tick":1203,"slots":["tape-scout","tape-target"],"cases":[{"call":"clock.tick","value":1203},{"call":"clock.seconds","value":60.15},{"call":"clock.remaining_ticks","value":597}]},
+      {"tick":1204,"slots":["tape-scout","tape-target"],"cases":[{"call":"clock.tick","value":1204},{"call":"clock.seconds","value":60.2},{"call":"clock.remaining_ticks","value":596}]},
+      {"tick":1205,"slots":["tape-scout","tape-target"],"cases":[{"call":"clock.tick","value":1205},{"call":"clock.seconds","value":60.25},{"call":"clock.remaining_ticks","value":595}]},
+      {"tick":1206,"slots":["tape-scout","tape-target"],"cases":[{"call":"clock.tick","value":1206},{"call":"clock.seconds","value":60.3},{"call":"clock.remaining_ticks","value":594}]},
+      {"tick":1207,"slots":["tape-scout","tape-target"],"cases":[{"call":"clock.tick","value":1207},{"call":"clock.seconds","value":60.35},{"call":"clock.remaining_ticks","value":593}]}
+     ]},
+    {"input": "vectors/api/inputs/tape-3d-gravity-hills.ndjson",
+     "hello": [
+      {"call":"clock.tick","error":"E_PHASE"}
+     ],
+     "states": [
+      {"tick":0,"slots":["tape-scout"],"cases":[{"call":"clock.tick","value":0},{"call":"clock.seconds","value":0},{"call":"clock.remaining_ticks","value":1800}]},
+      {"tick":1,"slots":["tape-scout"],"cases":[{"call":"clock.tick","value":1},{"call":"clock.seconds","value":0.05},{"call":"clock.remaining_ticks","value":1799}]},
+      {"tick":2,"slots":["tape-scout"],"cases":[{"call":"clock.tick","value":2},{"call":"clock.seconds","value":0.1},{"call":"clock.remaining_ticks","value":1798}]},
+      {"tick":3,"slots":["tape-scout"],"cases":[{"call":"clock.tick","value":3},{"call":"clock.seconds","value":0.15},{"call":"clock.remaining_ticks","value":1797}]},
+      {"tick":4,"slots":["tape-scout"],"cases":[{"call":"clock.tick","value":4},{"call":"clock.seconds","value":0.2},{"call":"clock.remaining_ticks","value":1796}]},
+      {"tick":5,"slots":["tape-scout"],"cases":[{"call":"clock.tick","value":5},{"call":"clock.seconds","value":0.25},{"call":"clock.remaining_ticks","value":1795}]},
+      {"tick":6,"slots":["tape-scout"],"cases":[{"call":"clock.tick","value":6},{"call":"clock.seconds","value":0.3},{"call":"clock.remaining_ticks","value":1794}]},
+      {"tick":7,"slots":["tape-scout"],"cases":[{"call":"clock.tick","value":7},{"call":"clock.seconds","value":0.35},{"call":"clock.remaining_ticks","value":1793}]},
+      {"tick":1200,"slots":["tape-scout","tape-target"],"cases":[{"call":"clock.tick","value":1200},{"call":"clock.seconds","value":60},{"call":"clock.remaining_ticks","value":600}]},
+      {"tick":1201,"slots":["tape-scout","tape-target"],"cases":[{"call":"clock.tick","value":1201},{"call":"clock.seconds","value":60.05},{"call":"clock.remaining_ticks","value":599}]},
+      {"tick":1202,"slots":["tape-scout","tape-target"],"cases":[{"call":"clock.tick","value":1202},{"call":"clock.seconds","value":60.1},{"call":"clock.remaining_ticks","value":598}]},
+      {"tick":1203,"slots":["tape-scout","tape-target"],"cases":[{"call":"clock.tick","value":1203},{"call":"clock.seconds","value":60.15},{"call":"clock.remaining_ticks","value":597}]},
+      {"tick":1204,"slots":["tape-scout","tape-target"],"cases":[{"call":"clock.tick","value":1204},{"call":"clock.seconds","value":60.2},{"call":"clock.remaining_ticks","value":596}]},
+      {"tick":1205,"slots":["tape-scout","tape-target"],"cases":[{"call":"clock.tick","value":1205},{"call":"clock.seconds","value":60.25},{"call":"clock.remaining_ticks","value":595}]},
+      {"tick":1206,"slots":["tape-scout","tape-target"],"cases":[{"call":"clock.tick","value":1206},{"call":"clock.seconds","value":60.3},{"call":"clock.remaining_ticks","value":594}]},
+      {"tick":1207,"slots":["tape-scout","tape-target"],"cases":[{"call":"clock.tick","value":1207},{"call":"clock.seconds","value":60.35},{"call":"clock.remaining_ticks","value":593}]}
+     ]},
+    {"input": "vectors/api/inputs/tape-3d-zero-g.ndjson",
+     "hello": [
+      {"call":"clock.tick","error":"E_PHASE"}
+     ],
+     "states": [
+      {"tick":0,"slots":["tape-scout"],"cases":[{"call":"clock.tick","value":0},{"call":"clock.seconds","value":0},{"call":"clock.remaining_ticks","value":1800}]},
+      {"tick":1,"slots":["tape-scout"],"cases":[{"call":"clock.tick","value":1},{"call":"clock.seconds","value":0.05},{"call":"clock.remaining_ticks","value":1799}]},
+      {"tick":2,"slots":["tape-scout"],"cases":[{"call":"clock.tick","value":2},{"call":"clock.seconds","value":0.1},{"call":"clock.remaining_ticks","value":1798}]},
+      {"tick":3,"slots":["tape-scout"],"cases":[{"call":"clock.tick","value":3},{"call":"clock.seconds","value":0.15},{"call":"clock.remaining_ticks","value":1797}]},
+      {"tick":4,"slots":["tape-scout"],"cases":[{"call":"clock.tick","value":4},{"call":"clock.seconds","value":0.2},{"call":"clock.remaining_ticks","value":1796}]},
+      {"tick":5,"slots":["tape-scout"],"cases":[{"call":"clock.tick","value":5},{"call":"clock.seconds","value":0.25},{"call":"clock.remaining_ticks","value":1795}]},
+      {"tick":6,"slots":["tape-scout"],"cases":[{"call":"clock.tick","value":6},{"call":"clock.seconds","value":0.3},{"call":"clock.remaining_ticks","value":1794}]},
+      {"tick":7,"slots":["tape-scout"],"cases":[{"call":"clock.tick","value":7},{"call":"clock.seconds","value":0.35},{"call":"clock.remaining_ticks","value":1793}]},
+      {"tick":839,"slots":["tape-scout"],"cases":[{"call":"clock.tick","value":839},{"call":"clock.seconds","value":41.95},{"call":"clock.remaining_ticks","value":961}]},
+      {"tick":840,"slots":["tape-scout"],"cases":[{"call":"clock.tick","value":840},{"call":"clock.seconds","value":42},{"call":"clock.remaining_ticks","value":960}]},
+      {"tick":841,"slots":["tape-scout"],"cases":[{"call":"clock.tick","value":841},{"call":"clock.seconds","value":42.05},{"call":"clock.remaining_ticks","value":959}]},
+      {"tick":842,"slots":["tape-scout"],"cases":[{"call":"clock.tick","value":842},{"call":"clock.seconds","value":42.1},{"call":"clock.remaining_ticks","value":958}]},
+      {"tick":843,"slots":["tape-scout"],"cases":[{"call":"clock.tick","value":843},{"call":"clock.seconds","value":42.15},{"call":"clock.remaining_ticks","value":957}]},
+      {"tick":844,"slots":["tape-scout"],"cases":[{"call":"clock.tick","value":844},{"call":"clock.seconds","value":42.2},{"call":"clock.remaining_ticks","value":956}]},
+      {"tick":845,"slots":["tape-scout"],"cases":[{"call":"clock.tick","value":845},{"call":"clock.seconds","value":42.25},{"call":"clock.remaining_ticks","value":955}]},
+      {"tick":846,"slots":["tape-scout"],"cases":[{"call":"clock.tick","value":846},{"call":"clock.seconds","value":42.3},{"call":"clock.remaining_ticks","value":954}]}
+     ]},
+    {"input": "vectors/api/inputs/mechanics-2d-classic.ndjson",
+     "hello": [
+      {"call":"clock.tick","error":"E_PHASE"}
+     ],
+     "states": [
+      {"tick":0,"slots":["scout"],"cases":[{"call":"clock.tick","value":0},{"call":"clock.seconds","value":0},{"call":"clock.remaining_ticks","value":200}]},
+      {"tick":1,"slots":["scout","a"],"cases":[{"call":"clock.tick","value":1},{"call":"clock.seconds","value":0.05},{"call":"clock.remaining_ticks","value":199}]},
+      {"tick":2,"slots":["scout","a"],"cases":[{"call":"clock.tick","value":2},{"call":"clock.seconds","value":0.1},{"call":"clock.remaining_ticks","value":198}]},
+      {"tick":3,"slots":["scout","a"],"cases":[{"call":"clock.tick","value":3},{"call":"clock.seconds","value":0.15},{"call":"clock.remaining_ticks","value":197}]},
+      {"tick":4,"slots":["scout","a"],"cases":[{"call":"clock.tick","value":4},{"call":"clock.seconds","value":0.2},{"call":"clock.remaining_ticks","value":196}]},
+      {"tick":5,"slots":["scout","a"],"cases":[{"call":"clock.tick","value":5},{"call":"clock.seconds","value":0.25},{"call":"clock.remaining_ticks","value":195}]},
+      {"tick":6,"slots":["scout","a"],"cases":[{"call":"clock.tick","value":6},{"call":"clock.seconds","value":0.3},{"call":"clock.remaining_ticks","value":194}]},
+      {"tick":7,"slots":["scout","a"],"cases":[{"call":"clock.tick","value":7},{"call":"clock.seconds","value":0.35},{"call":"clock.remaining_ticks","value":193}]},
+      {"tick":8,"slots":["scout","a"],"cases":[{"call":"clock.tick","value":8},{"call":"clock.seconds","value":0.4},{"call":"clock.remaining_ticks","value":192}]},
+      {"tick":9,"slots":["scout","a"],"cases":[{"call":"clock.tick","value":9},{"call":"clock.seconds","value":0.45},{"call":"clock.remaining_ticks","value":191}]},
+      {"tick":10,"slots":["scout","a"],"cases":[{"call":"clock.tick","value":10},{"call":"clock.seconds","value":0.5},{"call":"clock.remaining_ticks","value":190}]},
+      {"tick":11,"slots":["scout","a"],"cases":[{"call":"clock.tick","value":11},{"call":"clock.seconds","value":0.55},{"call":"clock.remaining_ticks","value":189}]},
+      {"tick":12,"slots":["scout","a"],"cases":[{"call":"clock.tick","value":12},{"call":"clock.seconds","value":0.6},{"call":"clock.remaining_ticks","value":188}]},
+      {"tick":13,"slots":["scout","a"],"cases":[{"call":"clock.tick","value":13},{"call":"clock.seconds","value":0.65},{"call":"clock.remaining_ticks","value":187}]},
+      {"tick":14,"slots":["scout","a"],"cases":[{"call":"clock.tick","value":14},{"call":"clock.seconds","value":0.7},{"call":"clock.remaining_ticks","value":186}]},
+      {"tick":15,"slots":["scout","a"],"cases":[{"call":"clock.tick","value":15},{"call":"clock.seconds","value":0.75},{"call":"clock.remaining_ticks","value":185}]},
+      {"tick":16,"slots":["scout","a"],"cases":[{"call":"clock.tick","value":16},{"call":"clock.seconds","value":0.8},{"call":"clock.remaining_ticks","value":184}]},
+      {"tick":17,"slots":["scout","a"],"cases":[{"call":"clock.tick","value":17},{"call":"clock.seconds","value":0.85},{"call":"clock.remaining_ticks","value":183}]},
+      {"tick":18,"slots":["scout","a"],"cases":[{"call":"clock.tick","value":18},{"call":"clock.seconds","value":0.9},{"call":"clock.remaining_ticks","value":182}]},
+      {"tick":19,"slots":["scout","a"],"cases":[{"call":"clock.tick","value":19},{"call":"clock.seconds","value":0.95},{"call":"clock.remaining_ticks","value":181}]},
+      {"tick":20,"slots":["scout","a"],"cases":[{"call":"clock.tick","value":20},{"call":"clock.seconds","value":1},{"call":"clock.remaining_ticks","value":180}]},
+      {"tick":21,"slots":["scout","a"],"cases":[{"call":"clock.tick","value":21},{"call":"clock.seconds","value":1.05},{"call":"clock.remaining_ticks","value":179}]},
+      {"tick":22,"slots":["scout","a"],"cases":[{"call":"clock.tick","value":22},{"call":"clock.seconds","value":1.1},{"call":"clock.remaining_ticks","value":178}]},
+      {"tick":23,"slots":["scout","a"],"cases":[{"call":"clock.tick","value":23},{"call":"clock.seconds","value":1.15},{"call":"clock.remaining_ticks","value":177}]},
+      {"tick":24,"slots":["scout","a"],"cases":[{"call":"clock.tick","value":24},{"call":"clock.seconds","value":1.2},{"call":"clock.remaining_ticks","value":176}]},
+      {"tick":25,"slots":["scout","a"],"cases":[{"call":"clock.tick","value":25},{"call":"clock.seconds","value":1.25},{"call":"clock.remaining_ticks","value":175}]},
+      {"tick":26,"slots":["scout","a"],"cases":[{"call":"clock.tick","value":26},{"call":"clock.seconds","value":1.3},{"call":"clock.remaining_ticks","value":174}]},
+      {"tick":27,"slots":["scout","a"],"cases":[{"call":"clock.tick","value":27},{"call":"clock.seconds","value":1.35},{"call":"clock.remaining_ticks","value":173}]},
+      {"tick":28,"slots":["scout","a"],"cases":[{"call":"clock.tick","value":28},{"call":"clock.seconds","value":1.4},{"call":"clock.remaining_ticks","value":172}]},
+      {"tick":29,"slots":["scout","a"],"cases":[{"call":"clock.tick","value":29},{"call":"clock.seconds","value":1.45},{"call":"clock.remaining_ticks","value":171}]},
+      {"tick":30,"slots":["scout","a"],"cases":[{"call":"clock.tick","value":30},{"call":"clock.seconds","value":1.5},{"call":"clock.remaining_ticks","value":170}]},
+      {"tick":31,"slots":["scout","a"],"cases":[{"call":"clock.tick","value":31},{"call":"clock.seconds","value":1.55},{"call":"clock.remaining_ticks","value":169}]},
+      {"tick":32,"slots":["scout","a"],"cases":[{"call":"clock.tick","value":32},{"call":"clock.seconds","value":1.6},{"call":"clock.remaining_ticks","value":168}]},
+      {"tick":33,"slots":["scout","a"],"cases":[{"call":"clock.tick","value":33},{"call":"clock.seconds","value":1.65},{"call":"clock.remaining_ticks","value":167}]},
+      {"tick":34,"slots":["scout","a"],"cases":[{"call":"clock.tick","value":34},{"call":"clock.seconds","value":1.7},{"call":"clock.remaining_ticks","value":166}]},
+      {"tick":35,"slots":["scout","a"],"cases":[{"call":"clock.tick","value":35},{"call":"clock.seconds","value":1.75},{"call":"clock.remaining_ticks","value":165}]},
+      {"tick":36,"slots":["scout","a"],"cases":[{"call":"clock.tick","value":36},{"call":"clock.seconds","value":1.8},{"call":"clock.remaining_ticks","value":164}]},
+      {"tick":37,"slots":["scout","a"],"cases":[{"call":"clock.tick","value":37},{"call":"clock.seconds","value":1.85},{"call":"clock.remaining_ticks","value":163}]},
+      {"tick":38,"slots":["scout","a"],"cases":[{"call":"clock.tick","value":38},{"call":"clock.seconds","value":1.9},{"call":"clock.remaining_ticks","value":162}]},
+      {"tick":39,"slots":["scout","a"],"cases":[{"call":"clock.tick","value":39},{"call":"clock.seconds","value":1.95},{"call":"clock.remaining_ticks","value":161}]},
+      {"tick":40,"slots":["scout","a"],"cases":[{"call":"clock.tick","value":40},{"call":"clock.seconds","value":2},{"call":"clock.remaining_ticks","value":160}]},
+      {"tick":41,"slots":["scout","a"],"cases":[{"call":"clock.tick","value":41},{"call":"clock.seconds","value":2.05},{"call":"clock.remaining_ticks","value":159}]},
+      {"tick":42,"slots":["scout","a"],"cases":[{"call":"clock.tick","value":42},{"call":"clock.seconds","value":2.1},{"call":"clock.remaining_ticks","value":158}]},
+      {"tick":43,"slots":["scout","a"],"cases":[{"call":"clock.tick","value":43},{"call":"clock.seconds","value":2.15},{"call":"clock.remaining_ticks","value":157}]},
+      {"tick":44,"slots":["scout","a"],"cases":[{"call":"clock.tick","value":44},{"call":"clock.seconds","value":2.2},{"call":"clock.remaining_ticks","value":156}]},
+      {"tick":45,"slots":["scout","a"],"cases":[{"call":"clock.tick","value":45},{"call":"clock.seconds","value":2.25},{"call":"clock.remaining_ticks","value":155}]},
+      {"tick":46,"slots":["scout","a","b"],"cases":[{"call":"clock.tick","value":46},{"call":"clock.seconds","value":2.3},{"call":"clock.remaining_ticks","value":154}]},
+      {"tick":47,"slots":["scout","a","b"],"cases":[{"call":"clock.tick","value":47},{"call":"clock.seconds","value":2.35},{"call":"clock.remaining_ticks","value":153}]},
+      {"tick":48,"slots":["scout","a","b"],"cases":[{"call":"clock.tick","value":48},{"call":"clock.seconds","value":2.4},{"call":"clock.remaining_ticks","value":152}]},
+      {"tick":49,"slots":["scout","a","b"],"cases":[{"call":"clock.tick","value":49},{"call":"clock.seconds","value":2.45},{"call":"clock.remaining_ticks","value":151}]},
+      {"tick":50,"slots":["scout","a","b"],"cases":[{"call":"clock.tick","value":50},{"call":"clock.seconds","value":2.5},{"call":"clock.remaining_ticks","value":150}]},
+      {"tick":51,"slots":["scout","a","b"],"cases":[{"call":"clock.tick","value":51},{"call":"clock.seconds","value":2.55},{"call":"clock.remaining_ticks","value":149}]},
+      {"tick":52,"slots":["scout","a","b"],"cases":[{"call":"clock.tick","value":52},{"call":"clock.seconds","value":2.6},{"call":"clock.remaining_ticks","value":148}]},
+      {"tick":53,"slots":["scout","a","b"],"cases":[{"call":"clock.tick","value":53},{"call":"clock.seconds","value":2.65},{"call":"clock.remaining_ticks","value":147}]},
+      {"tick":54,"slots":["scout","a","b"],"cases":[{"call":"clock.tick","value":54},{"call":"clock.seconds","value":2.7},{"call":"clock.remaining_ticks","value":146}]},
+      {"tick":55,"slots":["scout","a","b"],"cases":[{"call":"clock.tick","value":55},{"call":"clock.seconds","value":2.75},{"call":"clock.remaining_ticks","value":145}]},
+      {"tick":56,"slots":["scout","a","b"],"cases":[{"call":"clock.tick","value":56},{"call":"clock.seconds","value":2.8},{"call":"clock.remaining_ticks","value":144}]},
+      {"tick":57,"slots":["scout","a","b"],"cases":[{"call":"clock.tick","value":57},{"call":"clock.seconds","value":2.85},{"call":"clock.remaining_ticks","value":143}]},
+      {"tick":58,"slots":["scout","a","b"],"cases":[{"call":"clock.tick","value":58},{"call":"clock.seconds","value":2.9},{"call":"clock.remaining_ticks","value":142}]},
+      {"tick":59,"slots":["scout","a","b"],"cases":[{"call":"clock.tick","value":59},{"call":"clock.seconds","value":2.95},{"call":"clock.remaining_ticks","value":141}]}
+     ]},
+    {"input": "vectors/api/inputs/mechanics-3d-zero-g.ndjson",
+     "hello": [
+      {"call":"clock.tick","error":"E_PHASE"}
+     ],
+     "states": [
+      {"tick":0,"slots":["scout","b"],"cases":[{"call":"clock.tick","value":0},{"call":"clock.seconds","value":0},{"call":"clock.remaining_ticks","value":200}]},
+      {"tick":1,"slots":["scout","b","a"],"cases":[{"call":"clock.tick","value":1},{"call":"clock.seconds","value":0.05},{"call":"clock.remaining_ticks","value":199}]},
+      {"tick":2,"slots":["scout","b","a"],"cases":[{"call":"clock.tick","value":2},{"call":"clock.seconds","value":0.1},{"call":"clock.remaining_ticks","value":198}]},
+      {"tick":3,"slots":["scout","b","a"],"cases":[{"call":"clock.tick","value":3},{"call":"clock.seconds","value":0.15},{"call":"clock.remaining_ticks","value":197}]},
+      {"tick":4,"slots":["scout","b","a"],"cases":[{"call":"clock.tick","value":4},{"call":"clock.seconds","value":0.2},{"call":"clock.remaining_ticks","value":196}]},
+      {"tick":5,"slots":["scout","b","a"],"cases":[{"call":"clock.tick","value":5},{"call":"clock.seconds","value":0.25},{"call":"clock.remaining_ticks","value":195}]},
+      {"tick":6,"slots":["scout","b","a"],"cases":[{"call":"clock.tick","value":6},{"call":"clock.seconds","value":0.3},{"call":"clock.remaining_ticks","value":194}]},
+      {"tick":7,"slots":["scout","b","a"],"cases":[{"call":"clock.tick","value":7},{"call":"clock.seconds","value":0.35},{"call":"clock.remaining_ticks","value":193}]},
+      {"tick":8,"slots":["scout","b","a"],"cases":[{"call":"clock.tick","value":8},{"call":"clock.seconds","value":0.4},{"call":"clock.remaining_ticks","value":192}]},
+      {"tick":9,"slots":["scout","b","a"],"cases":[{"call":"clock.tick","value":9},{"call":"clock.seconds","value":0.45},{"call":"clock.remaining_ticks","value":191}]},
+      {"tick":10,"slots":["scout","b","a"],"cases":[{"call":"clock.tick","value":10},{"call":"clock.seconds","value":0.5},{"call":"clock.remaining_ticks","value":190}]},
+      {"tick":11,"slots":["scout","b","a"],"cases":[{"call":"clock.tick","value":11},{"call":"clock.seconds","value":0.55},{"call":"clock.remaining_ticks","value":189}]},
+      {"tick":12,"slots":["scout","b","a"],"cases":[{"call":"clock.tick","value":12},{"call":"clock.seconds","value":0.6},{"call":"clock.remaining_ticks","value":188}]},
+      {"tick":13,"slots":["scout","b","a"],"cases":[{"call":"clock.tick","value":13},{"call":"clock.seconds","value":0.65},{"call":"clock.remaining_ticks","value":187}]},
+      {"tick":14,"slots":["scout","b","a"],"cases":[{"call":"clock.tick","value":14},{"call":"clock.seconds","value":0.7},{"call":"clock.remaining_ticks","value":186}]},
+      {"tick":15,"slots":["scout","b","a"],"cases":[{"call":"clock.tick","value":15},{"call":"clock.seconds","value":0.75},{"call":"clock.remaining_ticks","value":185}]},
+      {"tick":16,"slots":["scout","b","a"],"cases":[{"call":"clock.tick","value":16},{"call":"clock.seconds","value":0.8},{"call":"clock.remaining_ticks","value":184}]},
+      {"tick":17,"slots":["scout","b","a"],"cases":[{"call":"clock.tick","value":17},{"call":"clock.seconds","value":0.85},{"call":"clock.remaining_ticks","value":183}]},
+      {"tick":18,"slots":["scout","b","a"],"cases":[{"call":"clock.tick","value":18},{"call":"clock.seconds","value":0.9},{"call":"clock.remaining_ticks","value":182}]},
+      {"tick":19,"slots":["scout","b","a"],"cases":[{"call":"clock.tick","value":19},{"call":"clock.seconds","value":0.95},{"call":"clock.remaining_ticks","value":181}]},
+      {"tick":20,"slots":["scout","b","a"],"cases":[{"call":"clock.tick","value":20},{"call":"clock.seconds","value":1},{"call":"clock.remaining_ticks","value":180}]},
+      {"tick":21,"slots":["scout","b","a"],"cases":[{"call":"clock.tick","value":21},{"call":"clock.seconds","value":1.05},{"call":"clock.remaining_ticks","value":179}]},
+      {"tick":22,"slots":["scout","b","a"],"cases":[{"call":"clock.tick","value":22},{"call":"clock.seconds","value":1.1},{"call":"clock.remaining_ticks","value":178}]},
+      {"tick":23,"slots":["scout","b","a"],"cases":[{"call":"clock.tick","value":23},{"call":"clock.seconds","value":1.15},{"call":"clock.remaining_ticks","value":177}]},
+      {"tick":24,"slots":["scout","b","a"],"cases":[{"call":"clock.tick","value":24},{"call":"clock.seconds","value":1.2},{"call":"clock.remaining_ticks","value":176}]},
+      {"tick":25,"slots":["scout","b","a"],"cases":[{"call":"clock.tick","value":25},{"call":"clock.seconds","value":1.25},{"call":"clock.remaining_ticks","value":175}]},
+      {"tick":26,"slots":["scout","b","a"],"cases":[{"call":"clock.tick","value":26},{"call":"clock.seconds","value":1.3},{"call":"clock.remaining_ticks","value":174}]},
+      {"tick":27,"slots":["scout","b","a"],"cases":[{"call":"clock.tick","value":27},{"call":"clock.seconds","value":1.35},{"call":"clock.remaining_ticks","value":173}]},
+      {"tick":28,"slots":["scout","b","a"],"cases":[{"call":"clock.tick","value":28},{"call":"clock.seconds","value":1.4},{"call":"clock.remaining_ticks","value":172}]},
+      {"tick":29,"slots":["scout","b","a"],"cases":[{"call":"clock.tick","value":29},{"call":"clock.seconds","value":1.45},{"call":"clock.remaining_ticks","value":171}]},
+      {"tick":30,"slots":["scout","b","a"],"cases":[{"call":"clock.tick","value":30},{"call":"clock.seconds","value":1.5},{"call":"clock.remaining_ticks","value":170}]},
+      {"tick":31,"slots":["scout","b","a"],"cases":[{"call":"clock.tick","value":31},{"call":"clock.seconds","value":1.55},{"call":"clock.remaining_ticks","value":169}]},
+      {"tick":32,"slots":["scout","b","a"],"cases":[{"call":"clock.tick","value":32},{"call":"clock.seconds","value":1.6},{"call":"clock.remaining_ticks","value":168}]},
+      {"tick":33,"slots":["scout","b","a"],"cases":[{"call":"clock.tick","value":33},{"call":"clock.seconds","value":1.65},{"call":"clock.remaining_ticks","value":167}]},
+      {"tick":34,"slots":["scout","b","a"],"cases":[{"call":"clock.tick","value":34},{"call":"clock.seconds","value":1.7},{"call":"clock.remaining_ticks","value":166}]},
+      {"tick":35,"slots":["scout","b","a"],"cases":[{"call":"clock.tick","value":35},{"call":"clock.seconds","value":1.75},{"call":"clock.remaining_ticks","value":165}]},
+      {"tick":36,"slots":["scout","b","a"],"cases":[{"call":"clock.tick","value":36},{"call":"clock.seconds","value":1.8},{"call":"clock.remaining_ticks","value":164}]},
+      {"tick":37,"slots":["scout","b","a"],"cases":[{"call":"clock.tick","value":37},{"call":"clock.seconds","value":1.85},{"call":"clock.remaining_ticks","value":163}]},
+      {"tick":38,"slots":["scout","b","a"],"cases":[{"call":"clock.tick","value":38},{"call":"clock.seconds","value":1.9},{"call":"clock.remaining_ticks","value":162}]},
+      {"tick":39,"slots":["scout","b","a"],"cases":[{"call":"clock.tick","value":39},{"call":"clock.seconds","value":1.95},{"call":"clock.remaining_ticks","value":161}]},
+      {"tick":40,"slots":["scout","b","a"],"cases":[{"call":"clock.tick","value":40},{"call":"clock.seconds","value":2},{"call":"clock.remaining_ticks","value":160}]},
+      {"tick":41,"slots":["scout","b","a"],"cases":[{"call":"clock.tick","value":41},{"call":"clock.seconds","value":2.05},{"call":"clock.remaining_ticks","value":159}]},
+      {"tick":42,"slots":["scout","b","a"],"cases":[{"call":"clock.tick","value":42},{"call":"clock.seconds","value":2.1},{"call":"clock.remaining_ticks","value":158}]},
+      {"tick":43,"slots":["scout","b","a"],"cases":[{"call":"clock.tick","value":43},{"call":"clock.seconds","value":2.15},{"call":"clock.remaining_ticks","value":157}]},
+      {"tick":44,"slots":["scout","b","a"],"cases":[{"call":"clock.tick","value":44},{"call":"clock.seconds","value":2.2},{"call":"clock.remaining_ticks","value":156}]},
+      {"tick":45,"slots":["scout","b","a"],"cases":[{"call":"clock.tick","value":45},{"call":"clock.seconds","value":2.25},{"call":"clock.remaining_ticks","value":155}]},
+      {"tick":46,"slots":["scout","b","a"],"cases":[{"call":"clock.tick","value":46},{"call":"clock.seconds","value":2.3},{"call":"clock.remaining_ticks","value":154}]},
+      {"tick":47,"slots":["scout","b","a"],"cases":[{"call":"clock.tick","value":47},{"call":"clock.seconds","value":2.35},{"call":"clock.remaining_ticks","value":153}]},
+      {"tick":48,"slots":["scout","b","a"],"cases":[{"call":"clock.tick","value":48},{"call":"clock.seconds","value":2.4},{"call":"clock.remaining_ticks","value":152}]},
+      {"tick":49,"slots":["scout","b","a"],"cases":[{"call":"clock.tick","value":49},{"call":"clock.seconds","value":2.45},{"call":"clock.remaining_ticks","value":151}]},
+      {"tick":50,"slots":["scout","b","a"],"cases":[{"call":"clock.tick","value":50},{"call":"clock.seconds","value":2.5},{"call":"clock.remaining_ticks","value":150}]},
+      {"tick":51,"slots":["scout","b","a"],"cases":[{"call":"clock.tick","value":51},{"call":"clock.seconds","value":2.55},{"call":"clock.remaining_ticks","value":149}]},
+      {"tick":52,"slots":["scout","b","a"],"cases":[{"call":"clock.tick","value":52},{"call":"clock.seconds","value":2.6},{"call":"clock.remaining_ticks","value":148}]},
+      {"tick":53,"slots":["scout","b","a"],"cases":[{"call":"clock.tick","value":53},{"call":"clock.seconds","value":2.65},{"call":"clock.remaining_ticks","value":147}]},
+      {"tick":54,"slots":["scout","b","a"],"cases":[{"call":"clock.tick","value":54},{"call":"clock.seconds","value":2.7},{"call":"clock.remaining_ticks","value":146}]},
+      {"tick":55,"slots":["scout","b","a"],"cases":[{"call":"clock.tick","value":55},{"call":"clock.seconds","value":2.75},{"call":"clock.remaining_ticks","value":145}]},
+      {"tick":56,"slots":["scout","b","a"],"cases":[{"call":"clock.tick","value":56},{"call":"clock.seconds","value":2.8},{"call":"clock.remaining_ticks","value":144}]},
+      {"tick":57,"slots":["scout","b","a"],"cases":[{"call":"clock.tick","value":57},{"call":"clock.seconds","value":2.85},{"call":"clock.remaining_ticks","value":143}]},
+      {"tick":58,"slots":["scout","b","a"],"cases":[{"call":"clock.tick","value":58},{"call":"clock.seconds","value":2.9},{"call":"clock.remaining_ticks","value":142}]},
+      {"tick":59,"slots":["scout","b","a"],"cases":[{"call":"clock.tick","value":59},{"call":"clock.seconds","value":2.95},{"call":"clock.remaining_ticks","value":141}]}
+     ]},
+    {"input": "vectors/api/inputs/cue-window.ndjson",
+     "hello": [
+      {"call":"clock.tick","error":"E_PHASE"}
+     ],
+     "states": [
+      {"tick":0,"slots":["scout"],"cases":[{"call":"clock.tick","value":0},{"call":"clock.seconds","value":0},{"call":"clock.remaining_ticks","value":200}]},
+      {"tick":1,"slots":["scout"],"cases":[{"call":"clock.tick","value":1},{"call":"clock.seconds","value":0.05},{"call":"clock.remaining_ticks","value":199}]},
+      {"tick":2,"slots":["scout"],"cases":[{"call":"clock.tick","value":2},{"call":"clock.seconds","value":0.1},{"call":"clock.remaining_ticks","value":198}]},
+      {"tick":3,"slots":["scout"],"cases":[{"call":"clock.tick","value":3},{"call":"clock.seconds","value":0.15},{"call":"clock.remaining_ticks","value":197}]},
+      {"tick":4,"slots":["scout"],"cases":[{"call":"clock.tick","value":4},{"call":"clock.seconds","value":0.2},{"call":"clock.remaining_ticks","value":196}]},
+      {"tick":5,"slots":["scout"],"cases":[{"call":"clock.tick","value":5},{"call":"clock.seconds","value":0.25},{"call":"clock.remaining_ticks","value":195}]},
+      {"tick":6,"slots":["scout"],"cases":[{"call":"clock.tick","value":6},{"call":"clock.seconds","value":0.3},{"call":"clock.remaining_ticks","value":194}]},
+      {"tick":7,"slots":["scout"],"cases":[{"call":"clock.tick","value":7},{"call":"clock.seconds","value":0.35},{"call":"clock.remaining_ticks","value":193}]},
+      {"tick":8,"slots":["scout"],"cases":[{"call":"clock.tick","value":8},{"call":"clock.seconds","value":0.4},{"call":"clock.remaining_ticks","value":192}]},
+      {"tick":9,"slots":["scout"],"cases":[{"call":"clock.tick","value":9},{"call":"clock.seconds","value":0.45},{"call":"clock.remaining_ticks","value":191}]},
+      {"tick":10,"slots":["scout"],"cases":[{"call":"clock.tick","value":10},{"call":"clock.seconds","value":0.5},{"call":"clock.remaining_ticks","value":190}]},
+      {"tick":11,"slots":["scout"],"cases":[{"call":"clock.tick","value":11},{"call":"clock.seconds","value":0.55},{"call":"clock.remaining_ticks","value":189}]},
+      {"tick":12,"slots":["scout"],"cases":[{"call":"clock.tick","value":12},{"call":"clock.seconds","value":0.6},{"call":"clock.remaining_ticks","value":188}]},
+      {"tick":13,"slots":["scout"],"cases":[{"call":"clock.tick","value":13},{"call":"clock.seconds","value":0.65},{"call":"clock.remaining_ticks","value":187}]},
+      {"tick":14,"slots":["scout"],"cases":[{"call":"clock.tick","value":14},{"call":"clock.seconds","value":0.7},{"call":"clock.remaining_ticks","value":186}]},
+      {"tick":15,"slots":["scout"],"cases":[{"call":"clock.tick","value":15},{"call":"clock.seconds","value":0.75},{"call":"clock.remaining_ticks","value":185}]},
+      {"tick":16,"slots":["scout"],"cases":[{"call":"clock.tick","value":16},{"call":"clock.seconds","value":0.8},{"call":"clock.remaining_ticks","value":184}]},
+      {"tick":17,"slots":["scout"],"cases":[{"call":"clock.tick","value":17},{"call":"clock.seconds","value":0.85},{"call":"clock.remaining_ticks","value":183}]},
+      {"tick":18,"slots":["scout"],"cases":[{"call":"clock.tick","value":18},{"call":"clock.seconds","value":0.9},{"call":"clock.remaining_ticks","value":182}]},
+      {"tick":19,"slots":["scout"],"cases":[{"call":"clock.tick","value":19},{"call":"clock.seconds","value":0.95},{"call":"clock.remaining_ticks","value":181}]},
+      {"tick":20,"slots":["scout"],"cases":[{"call":"clock.tick","value":20},{"call":"clock.seconds","value":1},{"call":"clock.remaining_ticks","value":180}]},
+      {"tick":21,"slots":["scout"],"cases":[{"call":"clock.tick","value":21},{"call":"clock.seconds","value":1.05},{"call":"clock.remaining_ticks","value":179}]},
+      {"tick":22,"slots":["scout"],"cases":[{"call":"clock.tick","value":22},{"call":"clock.seconds","value":1.1},{"call":"clock.remaining_ticks","value":178}]},
+      {"tick":23,"slots":["scout"],"cases":[{"call":"clock.tick","value":23},{"call":"clock.seconds","value":1.15},{"call":"clock.remaining_ticks","value":177}]},
+      {"tick":24,"slots":["scout"],"cases":[{"call":"clock.tick","value":24},{"call":"clock.seconds","value":1.2},{"call":"clock.remaining_ticks","value":176}]},
+      {"tick":25,"slots":["scout"],"cases":[{"call":"clock.tick","value":25},{"call":"clock.seconds","value":1.25},{"call":"clock.remaining_ticks","value":175}]},
+      {"tick":26,"slots":["scout"],"cases":[{"call":"clock.tick","value":26},{"call":"clock.seconds","value":1.3},{"call":"clock.remaining_ticks","value":174}]},
+      {"tick":27,"slots":["scout"],"cases":[{"call":"clock.tick","value":27},{"call":"clock.seconds","value":1.35},{"call":"clock.remaining_ticks","value":173}]},
+      {"tick":28,"slots":["scout"],"cases":[{"call":"clock.tick","value":28},{"call":"clock.seconds","value":1.4},{"call":"clock.remaining_ticks","value":172}]},
+      {"tick":29,"slots":["scout"],"cases":[{"call":"clock.tick","value":29},{"call":"clock.seconds","value":1.45},{"call":"clock.remaining_ticks","value":171}]},
+      {"tick":30,"slots":["scout"],"cases":[{"call":"clock.tick","value":30},{"call":"clock.seconds","value":1.5},{"call":"clock.remaining_ticks","value":170}]},
+      {"tick":31,"slots":["scout"],"cases":[{"call":"clock.tick","value":31},{"call":"clock.seconds","value":1.55},{"call":"clock.remaining_ticks","value":169}]},
+      {"tick":32,"slots":["scout"],"cases":[{"call":"clock.tick","value":32},{"call":"clock.seconds","value":1.6},{"call":"clock.remaining_ticks","value":168}]},
+      {"tick":33,"slots":["scout"],"cases":[{"call":"clock.tick","value":33},{"call":"clock.seconds","value":1.65},{"call":"clock.remaining_ticks","value":167}]},
+      {"tick":34,"slots":["scout"],"cases":[{"call":"clock.tick","value":34},{"call":"clock.seconds","value":1.7},{"call":"clock.remaining_ticks","value":166}]},
+      {"tick":35,"slots":["scout"],"cases":[{"call":"clock.tick","value":35},{"call":"clock.seconds","value":1.75},{"call":"clock.remaining_ticks","value":165}]},
+      {"tick":36,"slots":["scout"],"cases":[{"call":"clock.tick","value":36},{"call":"clock.seconds","value":1.8},{"call":"clock.remaining_ticks","value":164}]},
+      {"tick":37,"slots":["scout"],"cases":[{"call":"clock.tick","value":37},{"call":"clock.seconds","value":1.85},{"call":"clock.remaining_ticks","value":163}]},
+      {"tick":38,"slots":["scout"],"cases":[{"call":"clock.tick","value":38},{"call":"clock.seconds","value":1.9},{"call":"clock.remaining_ticks","value":162}]},
+      {"tick":39,"slots":["scout"],"cases":[{"call":"clock.tick","value":39},{"call":"clock.seconds","value":1.95},{"call":"clock.remaining_ticks","value":161}]},
+      {"tick":40,"slots":["scout"],"cases":[{"call":"clock.tick","value":40},{"call":"clock.seconds","value":2},{"call":"clock.remaining_ticks","value":160}]},
+      {"tick":41,"slots":["scout"],"cases":[{"call":"clock.tick","value":41},{"call":"clock.seconds","value":2.05},{"call":"clock.remaining_ticks","value":159}]},
+      {"tick":42,"slots":["scout"],"cases":[{"call":"clock.tick","value":42},{"call":"clock.seconds","value":2.1},{"call":"clock.remaining_ticks","value":158}]},
+      {"tick":43,"slots":["scout"],"cases":[{"call":"clock.tick","value":43},{"call":"clock.seconds","value":2.15},{"call":"clock.remaining_ticks","value":157}]},
+      {"tick":44,"slots":["scout"],"cases":[{"call":"clock.tick","value":44},{"call":"clock.seconds","value":2.2},{"call":"clock.remaining_ticks","value":156}]},
+      {"tick":45,"slots":["scout"],"cases":[{"call":"clock.tick","value":45},{"call":"clock.seconds","value":2.25},{"call":"clock.remaining_ticks","value":155}]},
+      {"tick":46,"slots":["scout"],"cases":[{"call":"clock.tick","value":46},{"call":"clock.seconds","value":2.3},{"call":"clock.remaining_ticks","value":154}]},
+      {"tick":47,"slots":["scout"],"cases":[{"call":"clock.tick","value":47},{"call":"clock.seconds","value":2.35},{"call":"clock.remaining_ticks","value":153}]},
+      {"tick":48,"slots":["scout"],"cases":[{"call":"clock.tick","value":48},{"call":"clock.seconds","value":2.4},{"call":"clock.remaining_ticks","value":152}]},
+      {"tick":49,"slots":["scout"],"cases":[{"call":"clock.tick","value":49},{"call":"clock.seconds","value":2.45},{"call":"clock.remaining_ticks","value":151}]},
+      {"tick":50,"slots":["scout"],"cases":[{"call":"clock.tick","value":50},{"call":"clock.seconds","value":2.5},{"call":"clock.remaining_ticks","value":150}]},
+      {"tick":51,"slots":["scout"],"cases":[{"call":"clock.tick","value":51},{"call":"clock.seconds","value":2.55},{"call":"clock.remaining_ticks","value":149}]},
+      {"tick":52,"slots":["scout"],"cases":[{"call":"clock.tick","value":52},{"call":"clock.seconds","value":2.6},{"call":"clock.remaining_ticks","value":148}]},
+      {"tick":53,"slots":["scout"],"cases":[{"call":"clock.tick","value":53},{"call":"clock.seconds","value":2.65},{"call":"clock.remaining_ticks","value":147}]},
+      {"tick":54,"slots":["scout"],"cases":[{"call":"clock.tick","value":54},{"call":"clock.seconds","value":2.7},{"call":"clock.remaining_ticks","value":146}]},
+      {"tick":55,"slots":["scout"],"cases":[{"call":"clock.tick","value":55},{"call":"clock.seconds","value":2.75},{"call":"clock.remaining_ticks","value":145}]},
+      {"tick":56,"slots":["scout"],"cases":[{"call":"clock.tick","value":56},{"call":"clock.seconds","value":2.8},{"call":"clock.remaining_ticks","value":144}]},
+      {"tick":57,"slots":["scout"],"cases":[{"call":"clock.tick","value":57},{"call":"clock.seconds","value":2.85},{"call":"clock.remaining_ticks","value":143}]},
+      {"tick":58,"slots":["scout"],"cases":[{"call":"clock.tick","value":58},{"call":"clock.seconds","value":2.9},{"call":"clock.remaining_ticks","value":142}]},
+      {"tick":59,"slots":["scout"],"cases":[{"call":"clock.tick","value":59},{"call":"clock.seconds","value":2.95},{"call":"clock.remaining_ticks","value":141}]},
+      {"tick":60,"slots":["scout"],"cases":[{"call":"clock.tick","value":60},{"call":"clock.seconds","value":3},{"call":"clock.remaining_ticks","value":140}]},
+      {"tick":61,"slots":["scout"],"cases":[{"call":"clock.tick","value":61},{"call":"clock.seconds","value":3.05},{"call":"clock.remaining_ticks","value":139}]},
+      {"tick":62,"slots":["scout"],"cases":[{"call":"clock.tick","value":62},{"call":"clock.seconds","value":3.1},{"call":"clock.remaining_ticks","value":138}]},
+      {"tick":63,"slots":["scout"],"cases":[{"call":"clock.tick","value":63},{"call":"clock.seconds","value":3.15},{"call":"clock.remaining_ticks","value":137}]},
+      {"tick":64,"slots":["scout"],"cases":[{"call":"clock.tick","value":64},{"call":"clock.seconds","value":3.2},{"call":"clock.remaining_ticks","value":136}]},
+      {"tick":65,"slots":["scout"],"cases":[{"call":"clock.tick","value":65},{"call":"clock.seconds","value":3.25},{"call":"clock.remaining_ticks","value":135}]},
+      {"tick":66,"slots":["scout"],"cases":[{"call":"clock.tick","value":66},{"call":"clock.seconds","value":3.3},{"call":"clock.remaining_ticks","value":134}]},
+      {"tick":67,"slots":["scout"],"cases":[{"call":"clock.tick","value":67},{"call":"clock.seconds","value":3.35},{"call":"clock.remaining_ticks","value":133}]},
+      {"tick":68,"slots":["scout"],"cases":[{"call":"clock.tick","value":68},{"call":"clock.seconds","value":3.4},{"call":"clock.remaining_ticks","value":132}]},
+      {"tick":69,"slots":["scout"],"cases":[{"call":"clock.tick","value":69},{"call":"clock.seconds","value":3.45},{"call":"clock.remaining_ticks","value":131}]}
+     ]}
+  ]
+}

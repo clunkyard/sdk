@@ -1,0 +1,492 @@
+{
+  "description": "The time-limit score and your armour; none while the mechanic is off.",
+  "encoding": "A case gives the call, its args (none for a property) and one outcome: value (CY_OK and the result), ok: true (CY_OK from a call with no result), none: true (CY_NONE, absent) or error (the status name, such as E_RANGE). A stream's configure gives the args of tracker.configure, called after the hello and before its cases. Records use the canonical snake_case field names. A number argument written {\"f64\": \"NaN\"} is that non-finite double (NaN, Infinity, -Infinity or -0). slots lists the id of each robot slot after the state: slot n is slots[n - 1], and you are slot 1.",
+  "tolerance": 1e-12,
+  "rule": "|actual - expected| <= tolerance * max(1, |expected|), field by field; a case's tolerance is the file's unless tolerances names its call",
+  "streams": [
+    {"input": "fixtures/2d-classic.ndjson",
+     "hello": [
+
+     ],
+     "states": [
+      {"tick":0,"slots":["scout"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":12,"slots":["scout","target"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":45,"slots":["scout","target"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]}
+     ]},
+    {"input": "fixtures/2d-inertial-2d.ndjson",
+     "hello": [
+
+     ],
+     "states": [
+      {"tick":0,"slots":["scout"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":12,"slots":["scout","target"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":45,"slots":["scout","target"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]}
+     ]},
+    {"input": "fixtures/3d-classic.ndjson",
+     "hello": [
+
+     ],
+     "states": [
+      {"tick":0,"slots":["scout"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":12,"slots":["scout","target"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":45,"slots":["scout","target"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]}
+     ]},
+    {"input": "fixtures/3d-gravity-flat.ndjson",
+     "hello": [
+
+     ],
+     "states": [
+      {"tick":0,"slots":["scout"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":12,"slots":["scout","target"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":45,"slots":["scout","target"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]}
+     ]},
+    {"input": "fixtures/3d-gravity-hills.ndjson",
+     "hello": [
+
+     ],
+     "states": [
+      {"tick":0,"slots":["scout"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":12,"slots":["scout","target"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":45,"slots":["scout","target"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]}
+     ]},
+    {"input": "fixtures/3d-zero-g.ndjson",
+     "hello": [
+
+     ],
+     "states": [
+      {"tick":0,"slots":["scout"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":12,"slots":["scout","target"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":45,"slots":["scout","target"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]}
+     ]},
+    {"input": "fixtures/mechanics/2d-classic.ndjson",
+     "hello": [
+
+     ],
+     "states": [
+      {"tick":0,"slots":["scout"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":12,"slots":["scout","target"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0.1},{"call":"score.armour","value":0}]},
+      {"tick":45,"slots":["scout","target"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0.1},{"call":"score.armour","value":0}]}
+     ]},
+    {"input": "fixtures/mechanics/3d-zero-g.ndjson",
+     "hello": [
+
+     ],
+     "states": [
+      {"tick":0,"slots":["scout"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":12,"slots":["scout","target"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":45,"slots":["scout","target"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]}
+     ]},
+    {"input": "fixtures/off/2d-classic.ndjson",
+     "hello": [
+
+     ],
+     "states": [
+      {"tick":0,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":12,"slots":["scout","target"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":45,"slots":["scout","target"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]}
+     ]},
+    {"input": "fixtures/off/2d-inertial-2d.ndjson",
+     "hello": [
+
+     ],
+     "states": [
+      {"tick":0,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":12,"slots":["scout","target"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":45,"slots":["scout","target"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]}
+     ]},
+    {"input": "fixtures/off/3d-classic.ndjson",
+     "hello": [
+
+     ],
+     "states": [
+      {"tick":0,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":12,"slots":["scout","target"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":45,"slots":["scout","target"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]}
+     ]},
+    {"input": "fixtures/off/3d-gravity-flat.ndjson",
+     "hello": [
+
+     ],
+     "states": [
+      {"tick":0,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":12,"slots":["scout","target"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":45,"slots":["scout","target"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]}
+     ]},
+    {"input": "fixtures/off/3d-gravity-hills.ndjson",
+     "hello": [
+
+     ],
+     "states": [
+      {"tick":0,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":12,"slots":["scout","target"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":45,"slots":["scout","target"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]}
+     ]},
+    {"input": "fixtures/off/3d-zero-g.ndjson",
+     "hello": [
+
+     ],
+     "states": [
+      {"tick":0,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":12,"slots":["scout","target"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":45,"slots":["scout","target"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]}
+     ]},
+    {"input": "fixtures/compute/2d-classic.ndjson",
+     "hello": [
+
+     ],
+     "states": [
+      {"tick":0,"slots":["scout"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":12,"slots":["scout","target"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":45,"slots":["scout","target"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]}
+     ]},
+    {"input": "fixtures/compute/3d-zero-g.ndjson",
+     "hello": [
+
+     ],
+     "states": [
+      {"tick":0,"slots":["scout"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":12,"slots":["scout","target"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":45,"slots":["scout","target"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]}
+     ]},
+    {"input": "vectors/api/inputs/tape-2d-classic.ndjson",
+     "hello": [
+
+     ],
+     "states": [
+      {"tick":0,"slots":["tape-scout"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":1,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":2,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":3,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":4,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":5,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":6,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":7,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":1200,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":57.19},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":1201,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":62.58},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":1202,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":62.57},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":1203,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":62.57},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":1204,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":62.57},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":1205,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":62.57},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":1206,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":62.56},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":1207,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":62.56},{"call":"score.best","value":0},{"call":"score.armour","none":true}]}
+     ]},
+    {"input": "vectors/api/inputs/tape-2d-inertial-2d.ndjson",
+     "hello": [
+
+     ],
+     "states": [
+      {"tick":0,"slots":["tape-scout"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":1,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":2,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":3,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":4,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":5,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":6,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":7,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":1200,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":36.91},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":1201,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":36.88},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":1202,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":36.88},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":1203,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":36.88},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":1204,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":36.88},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":1205,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":36.87},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":1206,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":36.87},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":1207,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":36.87},{"call":"score.best","value":0},{"call":"score.armour","none":true}]}
+     ]},
+    {"input": "vectors/api/inputs/tape-3d-classic.ndjson",
+     "hello": [
+
+     ],
+     "states": [
+      {"tick":0,"slots":["tape-scout"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":1,"slots":["tape-scout"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":2,"slots":["tape-scout"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":3,"slots":["tape-scout"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":4,"slots":["tape-scout"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":5,"slots":["tape-scout"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":6,"slots":["tape-scout"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":7,"slots":["tape-scout"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":1200,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":63.65},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":1201,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":70.34},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":1202,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":70.34},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":1203,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":70.33},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":1204,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":70.32},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":1205,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":70.32},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":1206,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":70.31},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":1207,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":70.3},{"call":"score.best","value":0},{"call":"score.armour","none":true}]}
+     ]},
+    {"input": "vectors/api/inputs/tape-3d-gravity-flat.ndjson",
+     "hello": [
+
+     ],
+     "states": [
+      {"tick":0,"slots":["tape-scout"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":1,"slots":["tape-scout"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":2,"slots":["tape-scout"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":3,"slots":["tape-scout"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":4,"slots":["tape-scout"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":5,"slots":["tape-scout"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":6,"slots":["tape-scout"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":7,"slots":["tape-scout"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":1200,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":61.48},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":1201,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":61.45},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":1202,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":61.45},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":1203,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":61.45},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":1204,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":61.45},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":1205,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":61.45},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":1206,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":61.45},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":1207,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":61.44},{"call":"score.best","value":0},{"call":"score.armour","none":true}]}
+     ]},
+    {"input": "vectors/api/inputs/tape-3d-gravity-hills.ndjson",
+     "hello": [
+
+     ],
+     "states": [
+      {"tick":0,"slots":["tape-scout"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":1,"slots":["tape-scout"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":2,"slots":["tape-scout"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":3,"slots":["tape-scout"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":4,"slots":["tape-scout"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":5,"slots":["tape-scout"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":6,"slots":["tape-scout"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":7,"slots":["tape-scout"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":1200,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":51.29},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":1201,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":70.69},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":1202,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":70.69},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":1203,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":70.68},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":1204,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":70.68},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":1205,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":70.68},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":1206,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":70.67},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":1207,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":70.67},{"call":"score.best","value":0},{"call":"score.armour","none":true}]}
+     ]},
+    {"input": "vectors/api/inputs/tape-3d-zero-g.ndjson",
+     "hello": [
+
+     ],
+     "states": [
+      {"tick":0,"slots":["tape-scout"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":1,"slots":["tape-scout"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":2,"slots":["tape-scout"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":3,"slots":["tape-scout"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":4,"slots":["tape-scout"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":5,"slots":["tape-scout"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":6,"slots":["tape-scout"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":7,"slots":["tape-scout"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":839,"slots":["tape-scout"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":840,"slots":["tape-scout"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":841,"slots":["tape-scout"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":842,"slots":["tape-scout"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":843,"slots":["tape-scout"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":844,"slots":["tape-scout"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":845,"slots":["tape-scout"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":846,"slots":["tape-scout"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]}
+     ]},
+    {"input": "vectors/api/inputs/mechanics-2d-classic.ndjson",
+     "hello": [
+
+     ],
+     "states": [
+      {"tick":0,"slots":["scout"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":1,"slots":["scout","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":2,"slots":["scout","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":3,"slots":["scout","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":4,"slots":["scout","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":5,"slots":["scout","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":6,"slots":["scout","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":7,"slots":["scout","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":8,"slots":["scout","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":9,"slots":["scout","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":10,"slots":["scout","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":11,"slots":["scout","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":12,"slots":["scout","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":13,"slots":["scout","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":14,"slots":["scout","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":15,"slots":["scout","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":16,"slots":["scout","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":17,"slots":["scout","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":18,"slots":["scout","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":19,"slots":["scout","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":20,"slots":["scout","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":21,"slots":["scout","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":22,"slots":["scout","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":23,"slots":["scout","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":24,"slots":["scout","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":25,"slots":["scout","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":26,"slots":["scout","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":27,"slots":["scout","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":28,"slots":["scout","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":29,"slots":["scout","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":30,"slots":["scout","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":31,"slots":["scout","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":32,"slots":["scout","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":33,"slots":["scout","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":34,"slots":["scout","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":35,"slots":["scout","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":36,"slots":["scout","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":37,"slots":["scout","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":38,"slots":["scout","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":39,"slots":["scout","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":40,"slots":["scout","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":41,"slots":["scout","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":42,"slots":["scout","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":43,"slots":["scout","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":44,"slots":["scout","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":45,"slots":["scout","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":46,"slots":["scout","a","b"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":47,"slots":["scout","a","b"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":48,"slots":["scout","a","b"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0.05},{"call":"score.armour","value":0}]},
+      {"tick":49,"slots":["scout","a","b"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0.1},{"call":"score.armour","value":0}]},
+      {"tick":50,"slots":["scout","a","b"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0.15},{"call":"score.armour","value":0}]},
+      {"tick":51,"slots":["scout","a","b"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0.2},{"call":"score.armour","value":0}]},
+      {"tick":52,"slots":["scout","a","b"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0.25},{"call":"score.armour","value":0}]},
+      {"tick":53,"slots":["scout","a","b"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0.3},{"call":"score.armour","value":0}]},
+      {"tick":54,"slots":["scout","a","b"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0.35},{"call":"score.armour","value":0}]},
+      {"tick":55,"slots":["scout","a","b"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0.4},{"call":"score.armour","value":0}]},
+      {"tick":56,"slots":["scout","a","b"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0.45},{"call":"score.armour","value":0}]},
+      {"tick":57,"slots":["scout","a","b"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0.5},{"call":"score.armour","value":0}]},
+      {"tick":58,"slots":["scout","a","b"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0.55},{"call":"score.armour","value":0}]},
+      {"tick":59,"slots":["scout","a","b"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0.6},{"call":"score.armour","value":0}]}
+     ]},
+    {"input": "vectors/api/inputs/mechanics-3d-zero-g.ndjson",
+     "hello": [
+
+     ],
+     "states": [
+      {"tick":0,"slots":["scout","b"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":1,"slots":["scout","b","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":2,"slots":["scout","b","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":3,"slots":["scout","b","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":4,"slots":["scout","b","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":5,"slots":["scout","b","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":6,"slots":["scout","b","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":7,"slots":["scout","b","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":8,"slots":["scout","b","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":9,"slots":["scout","b","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":10,"slots":["scout","b","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":11,"slots":["scout","b","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":12,"slots":["scout","b","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":13,"slots":["scout","b","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":14,"slots":["scout","b","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":15,"slots":["scout","b","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":16,"slots":["scout","b","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":17,"slots":["scout","b","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":18,"slots":["scout","b","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":19,"slots":["scout","b","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":20,"slots":["scout","b","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":21,"slots":["scout","b","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":22,"slots":["scout","b","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":23,"slots":["scout","b","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":24,"slots":["scout","b","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":25,"slots":["scout","b","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":26,"slots":["scout","b","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":27,"slots":["scout","b","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":28,"slots":["scout","b","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":29,"slots":["scout","b","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":30,"slots":["scout","b","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":31,"slots":["scout","b","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":32,"slots":["scout","b","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":33,"slots":["scout","b","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":34,"slots":["scout","b","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":35,"slots":["scout","b","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":36,"slots":["scout","b","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":37,"slots":["scout","b","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":38,"slots":["scout","b","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":39,"slots":["scout","b","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":40,"slots":["scout","b","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":41,"slots":["scout","b","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":42,"slots":["scout","b","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":43,"slots":["scout","b","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":44,"slots":["scout","b","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":45,"slots":["scout","b","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":46,"slots":["scout","b","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":47,"slots":["scout","b","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":48,"slots":["scout","b","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":49,"slots":["scout","b","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":50,"slots":["scout","b","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":51,"slots":["scout","b","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":52,"slots":["scout","b","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":53,"slots":["scout","b","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":54,"slots":["scout","b","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":55,"slots":["scout","b","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":56,"slots":["scout","b","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":57,"slots":["scout","b","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":58,"slots":["scout","b","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]},
+      {"tick":59,"slots":["scout","b","a"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","value":0}]}
+     ]},
+    {"input": "vectors/api/inputs/cue-window.ndjson",
+     "hello": [
+
+     ],
+     "states": [
+      {"tick":0,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":1,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":2,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":3,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":4,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":5,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":6,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":7,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":8,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":9,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":10,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":11,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":12,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":13,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":14,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":15,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":16,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":17,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":18,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":19,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":20,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":21,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":22,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":23,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":24,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":25,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":26,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":27,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":28,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":29,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":30,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":31,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":32,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":33,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":34,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":35,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":36,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":37,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":38,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":39,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":40,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":41,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":42,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":43,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":44,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":45,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":46,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":47,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":48,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":49,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":50,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":51,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":52,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":53,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":54,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":55,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":56,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":57,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":58,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":59,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":60,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":61,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":62,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":63,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":64,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":65,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":66,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":67,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":68,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":69,"slots":["scout"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]}
+     ]}
+  ]
+}

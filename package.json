@@ -1,0 +1,10 @@
+{
+  "name": "clunkyard-sdk-release",
+  "private": true,
+  "scripts": {
+    "pack": "node scripts/pack.cjs",
+    "qualify": "node scripts/qualify.cjs"
+  },
+  "engines": { "node": ">=20" },
+  "devDependencies": { "typescript": "6.0.2" }
+}

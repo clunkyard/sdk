@@ -1,0 +1,3 @@
+/target/
+# The committed wasm32 build, which the root .gitignore would leave out.
+!/dist/

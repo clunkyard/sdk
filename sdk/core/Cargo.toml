@@ -1,0 +1,44 @@
+[package]
+name = "clunkyard-core"
+version = "2.0.0"
+edition = "2021"
+rust-version = "1.82"
+description = "The Clunkyard robot core: protocol 2 and the robot subsystems behind one C ABI."
+license = "MIT"
+publish = false
+
+[lib]
+name = "clunkyard"
+crate-type = ["rlib", "cdylib", "staticlib"]
+# generated/mod.rs lists signatures in indented doc blocks, which are not Rust.
+doctest = false
+
+[features]
+# cy_test_panic, for the panic reset and poisoning tests.
+test-panic = []
+
+[dependencies]
+libm = "0.2"
+serde_core = { version = "1", default-features = false, features = ["std"] }
+serde_json = { version = "1", default-features = false, features = ["std", "float_roundtrip"] }
+
+[profile.release]
+panic = "unwind"
+lto = true
+codegen-units = 1
+
+# The committed wasm32 build (build-wasm.sh). wasm32-unknown-unknown cannot
+# unwind, so a panic traps and the loader re-instantiates (src/dsl/core.js).
+[profile.wasm]
+inherits = "release"
+panic = "abort"
+opt-level = "z"
+debug = false
+
+[dev-dependencies]
+# The tests build the core with cy_test_panic; release builds never have it.
+clunkyard-core = { path = ".", features = ["test-panic"] }
+
+[[test]]
+name = "stdio"
+harness = false

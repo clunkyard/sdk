@@ -1,0 +1,42 @@
+{
+  "name": "@clunkyard/git",
+  "version": "2.0.1",
+  "description": "Ordinary private Git for Clunkyard bot projects",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "bin": {
+    "git-remote-clunkyard": "git-remote-clunkyard",
+    "clunkyard-git": "login.cjs"
+  },
+  "files": [
+    "git-remote-clunkyard",
+    "login.cjs",
+    "client.cjs",
+    "README.md",
+    "LICENSE"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/clunkyard/sdk.git",
+    "directory": "packages/git"
+  },
+  "homepage": "https://clunkyard.com/sdk/private-git",
+  "bugs": {
+    "url": "https://github.com/clunkyard/sdk/issues"
+  },
+  "keywords": [
+    "clunkyard",
+    "git",
+    "robot",
+    "arena"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "exports": {
+    "./package.json": "./package.json"
+  }
+}
