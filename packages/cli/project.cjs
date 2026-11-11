@@ -42,6 +42,7 @@ function makefile() {
 function readme(language,entry) {
   const row=catalogue.languages[language],portable=nodeLanguage(language)||row.portable;
   const tools=row.tools.filter(tool=>!['node','make'].includes(tool));
+  const guide=language==='typescript'?'javascript':language==='wat'||language.endsWith('-wasm')?'wasm':language;
   return `# A Clunkyard robot in ${language}
 
 Edit \`${entry}\`, build, play a real local match and inspect its replay. Install Node 20+ with npm${tools.length?' and your existing language tools: '+tools.map(tool=>'\`'+tool+'\`').join(', '):''}.
@@ -60,7 +61,7 @@ If you use Make, the equivalent commands are \`make doctor\`, \`make\`, \`make m
 
 ${nodeLanguage(language)?`The ordinary npm dependency is \`clunkyard@npm:@clunkyard/sdk@${catalogue.sdkVersion}\`, pinned with its integrity in \`package-lock.json\`. Existing \`require('clunkyard')\` and \`import ... from 'clunkyard'\` source works locally and online. The first build runs \`npm ci --ignore-scripts\`; you can also run \`npm ci\` yourself. Keep both package files in Git. ${language==='typescript'?'Use your installed TypeScript 6+ compiler; the CLI downloads no compiler.':''}\n\n`:''}${(row.requirements?.notes||[]).join(' ')}
 
-The [language guide](https://clunkyard.com/sdk/${language==='typescript'?'javascript':language}) lists the adapter, official language reference and toolchain prerequisites. \`doctor\` checks your existing installation without downloading a compiler. Compiler-sensitive native bindings rebuild with your own toolchain.
+The [language guide](https://clunkyard.com/sdk/${guide}) lists the adapter, official language reference and toolchain prerequisites. \`doctor\` checks your existing installation without downloading a compiler. Compiler-sensitive native bindings rebuild with your own toolchain.
 
 ## Repeat a trial
 

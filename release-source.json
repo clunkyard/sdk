@@ -1,6 +1,6 @@
 {
   "v": 1,
-  "sourceCommit": "61818be782139065e48effeb76f8b62f46640c69",
+  "sourceCommit": "d5bde475f2933f1975279474ac725ccdeef391a8",
   "sourceDirty": false,
   "packages": [
     "git",
@@ -65,8 +65,8 @@
     },
     {
       "path": "packages/cli/project.cjs",
-      "bytes": 11313,
-      "sha256": "9e1a95fcaead065b82e63827d18d107a300bce3c4d68683fa1ab75ef60353729"
+      "bytes": 11386,
+      "sha256": "d0ac159fae3c884a54e27eb1b2cd902cf01a3faf945ea80efb1295ff7960a20e"
     },
     {
       "path": "packages/cli/README.md",
