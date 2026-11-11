@@ -128,3 +128,11 @@ It strips custom SDK overrides and GitHub tokens from validation subprocesses,
 and uploads the matching results, logs and replays. The workflow publishes
 nothing. A passing receipt closes archive selection/extraction separately from
 the earlier installed-SDK bootstrap and later anonymous registry installation.
+
+After publication, dispatch **Public native npm qualification** for the exact
+registry version. Its Intel runner installs the public package with empty npm
+configuration and a fresh cache, clones C/C++/Python/Rust starters, and runs real
+2D/3D matches with no SDK or local-archive override. It checks the registry
+integrity, installed bytes, normal source preservation and robot results.
+The same public `scripts/native-registry-smoke.cjs` accepts an explicit platform
+and selected language list for other native hosts; it never installs toolchains.

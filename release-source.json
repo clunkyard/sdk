@@ -1,6 +1,6 @@
 {
   "v": 1,
-  "sourceCommit": "2920bbcc5abbddae8478b851f7debbca1e702350",
+  "sourceCommit": "2bf446456397969aa70c74202bfd076c454cc304",
   "sourceDirty": false,
   "packages": [
     "git",
@@ -22,6 +22,11 @@
       "path": ".github/workflows/native-qualification.yml",
       "bytes": 1584,
       "sha256": "0d3d8a1c8c9a75b815785a939d8ba70aecf55aa9e633d536e13e359add28776d"
+    },
+    {
+      "path": ".github/workflows/native-registry-qualification.yml",
+      "bytes": 1273,
+      "sha256": "612791af6b71cbb85376b9c8f7f1c942af3a5d39625970aeb14cef5f67b9455d"
     },
     {
       "path": ".github/workflows/npm-release.yml",
@@ -480,8 +485,8 @@
     },
     {
       "path": "RELEASING.md",
-      "bytes": 6899,
-      "sha256": "914b79e459ef8c57d2843f1d6dac54baf6ba087a54525271adaa5415eb963aec"
+      "bytes": 7450,
+      "sha256": "7f4a1da930d86dbd30cf9af7cd11fbe25355f7c821c0ee9e1be76e2030b6c8b7"
     },
     {
       "path": "scripts/core-notices.cjs",
@@ -492,6 +497,11 @@
       "path": "scripts/native-archive-smoke.cjs",
       "bytes": 5891,
       "sha256": "edc3900dc33f098fc58fb0e61d893f72c824477c845cae553e43111aee451497"
+    },
+    {
+      "path": "scripts/native-registry-smoke.cjs",
+      "bytes": 7531,
+      "sha256": "9d88c71eb01849fb93b7331ca12c33cf985cb079ed429eb5c63c5314e52b6e10"
     },
     {
       "path": "scripts/native-smoke.cjs",
