@@ -1,6 +1,6 @@
 {
   "v": 1,
-  "sourceCommit": "8b1da44aaf16f64c7c8029bf2ebc721c1d75c262",
+  "sourceCommit": "b0a40abb837e9c576aa472d06092b30fec1cffb9",
   "sourceDirty": false,
   "packages": [
     "git",
@@ -465,13 +465,13 @@
     },
     {
       "path": "README.md",
-      "bytes": 3093,
-      "sha256": "8dd2a356f9259e9a815ea9d59f23f3ceadac9ed2a9faa308f492d2e593b158d0"
+      "bytes": 3574,
+      "sha256": "f581b6ed366a1e19d8dad44f7017ab23095971e40918a58563db886328ba211d"
     },
     {
       "path": "RELEASING.md",
-      "bytes": 4271,
-      "sha256": "6e7f42b1f2dc81ead0ec09c080549840d577ce2363ae936828c9290ab752fd23"
+      "bytes": 4395,
+      "sha256": "97880634b447856bf61b8e7b40199ca0b8b2f0cae29380539dfdfe7f639dfcd1"
     },
     {
       "path": "scripts/pack.cjs",

@@ -42,6 +42,7 @@ Once the package exists, configure the **exact** public workflow identity:
 ```sh
 npm trust github @clunkyard/git --repo clunkyard/sdk --file npm-release.yml --environment npm-staging --allow-stage-publish
 npm trust github @clunkyard/sdk --repo clunkyard/sdk --file npm-release.yml --environment npm-staging --allow-stage-publish
+npm trust github @clunkyard/cli --repo clunkyard/sdk --file npm-release.yml --environment npm-staging --allow-stage-publish
 ```
 
 These settings authorize staging only. There is no registry token in GitHub

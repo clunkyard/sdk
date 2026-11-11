@@ -33,6 +33,21 @@ The package is a robot library, not a match engine or a browser bundle. Use a
 [language starter](https://github.com/clunkyard/game-kit) for real local matches,
 replays and optional selected-language containers.
 
+The shared CLI creates a clean starter and supplies its local build and match
+commands:
+
+```sh
+npx --yes @clunkyard/cli@2 new python my-robot
+cd my-robot
+npx --yes @clunkyard/cli@2 doctor
+npx --yes @clunkyard/cli@2 match
+```
+
+It downloads only the pinned engine and selected SDK, using your installed
+language tools. Robot repositories keep source and normal build metadata;
+shared tool fixes arrive through compatible CLI releases. For exact tooling,
+use `@clunkyard/cli@2.0.0`.
+
 ## Review and qualify a release
 
 ```sh
