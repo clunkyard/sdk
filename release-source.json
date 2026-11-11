@@ -1,6 +1,6 @@
 {
   "v": 1,
-  "sourceCommit": "c49cd646b0102b2e0bc8b3cf8156264fe1d8c679",
+  "sourceCommit": "2d5af794933567449c59d450e3acb65c98a76fbd",
   "sourceDirty": false,
   "packages": [
     "git",
@@ -12,6 +12,11 @@
       "path": ".gitattributes",
       "bytes": 45,
       "sha256": "96695717cc7dae5d62e4b31bd3b954c32a820b1ec22d7f5a8a5b184e2455e055"
+    },
+    {
+      "path": ".github/workflows/native-qualification.yml",
+      "bytes": 1584,
+      "sha256": "0d3d8a1c8c9a75b815785a939d8ba70aecf55aa9e633d536e13e359add28776d"
     },
     {
       "path": ".github/workflows/npm-release.yml",
@@ -61,7 +66,7 @@
     {
       "path": "packages/cli/package.json",
       "bytes": 728,
-      "sha256": "0f0cbbba2e62d5c381bf9e95418481b76ba1c34125e646f86e816dd4c8d6e6c2"
+      "sha256": "cccf6b5d00293f4841967d9563ba160b6ecbe163bd97975698270c87dae2fe11"
     },
     {
       "path": "packages/cli/project.cjs",
@@ -71,12 +76,12 @@
     {
       "path": "packages/cli/README.md",
       "bytes": 3025,
-      "sha256": "96a191e87f696f26312e5814ae5b13c19b36a47ee40865d681b92de8e5d61e61"
+      "sha256": "4272c7495438128a3b37cf9fb5bfebaca9e7f93f5f63c2d9d3a7e76035aadbec"
     },
     {
       "path": "packages/cli/runtime.cjs",
-      "bytes": 17145,
-      "sha256": "2da775613f375643d2ccbcc12adf41a9911dff03752df4bd9b9ea8f0669f86ac"
+      "bytes": 21491,
+      "sha256": "2e5ca6ae5253b89fd00f27a5d571c249056953f7a5b8195e1fa78c415aac3f45"
     },
     {
       "path": "packages/git/client.cjs",
@@ -470,13 +475,28 @@
     },
     {
       "path": "RELEASING.md",
-      "bytes": 4395,
-      "sha256": "97880634b447856bf61b8e7b40199ca0b8b2f0cae29380539dfdfe7f639dfcd1"
+      "bytes": 6045,
+      "sha256": "d792b75c6389f17be3938389c9375f5794706386b84f46a447ecbbf8c02ce235"
+    },
+    {
+      "path": "scripts/core-notices.cjs",
+      "bytes": 2579,
+      "sha256": "d12ecb93b3d3c2763620f1a88a347fb9b1a430e82759841ad2ac9d420d93db8f"
+    },
+    {
+      "path": "scripts/native-smoke.cjs",
+      "bytes": 8155,
+      "sha256": "9940b42a869ad21794397998784334fa370adbea3362eba244ac15173d734340"
     },
     {
       "path": "scripts/pack.cjs",
       "bytes": 2744,
       "sha256": "60ae7f6f2c1953db6d267c7952a35b419021702153b3d9243143bfe9206762bd"
+    },
+    {
+      "path": "scripts/player-kit/build-native.cjs",
+      "bytes": 4369,
+      "sha256": "39dbbf530e029340c4f1d2d00be9709d12785b246d7b15d39436405121b31dbe"
     },
     {
       "path": "scripts/qualify.cjs",
@@ -511,7 +531,7 @@
     {
       "path": "scripts/smoke-cli.cjs",
       "bytes": 5162,
-      "sha256": "2d17d4004097bc8d1a128157e4d6a06bce28fefca35cba8682a973676ee6eedd"
+      "sha256": "9b37a1024d04e3c67112cc51c3964a11e5bde799dfee7906fc9f05447dc61f54"
     },
     {
       "path": "scripts/smoke-git.cjs",
@@ -527,6 +547,121 @@
       "path": "scripts/verify-oidc.cjs",
       "bytes": 2527,
       "sha256": "369030b8d5e47e5c34daece087171bbbeaf09b82d6da8895cf0214ec0a352a00"
+    },
+    {
+      "path": "sdk/bindings/c/install.cjs",
+      "bytes": 372,
+      "sha256": "ba787a8869349f371c4a6a5b1f6e8d915ff5b5aad92109ddd3e98d09414aa063"
+    },
+    {
+      "path": "sdk/bindings/c/Makefile",
+      "bytes": 412,
+      "sha256": "6c3e20da4f7e8b06743efe92f4d7608964489376f750ae442fbe6e26e1f10684"
+    },
+    {
+      "path": "sdk/bindings/c/README.md",
+      "bytes": 2439,
+      "sha256": "01293430bc7d6c16a7aba9f6eccdde949388dc4ebec5e3e9ad407368172af218"
+    },
+    {
+      "path": "sdk/bindings/c/test_conformance.c",
+      "bytes": 45207,
+      "sha256": "736c130d19ff81986900974c21d37790f6432f78154572f071f3169e9c4ff042"
+    },
+    {
+      "path": "sdk/bindings/cpp/clunkyard.hpp",
+      "bytes": 30477,
+      "sha256": "d2b8f8a01fc9a827fafc6ea3706897129ab18994ac62d0e3ffb851560fa80530"
+    },
+    {
+      "path": "sdk/bindings/cpp/install.cjs",
+      "bytes": 382,
+      "sha256": "493ae25c761ff6d08168d7f82f2c223f31243f81d803a5f4cdd312b4fb17d90b"
+    },
+    {
+      "path": "sdk/bindings/cpp/Makefile",
+      "bytes": 475,
+      "sha256": "5ef70cd41642ea8cb630b98394d357cac5a7321390b2c46ff3cf4ec0a53f3fae"
+    },
+    {
+      "path": "sdk/bindings/cpp/README.md",
+      "bytes": 1910,
+      "sha256": "568d78d613f806d528752af505ec6f23175a789821b6c8c6210044bd97c6be45"
+    },
+    {
+      "path": "sdk/bindings/cpp/test_conformance.cpp",
+      "bytes": 80067,
+      "sha256": "da1a15d39a2ec875345015789e17146691ca93240f891cbecacd77b800a69898"
+    },
+    {
+      "path": "sdk/bindings/python/clunkyard/__init__.py",
+      "bytes": 2600,
+      "sha256": "2801c027aaf3f3496320a04cd3b51f80a5010bf448066a8e7bbc60b045147889"
+    },
+    {
+      "path": "sdk/bindings/python/clunkyard/_api.py",
+      "bytes": 32039,
+      "sha256": "b77853da85c5ffa14b9eb9355417eeac0a2c8c2f5ab1d5a280a86f5aa30f6c4e"
+    },
+    {
+      "path": "sdk/bindings/python/clunkyard/_core.py",
+      "bytes": 1530,
+      "sha256": "f13bedf37bebdb795861edb62ca1f71c4ad18314e0b64c2cea624d2e55219518"
+    },
+    {
+      "path": "sdk/bindings/python/install.cjs",
+      "bytes": 484,
+      "sha256": "252ef08120887a903162f4cb7196aac999706a427a56856f8a3639cc054b8144"
+    },
+    {
+      "path": "sdk/bindings/python/Makefile",
+      "bytes": 879,
+      "sha256": "b1907a329b46775cd9d3add5084a759feafc859409b9dd98a6121ed1661dacbc"
+    },
+    {
+      "path": "sdk/bindings/python/README.md",
+      "bytes": 2306,
+      "sha256": "88204d16b39f79e18725cb7178afc9eacec8160bb15585739f3e438f26341aab"
+    },
+    {
+      "path": "sdk/bindings/python/test_conformance.py",
+      "bytes": 9853,
+      "sha256": "e30d3f2c7606ba447da99bf53fa421016f201bc317dc20eb8aa38a4d430be19a"
+    },
+    {
+      "path": "sdk/bindings/python/test_loop.py",
+      "bytes": 837,
+      "sha256": "a95c89c247e2833e65275e635232b254f1d97d8631370397b715dfbad87aff00"
+    },
+    {
+      "path": "sdk/bindings/rust/clunkyard.rs",
+      "bytes": 53082,
+      "sha256": "36c36c0aade494a1ff49e9f95ff347fdea683ded149ddc65f711faa7573b6a22"
+    },
+    {
+      "path": "sdk/bindings/rust/install.cjs",
+      "bytes": 692,
+      "sha256": "02528228ee10e61e7d579cce84c3123346751830d050fcbf32892ff55baf317b"
+    },
+    {
+      "path": "sdk/bindings/rust/Makefile",
+      "bytes": 662,
+      "sha256": "e64a74753a6e92908c73616a0b721170cdbc6f8062a468f31b0236b388fabfb3"
+    },
+    {
+      "path": "sdk/bindings/rust/README.md",
+      "bytes": 2381,
+      "sha256": "b2c58f9c6258a8f94bdbc9c2f252655c0c6b7e5fa02bb3c2c951426ac3332596"
+    },
+    {
+      "path": "sdk/bindings/rust/test_conformance.c",
+      "bytes": 57183,
+      "sha256": "d97493cf4a2ddfadd48aa08d704bd256d7762ac40e7529d24844be277ce353a7"
+    },
+    {
+      "path": "sdk/bindings/rust/test_conformance.rs",
+      "bytes": 43475,
+      "sha256": "e4bf77c135c9b4512c8fbd034f9f2dea06d3676363102c9fb9891fd224799f46"
     },
     {
       "path": "sdk/core/.cargo/config.toml",
@@ -545,8 +680,8 @@
     },
     {
       "path": "sdk/core/build.rs",
-      "bytes": 364,
-      "sha256": "d97991e903f678187b3ee7f5e9160c93c7eb563228b0898faaab64257de7b933"
+      "bytes": 537,
+      "sha256": "6f0f53aa07ada69f2ea1c6d2b443a1d461ec0261070df34e44e0e71bb8c762f3"
     },
     {
       "path": "sdk/core/Cargo.lock",

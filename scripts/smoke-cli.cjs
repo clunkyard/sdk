@@ -25,9 +25,9 @@ try {
   const entry=path.join(directory,'cli.cjs');
   const bin=path.join(prefix,...(process.platform==='win32'?[]:['bin']),'clunkyard'+(process.platform==='win32'?'.cmd':''));
   assert.ok(fs.existsSync(bin),'npm did not install the CLI command shim.');
-  if(process.platform==='win32')assert.equal(run(process.env.ComSpec||'cmd.exe',['/d','/s','/c',`""${bin}" --version"`],{windowsVerbatimArguments:true}),'2.0.1');
-  else assert.equal(run(bin,['--version']),'2.0.1');
-  assert.equal(run(process.execPath,[entry,'--version']),'2.0.1');
+  if(process.platform==='win32')assert.equal(run(process.env.ComSpec||'cmd.exe',['/d','/s','/c',`""${bin}" --version"`],{windowsVerbatimArguments:true}),'2.1.0');
+  else assert.equal(run(bin,['--version']),'2.1.0');
+  assert.equal(run(process.execPath,[entry,'--version']),'2.1.0');
   run(process.execPath,[entry,'new','javascript',project]);
   for(const file of ['clunkyard.cjs','clunkyard-archive.cjs','clunkyard.lock.json','clunkyard-template.json'])assert.equal(fs.existsSync(path.join(project,file)),false,'Copied tooling: '+file);
   run(process.execPath,[entry,'doctor','--project',project]);

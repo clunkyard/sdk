@@ -6,6 +6,37 @@ const {extract,readAsset}=require('./archive.cjs');
 const catalogue=require('./catalogue.json');
 const {readManifest}=require('./project.cjs');
 
+function selectPlatformSdk(lock,platform=process.platform,arch=process.arch) {
+  if(lock.portable)return lock.sdk;
+  const key=`${platform}-${arch}`,asset=lock.sdkPlatforms?.[key];
+  if(asset)return asset;
+  if(key==='linux-x64')return lock.sdk;
+  throw new Error(`No native ${lock.language} SDK is released for ${key}. Use a hosted build or trial, or install a matching SDK with CLUNKYARD_SDK. See the language guide for toolchain requirements.`);
+}
+
+// Execute the worker's environment-prefixed recipes without requiring Unix env
+// on the player's machine. Arguments stay separate, including paths with spaces.
+function recipeInvocation(command,args,{cwd,env}) {
+  if(command!=='env')return {command,args,cwd,env};
+  args=[...args];env={...env};
+  if(args[0]==='--chdir'){args.shift();cwd=args.shift();}
+  while(args.length&&/^[A-Za-z_][A-Za-z0-9_]*=/.test(args[0])){
+    const value=args.shift(),index=value.indexOf('=');env[value.slice(0,index)]=value.slice(index+1);
+  }
+  command=args.shift();
+  if(!command)throw new Error('The local recipe has no executable.');
+  return {command,args,cwd,env};
+}
+
+function bindingCompilerIdentity(lock,environment,probe=spawnSync,platform=process.platform){
+  return lock.tools.filter(tool=>!['node','make'].includes(tool)&&!(platform==='win32'&&lock.language==='rust'&&tool==='cc')).map(tool=>{
+    const variable={rustc:'RUSTC',cc:'CC','c++':'CXX',swiftc:'SWIFTC'}[tool];
+    const command=variable&&environment[variable]||tool;
+    const result=probe(command,[tool==='javac'?'-version':'--version'],{env:environment,encoding:'utf8',timeout:10000,maxBuffer:64*1024});
+    return {command,status:result.status,version:(String(result.stdout||'')+String(result.stderr||'')).slice(0,4096),error:result.error?.code||null};
+  });
+}
+
 function selectLocalResourceMode(bot,supported) {
   if(supported.includes('open'))return 'open';
   const metered=supported.find(mode=>mode==='dsl'||mode==='wasm');
@@ -17,24 +48,36 @@ function createRuntime(project,entry=path.join(__dirname,'cli.cjs')) {
 const root=path.resolve(project),initial=readManifest(root),lock=catalogue.languages[initial.language];
 const cache=path.join(root,'.clunkyard');
 const engine=path.join(cache,'engine-'+lock.engine.sha256.slice(0,16));
-const sdk=process.env.CLUNKYARD_SDK||path.join(cache,'sdk-'+lock.sdk.sha256.slice(0,16));
 const npmSDK=['javascript','typescript'].includes(initial.language)?catalogue.npmSDK:null;
+const suppliedSdk=process.env.CLUNKYARD_SDK?path.resolve(process.env.CLUNKYARD_SDK):null;
+let sdkAsset,platformError,suppliedMetadata;
+try{sdkAsset=npmSDK?lock.sdk:selectPlatformSdk(lock);}catch(error){platformError=error;}
+if(suppliedSdk&&fs.existsSync(path.join(suppliedSdk,'platform.json')))suppliedMetadata=JSON.parse(fs.readFileSync(path.join(suppliedSdk,'platform.json'),'utf8'));
+const sdk=suppliedSdk||path.join(cache,'sdk-'+(sdkAsset?.sha256.slice(0,16)||'unavailable'));
+const library=suppliedMetadata?.library||sdkAsset?.library||({darwin:'libclunkyard.2.dylib',win32:'clunkyard.dll'}[process.platform]||'libclunkyard.so.2');
+if(path.basename(library)!==library||library.includes('\\'))throw new Error('SDK library must be a file name.');
 const manifest=()=>readManifest(root);
 const sha=data=>crypto.createHash('sha256').update(data).digest('hex');
 const skip=new Set(['.git','.clunkyard','build','replays','node_modules','__pycache__','obj','bin']);
 
 function run(command, args, options={}) {
-  const result=spawnSync(command,args,{cwd:root,env:environment(),stdio:'inherit',...options});
+  const invocation=recipeInvocation(command,args,{cwd:options.cwd||root,env:options.env||environment()});
+  command=invocation.command;
+  if(process.platform==='win32'&&command==='python3')command=process.env.PYTHON||'python';
+  const result=spawnSync(command,invocation.args,{stdio:'inherit',...options,cwd:invocation.cwd,env:invocation.env});
   if(result.error)throw new Error(`${command}: ${result.error.message}. See README.md for this language's toolchain.`);
   if(result.status!==0)throw new Error(`${command} exited with status ${result.status}`);
   return result;
 }
 function environment() {
   const paths=[path.join(sdk,'lib'),process.env.LD_LIBRARY_PATH].filter(Boolean).join(path.delimiter);
-  return {...process.env,CLUNKYARD_SDK:sdk,CLUNKYARD_PROJECT:root,CLUNKYARD_LIB:path.join(sdk,'lib','libclunkyard.so.2'),LD_LIBRARY_PATH:paths,
+  return {...process.env,CLUNKYARD_SDK:sdk,CLUNKYARD_PROJECT:root,CLUNKYARD_LIB:path.join(sdk,'lib',library),LD_LIBRARY_PATH:paths,
+    ...(process.platform==='darwin'?{DYLD_LIBRARY_PATH:[path.join(sdk,'lib'),process.env.DYLD_LIBRARY_PATH].filter(Boolean).join(path.delimiter)}:{}),
+    ...(process.platform==='win32'?{PATH:[path.join(sdk,'lib'),process.env.PATH].filter(Boolean).join(path.delimiter),CC:cCompiler(false),CXX:cCompiler(true)}:{}),
     TMPDIR:path.join(cache,'tmp'),NODE_PATH:npmSDK?path.join(root,'node_modules'):path.join(sdk,'bindings','javascript'),
     DOTNET_CLI_TELEMETRY_OPTOUT:'1',DOTNET_NOLOGO:'1'};
 }
+function cCompiler(cpp){return process.env[cpp?'CXX':'CC']||(process.platform==='win32'?(toolAvailable(cpp?'clang++':'clang')?(cpp?'clang++':'clang'):'cl'):(cpp?'c++':'cc'));}
 function safeCache() {
   if(fs.existsSync(cache)&&(!fs.lstatSync(cache).isDirectory()||fs.lstatSync(cache).isSymbolicLink()))throw new Error('.clunkyard must be an ordinary directory');
   fs.mkdirSync(cache,{recursive:true});fs.mkdirSync(path.join(cache,'tmp'),{recursive:true});
@@ -50,11 +93,20 @@ async function download(asset, destination) {
 }
 async function setup() {
   safeCache();
-  if(!npmSDK&&!lock.portable&&(process.platform!=='linux'||process.arch!=='x64'))throw new Error('This native SDK release supports Linux x86-64 (Ubuntu 24.04+/WSL2). Use JavaScript/Vane/Cadence/Glyph for the portable Node route; other native platforms are not yet qualified.');
+  checkNativePlatform();
   await download(lock.engine,engine);
   if(npmSDK)installNpmSDK();
-  else if(!process.env.CLUNKYARD_SDK)await download(lock.sdk,sdk);
+  else if(!suppliedSdk)await download(sdkAsset,sdk);
   else if(fs.readFileSync(path.join(sdk,'VERSION'),'utf8').trim()!==lock.sdkVersion)throw new Error('CLUNKYARD_SDK points to another SDK version');
+}
+function checkNativePlatform(){
+  if(npmSDK||lock.portable)return;
+  if(suppliedSdk){
+    if(suppliedMetadata&&suppliedMetadata.platform!==`${process.platform}-${process.arch}`)throw new Error(`CLUNKYARD_SDK targets ${suppliedMetadata.platform}, not ${process.platform}-${process.arch}.`);
+    if(!suppliedMetadata&&process.platform!=='linux')throw new Error('A custom native SDK on this platform needs platform.json from the native SDK builder.');
+  }else if(platformError)throw platformError;
+  const glibc=process.report?.getReport().header.glibcVersionRuntime;
+  if(process.platform==='linux'&&(!glibc||Number(glibc.split('.')[0])<2||(Number(glibc.split('.')[0])===2&&Number(glibc.split('.')[1])<39)))throw new Error('This native Linux SDK needs glibc 2.39+ (Ubuntu 24.04+ or WSL2). Use a hosted build or trial on other systems.');
 }
 function installNpmSDK() {
   const packageFile=path.join(root,'package.json'),lockFile=path.join(root,'package-lock.json');
@@ -94,7 +146,9 @@ function rebuildBinding() {
   // This downloads no compiler and keeps native modules compatible locally.
   for(const binding of npmSDK?[]:(lock.rebuildBindings||[])){
     const directory=path.join(sdk,'binding-src',binding);
-    run('make',['-C',directory,'install',`SDK=${sdk}`,`ROOT=${engine}`,`BUILD=${path.join(cache,'tmp','binding-'+binding)}`]);
+    const installer=path.join(directory,'install.cjs');
+    if(fs.existsSync(installer))run(process.execPath,[installer,sdk]);
+    else run('make',['-C',directory,'install',`SDK=${sdk}`,`ROOT=${engine}`,`BUILD=${path.join(cache,'tmp','binding-'+binding)}`]);
   }
 }
 function typescriptCompiler() {
@@ -115,11 +169,11 @@ function typescriptCompiler() {
 }
 async function build() {
   await setup();const m=manifest(),out=path.join(cache,'build');fs.mkdirSync(out,{recursive:true});
-  const bindingStamp=path.join(cache,'bindings-ready'),bindingIdentity=npmSDK?.integrity||lock.sdk.sha256;
+  const bindingStamp=path.join(cache,'bindings-ready'),bindingIdentity=npmSDK?.integrity||sha(Buffer.from(JSON.stringify({asset:suppliedSdk?{sdk,metadata:suppliedMetadata||{},version:lock.sdkVersion}:sdkAsset.sha256,compilers:lock.rebuildBindings?.length?bindingCompilerIdentity(lock,environment()):[]})));
   if(!fs.existsSync(bindingStamp)||fs.readFileSync(bindingStamp,'utf8')!==bindingIdentity){rebuildBinding();fs.writeFileSync(bindingStamp,bindingIdentity);}
   const copied=path.join(cache,'source');fs.rmSync(copied,{recursive:true,force:true});sources(root,copied);
   const action=npmSDK&&m.language==='typescript'?[...typescriptCompiler(),'--ignoreConfig','--ignoreDeprecations','6.0','--target','ES2022','--module','commonjs','--rootDir',copied,'--outDir',out,path.join(copied,m.entry)]:worker(copied).command(m.language,path.join(copied,m.entry),out,m);
-  if(action){const steps=Array.isArray(action[0])?action:[action];for(const step of steps){const args=step.map(rewrite);if(m.language==='c')args[0]=process.env.CC||'cc';if(m.language==='cpp')args[0]=process.env.CXX||'c++';run(args[0],args.slice(1),{cwd:copied});}}
+  if(action){const steps=Array.isArray(action[0])?action:[action];for(const step of steps){const args=step.map(rewrite);if(m.language==='c')args[0]=cCompiler(false);if(m.language==='cpp')args[0]=cCompiler(true);run(args[0],args.slice(1),{cwd:copied});}}
   const runtimeSource=path.join(out,'source');fs.rmSync(runtimeSource,{recursive:true,force:true});sources(copied,runtimeSource);
   if(m.language==='typescript')fs.writeFileSync(path.join(out,'package.json'),'{"type":"commonjs"}\n');
   fs.writeFileSync(path.join(cache,'local-bot.json'),JSON.stringify({...m,command:[process.execPath,entry,'--project',root,'stdio']},null,2)+'\n');
@@ -184,12 +238,13 @@ function toolAvailable(tool){
 function doctor(){
   console.log(`Clunkyard SDK ${lock.sdkVersion}; ${lock.language}; ${process.platform}/${process.arch}; Node ${process.versions.node}`);
   let missing=0;
-  for(const tool of lock.tools.filter(tool=>tool!=='make'||(!npmSDK&&lock.rebuildBindings?.length))){
-    const ok=toolAvailable(tool);
-    console.log(`${ok?'found':'missing'} ${tool}`);if(!ok)missing++;
+  for(const tool of lock.tools.filter(tool=>!(process.platform==='win32'&&lock.language==='rust'&&tool==='cc')).filter(tool=>tool!=='make'||(!npmSDK&&lock.rebuildBindings?.some(binding=>!sdkAsset?.portableBindingInstallers?.includes(binding)&&!fs.existsSync(path.join(sdk,'binding-src',binding,'install.cjs')))))){
+    const command=process.platform==='win32'?({python3:process.env.PYTHON||'python',cc:cCompiler(false),'c++':cCompiler(true)}[tool]||tool):tool;
+    const ok=toolAvailable(command);
+    console.log(`${ok?'found':'missing'} ${command}`);if(!ok)missing++;
   }
   for(const check of lock.requirements?.checks||[]){
-    let command=[check.command];
+    let command=[process.platform==='win32'&&check.command==='python3'?(process.env.PYTHON||'python'):check.command];
     if(npmSDK&&check.command==='tsc'){try{command=typescriptCompiler()}catch{}}
     const result=spawnSync(command[0],[...command.slice(1),...check.args],{encoding:'utf8',env:environment(),timeout:10000});
     const output=String(result.stdout||'')+String(result.stderr||'');
@@ -200,10 +255,9 @@ function doctor(){
   if(lock.language==='clojure'){try{console.log('ok Clojure runtime: '+clojureClasspath())}catch(error){console.log('missing '+error.message);missing++}}
   if(lock.language==='scala'&&process.env.SCALA_LIBRARY_JAR&&!fs.existsSync(process.env.SCALA_LIBRARY_JAR)){console.log('missing SCALA_LIBRARY_JAR file');missing++}
   if(lock.language==='scala'&&!process.env.SCALA_LIBRARY_JAR&&!fs.existsSync('/usr/share/scala-2.11/lib/scala-library.jar')&&spawnSync('scala',['-version'],{timeout:10000}).error){console.log('missing Scala runtime; set SCALA_LIBRARY_JAR or install the scala launcher.');missing++}
-  const glibc=process.report?.getReport().header.glibcVersionRuntime;
-  if(!npmSDK&&!lock.portable&&(process.platform!=='linux'||process.arch!=='x64'||!glibc||Number(glibc.split('.')[0])<2||(Number(glibc.split('.')[0])===2&&Number(glibc.split('.')[1])<39))){console.log('unsupported native platform: use Linux x86-64 with glibc 2.39+ (Ubuntu 24.04+ or WSL2).');missing++}
+  try{checkNativePlatform()}catch(error){console.log(error.message);missing++}
   for(const note of lock.requirements?.notes||[])console.log(note);
-  console.log(npmSDK||lock.portable?'Portable Node route.':'Native assets: Linux x86-64, glibc 2.39+; Ubuntu 24.04+/WSL2.');
+  console.log(npmSDK||lock.portable?'Portable Node route.':`Native SDK: ${process.platform}-${process.arch}${suppliedSdk?' (user-provided)':sdkAsset?.minimumOS?'; minimum OS '+sdkAsset.minimumOS:''}.`);
   console.log('No toolchains are downloaded automatically. See README.md for official installers.');
   if(missing)process.exitCode=1;
 }
@@ -222,4 +276,4 @@ async function main(action='build',args=[]){
 return {main};
 }
 
-module.exports={createRuntime,selectLocalResourceMode};
+module.exports={createRuntime,selectLocalResourceMode,selectPlatformSdk,recipeInvocation,bindingCompilerIdentity};

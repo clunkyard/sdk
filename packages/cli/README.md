@@ -38,8 +38,8 @@ assets currently require Linux x86-64/glibc 2.39+ (Ubuntu 24.04+ or WSL2).
 JavaScript, TypeScript and the Vane/Cadence/Glyph Node routes use WebAssembly.
 
 `@2` receives compatible tooling updates. For an exact tool version, run
-`npx --yes @clunkyard/cli@2.0.1` or set
-`CLUNKYARD='npx --yes @clunkyard/cli@2.0.1'` with Make. Commit the npm lockfile
+`npx --yes @clunkyard/cli@2.1.0` or set
+`CLUNKYARD='npx --yes @clunkyard/cli@2.1.0'` with Make. Commit the npm lockfile
 for reproducible JavaScript/TypeScript dependencies. Match replays record the
 game rules and robot actions; local timings do not qualify hosted budgets.
 

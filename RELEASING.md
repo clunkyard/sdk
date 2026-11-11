@@ -89,3 +89,30 @@ Official references:
 - https://docs.npmjs.com/cli/v11/commands/npm-stage/
 - https://docs.npmjs.com/cli/v11/commands/npm-trust/
 - https://docs.npmjs.com/trusted-publishers/
+
+## Native SDK qualification
+
+The public export also includes the native core build helper and the C, C++,
+Python and Rust adapter sources. These are first-party SDK surfaces; no arena
+application or deployment configuration is exported for this workflow.
+
+Dispatch **Native starter qualification** to build the core with Rust 1.96.0
+and run fresh anonymous starter clones through an installed candidate CLI.
+The Intel job explicitly uses `macos-15-intel`; `macos-15` is a separate Apple
+Silicon job. Ubuntu 24.04 supplies a Linux regression. Each runs real 2D and
+3D trials, checks firing and zero robot failures, and retains source commits,
+compiler metadata, logs, replays and the installed SDK archive. Runner labels
+are documented in [GitHub's hosted-runner reference](https://docs.github.com/en/actions/reference/runners/github-hosted-runners).
+
+The initial qualification uses `CLUNKYARD_SDK` to test newly built native
+libraries before their immutable archives exist. It does not prove registry
+installation or catalogue download selection. After platform asset hashes are
+added, repeat the public fresh-install flow without that override before
+claiming release delivery.
+
+Before compiling, the smoke runner checks every file against the clean export's
+`release-source.json`. Its SDK artifact then records the canonical source
+commit, actual public checkout commit and export-manifest SHA-256. This explicit
+mapping lets the private release assembler bind SDK bytes to their canonical
+inputs without silently relabelling a different source tree. Public package
+contents and existing npm SDK notice bytes are unaffected by the extra CI files.
