@@ -8,6 +8,7 @@ for(const value of manifest.packages){
   let args;
   let project;
   if(value.name==='@clunkyard/git')args=[path.join(root,'scripts/smoke-git.cjs'),file];
+  else if(value.name==='@clunkyard/cli')args=[path.join(root,'scripts/smoke-cli.cjs'),file];
   else{
     if(!process.env.TMPDIR||!path.isAbsolute(process.env.TMPDIR))throw Error('Set TMPDIR to an absolute temporary directory.');
     project=fs.mkdtempSync(path.join(process.env.TMPDIR,'npm-sdk-consumer-'));

@@ -14,6 +14,10 @@ on:
         description: Stage the qualified tarballs on npm for maintainer review
         type: boolean
         default: false
+      packages:
+        description: Optional comma-separated package names to stage
+        type: string
+        default: ''
 
 permissions:
   contents: read
@@ -112,3 +116,5 @@ jobs:
           name: qualification-ubuntu-24.04-node24
           path: dist/
       - run: npm exec -- node scripts/stage.cjs --apply
+        env:
+          NPM_STAGE_PACKAGES: ${{ inputs.packages }}

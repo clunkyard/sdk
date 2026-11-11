@@ -3,7 +3,7 @@
 
 // Exercise the packed package through npm's installed command shims and Git's
 // normal remote-helper discovery. This fixture never uses a registry key or
-// the production service. Run via `npm exec -- node ... TGZ` to select npm.
+// the production service. Supply a tarball or an exact registry version.
 const assert = require('node:assert/strict');
 const crypto = require('node:crypto');
 const fs = require('node:fs');
@@ -29,9 +29,10 @@ function gitObject(type, data) {
 const wire = object => ({ oid:object.oid, type:object.type, data:object.data.toString('base64') });
 
 async function main() {
-  if (process.argv.length !== 3) throw Error('Usage: npm exec -- node scripts/npm-release/smoke-git.cjs PACKAGE.tgz');
-  const archive = path.resolve(process.argv[2]);
-  assert.ok(fs.statSync(archive).isFile(), 'Supply the packed npm tarball.');
+  if (process.argv.length !== 3) throw Error('Usage: npm exec -- node scripts/npm-release/smoke-git.cjs PACKAGE.tgz|@clunkyard/git@VERSION');
+  const registry = /^@clunkyard\/git@\d+\.\d+\.\d+$/.test(process.argv[2]);
+  const archive = registry ? process.argv[2] : path.resolve(process.argv[2]);
+  if (!registry) assert.ok(fs.statSync(archive).isFile(), 'Supply the packed npm tarball or an exact registry version.');
   const directory = fs.mkdtempSync(path.join(process.env.TMPDIR || os.tmpdir(), 'npm-git-smoke-'));
   const prefix = path.join(directory, 'npm prefix'), config = path.join(directory, 'owner config');
   const otherConfig = path.join(directory, 'other config');
@@ -121,10 +122,13 @@ async function main() {
   try {
     await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
     origin = `http://127.0.0.1:${server.address().port}`;
-    await command(process.execPath, [npmCli(), 'install', '--global', '--prefix', prefix, '--offline', '--ignore-scripts', '--no-audit', '--no-fund', archive]);
+    await command(process.execPath, [npmCli(), 'install', '--global', '--prefix', prefix,
+      ...(registry ? ['--registry=https://registry.npmjs.org'] : ['--offline']),
+      '--ignore-scripts', '--no-audit', '--no-fund', archive]);
     const packageDirectory = path.join(prefix, ...(process.platform === 'win32' ? [] : ['lib']), 'node_modules/@clunkyard/git');
     const metadata = JSON.parse(fs.readFileSync(path.join(packageDirectory, 'package.json'), 'utf8'));
     assert.equal(metadata.name, '@clunkyard/git');
+    if (registry) assert.equal(metadata.version, archive.slice('@clunkyard/git@'.length));
     assert.match(fs.readFileSync(path.join(packageDirectory, 'LICENSE'), 'utf8'), /MIT License/);
     async function login(key, env = environment) {
       // .cmd files need cmd.exe on Windows. Only a fixed command name and our

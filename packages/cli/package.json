@@ -1,0 +1,34 @@
+{
+  "name": "@clunkyard/cli",
+  "version": "2.0.0",
+  "description": "Shared local builds, matches and replays for Clunkyard robots",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "bin": {
+    "clunkyard": "cli.cjs"
+  },
+  "files": [
+    "cli.cjs",
+    "runtime.cjs",
+    "project.cjs",
+    "archive.cjs",
+    "catalogue.json",
+    "README.md",
+    "LICENSE"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/clunkyard/sdk.git",
+    "directory": "packages/cli"
+  },
+  "homepage": "https://clunkyard.com/sdk/player-kit",
+  "bugs": {
+    "url": "https://github.com/clunkyard/sdk/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  }
+}

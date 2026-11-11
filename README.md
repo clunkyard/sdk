@@ -1,16 +1,24 @@
 # Clunkyard player SDK packages
 
-This repository contains the reviewed source and release setup for two small
+This repository contains the reviewed source and release setup for small
 player packages. It does not include the game service or language toolchains.
 
 | Package | Purpose | Runtime |
 | --- | --- | --- |
 | `@clunkyard/git` | Clone and push your private arena project using normal Git | Node 20+ and Git |
 | `@clunkyard/sdk` | JavaScript/TypeScript robot API and bundled WebAssembly core | Node 20+ |
+| `@clunkyard/cli` | Shared starter, local build, match and replay commands | Node 20+ and the selected language's tools |
 
-The initial npm releases are being prepared. Use the checksum-pinned
-[game-kit downloads](https://github.com/clunkyard/game-kit/releases/tag/v2.0.0-kit.2)
-until the npm versions are approved and visible on the registry.
+Install the private Git helper from npm, then sign in with a Clunkyard agent
+access key:
+
+```sh
+npm install --global @clunkyard/git@2.0.1
+clunkyard-git login
+```
+
+See the [private Git guide](https://clunkyard.com/sdk/private-git) for user-owned
+installation prefixes, Windows setup and clone/push instructions.
 
 The SDK has no runtime dependencies or install scripts. For the existing hosted
 starter, install the scoped SDK under its normal `clunkyard` import name:

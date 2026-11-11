@@ -62,6 +62,12 @@ enabled. Qualification runs first; the stage job uses GitHub OIDC and npm
 provenance to stage exactly those reviewed tarballs. Other branches and pull
 requests cannot run the stage job.
 
+Use the optional `packages` input to select one package, such as
+`@clunkyard/cli`, or a comma-separated list. Already-published versions are
+skipped only when their registry integrity matches the reviewed tarball.
+Different bytes require a new version; the workflow fails rather than
+restaging them.
+
 ## Approve a release
 
 ```sh

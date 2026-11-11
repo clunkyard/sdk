@@ -1,10 +1,11 @@
 {
   "v": 1,
-  "sourceCommit": "d5a2f84abdf30e3186ab0f991189c914635173c2",
+  "sourceCommit": "61818be782139065e48effeb76f8b62f46640c69",
   "sourceDirty": false,
   "packages": [
     "git",
-    "sdk"
+    "sdk",
+    "cli"
   ],
   "files": [
     {
@@ -14,8 +15,8 @@
     },
     {
       "path": ".github/workflows/npm-release.yml",
-      "bytes": 3812,
-      "sha256": "cfc5236884e7d05a4d3f5b746ccb9a4314e6be8d670aeffb6b13f449f8f9d502"
+      "bytes": 4004,
+      "sha256": "e39014fd2a4102856ae56ab7a3749d6a39a7635fe211447de6cc079fe075b1b0"
     },
     {
       "path": ".gitignore",
@@ -36,6 +37,46 @@
       "path": "package.json",
       "bytes": 237,
       "sha256": "9ad2353a296892910dd5168f8a3bea70a4f096a60a3b9362259b88e83df71fce"
+    },
+    {
+      "path": "packages/cli/archive.cjs",
+      "bytes": 4657,
+      "sha256": "55d92cff5e0f4e2fd3d6bf5a949748280bdbd3d4452a79d80afa1e01821142f5"
+    },
+    {
+      "path": "packages/cli/catalogue.json",
+      "bytes": 128292,
+      "sha256": "70b5db525e2ee8c6c6f8f5e358b9eb95243ad4549d9cff133c697ecdb70cc969"
+    },
+    {
+      "path": "packages/cli/cli.cjs",
+      "bytes": 2194,
+      "sha256": "1ecd9c7af6c9f716a1f22dd1eb349baa661c813007a6c3dd5f960c68d14055a8"
+    },
+    {
+      "path": "packages/cli/LICENSE",
+      "bytes": 1079,
+      "sha256": "652cbd0ba5e21c5b7ee7a52b539cc9087b38b1bfc3ae0baacc6828c8dfdf2e95"
+    },
+    {
+      "path": "packages/cli/package.json",
+      "bytes": 728,
+      "sha256": "7f5bd9e94666e81ee270182318e88c315cd572ca74f82a9e2e3d6d5b9c79e7d0"
+    },
+    {
+      "path": "packages/cli/project.cjs",
+      "bytes": 11313,
+      "sha256": "9e1a95fcaead065b82e63827d18d107a300bce3c4d68683fa1ab75ef60353729"
+    },
+    {
+      "path": "packages/cli/README.md",
+      "bytes": 2823,
+      "sha256": "0f85928ca60aad7eee2332ff9bf433bfad5fd4c9fbbcb39f0ab6cc479449f172"
+    },
+    {
+      "path": "packages/cli/runtime.cjs",
+      "bytes": 15496,
+      "sha256": "7c9caebe3d9cfaf5680bb0a5a12628b347c7a6433f9e6fad58f2efa6d55cfefe"
     },
     {
       "path": "packages/git/client.cjs",
@@ -424,13 +465,13 @@
     },
     {
       "path": "README.md",
-      "bytes": 2883,
-      "sha256": "8e2189c6f33d61d7992b2e6ee2346a4297d0208982470bea23629dc27fe972ae"
+      "bytes": 3093,
+      "sha256": "8dd2a356f9259e9a815ea9d59f23f3ceadac9ed2a9faa308f492d2e593b158d0"
     },
     {
       "path": "RELEASING.md",
-      "bytes": 3970,
-      "sha256": "f99a044593a1fb66571327339548833092b1fcbab72e94781af749adacef4c5b"
+      "bytes": 4271,
+      "sha256": "6e7f42b1f2dc81ead0ec09c080549840d577ce2363ae936828c9290ab752fd23"
     },
     {
       "path": "scripts/pack.cjs",
@@ -439,8 +480,8 @@
     },
     {
       "path": "scripts/qualify.cjs",
-      "bytes": 2024,
-      "sha256": "d0b3a08797df5f0e9395e0d9cccb3202ff51d7eb8d36687aef901716b7c9abdb"
+      "bytes": 2117,
+      "sha256": "029c6965dd437022097b2c93e6f6da53fc3765e05c239c4180d8e029699bae4c"
     },
     {
       "path": "scripts/sdk/probe-stdio.cjs",
@@ -468,14 +509,19 @@
       "sha256": "e703ee86078dce3bb5c02971319f119a80a1441c3df92ff465d0106bec58b2b4"
     },
     {
+      "path": "scripts/smoke-cli.cjs",
+      "bytes": 5162,
+      "sha256": "ecc9c95cbe9b5c40804fee88bf3ea9f0d10e8b0cf812b1008d3e9e111dccca4c"
+    },
+    {
       "path": "scripts/smoke-git.cjs",
-      "bytes": 12072,
-      "sha256": "a60a1697c169680e62cc547ef13c0198191fd22d1c7466e96ebae2b0ad0282fa"
+      "bytes": 12406,
+      "sha256": "9f59255d02d4fb1c5c2b8f6ea31db44f2ec21cf1bef4ddd46d6c3800538449e1"
     },
     {
       "path": "scripts/stage.cjs",
-      "bytes": 1914,
-      "sha256": "bc3469d71bd7615e1d4a0415c1c1af4bef31b9004ce7327d36f54840f55bf695"
+      "bytes": 3131,
+      "sha256": "eec0ef0e35a4b8e6f72242d72591a8b17b066d2c3ced831405d11554cfe5ac39"
     },
     {
       "path": "scripts/verify-oidc.cjs",
