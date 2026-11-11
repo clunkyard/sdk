@@ -6,11 +6,10 @@
 const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
 const {execFileSync}=require('node:child_process');
 const hash=bytes=>crypto.createHash('sha256').update(bytes).digest('hex');
-const shellQuote=value=>"'"+String(value).replaceAll("'","'\\''")+"'";
 function parameters(argv,environment){
   const option=name=>{const i=argv.indexOf(name);return i<0?null:argv[i+1]},version=String(environment.NATIVE_CLI_VERSION||'');
   const platform=option('--expected-platform'),output=option('--out'),languages=(option('--languages')||'').split(',');
-  if(!/^\d+\.\d+\.\d+$/.test(version)||!['linux-x64','darwin-x64','darwin-arm64'].includes(platform)||!output||!languages.length||languages.some(language=>!['c','cpp','python','rust','javascript'].includes(language))||new Set(languages).size!==languages.length)throw Error('Use an exact public CLI version, supported platform, language list and new output directory.');
+  if(!/^\d+\.\d+\.\d+$/.test(version)||!['linux-x64','darwin-x64','darwin-arm64','win32-x64'].includes(platform)||!output||!languages.length||languages.some(language=>!['c','cpp','python','rust','javascript','csharp'].includes(language))||new Set(languages).size!==languages.length)throw Error('Use an exact public CLI version, supported platform, language list and new output directory.');
   return {version,platform,output,languages};
 }
 function anonymousEnvironment(base,directory){
@@ -41,12 +40,11 @@ function main(){
     const {extract}=require(path.join(installed,'archive.cjs')),unpacked=path.join(directory,'reviewed-registry-bytes');fs.mkdirSync(unpacked);extract(bytes,unpacked);
     for(const file of ['cli.cjs','runtime.cjs','project.cjs','archive.cjs','package.json','catalogue.json','README.md','LICENSE'])if(!fs.readFileSync(path.join(installed,file)).equals(fs.readFileSync(path.join(unpacked,'package',file))))throw Error('Installed package differs from the registry archive: '+file);
     receipt.cliCatalogueSHA=hash(fs.readFileSync(path.join(installed,'catalogue.json')));receipt.engineSHA=catalogue.engine.sha256;
-    const invocation=shellQuote(process.execPath)+' '+shellQuote(cli);
     for(const language of input.languages){
       const project=path.join(directory,'fresh robot projects',language),log=path.join(artifacts,language+'.log');fs.mkdirSync(path.dirname(project),{recursive:true});
       run('git',['-c','credential.helper=','clone','--depth','1','https://github.com/clunkyard/starter-'+language+'.git',project],{log});
       const sourceCommit=run('git',['rev-parse','HEAD'],{cwd:project}),manifest=fs.readFileSync(path.join(project,'bot.json'));
-      run('make',['CLUNKYARD='+invocation,'doctor'],{cwd:project,log});
+      run(process.execPath,[cli,'--project',project,'doctor'],{cwd:project,log});
       for(const [seed,mode,ruleset]of [[42,'2d','classic'],[77,'3d','zero-g']]){
         run(process.execPath,[cli,'--project',project,'match',String(seed),mode,ruleset],{cwd:project,log});
         const file=path.join(project,'replays','trial-'+seed+'.json'),replay=JSON.parse(fs.readFileSync(file)),bots=replay.stats.bots;
