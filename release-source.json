@@ -1,6 +1,6 @@
 {
   "v": 1,
-  "sourceCommit": "a22e0a83ea6543e334c3db796ae846ebc8b6bf45",
+  "sourceCommit": "d5a2f84abdf30e3186ab0f991189c914635173c2",
   "sourceDirty": false,
   "packages": [
     "git",
@@ -14,8 +14,8 @@
     },
     {
       "path": ".github/workflows/npm-release.yml",
-      "bytes": 2948,
-      "sha256": "3c911156276ae3af8a65f6bb28fe92aa0effbf96c746b549cc80d1d513ab17e2"
+      "bytes": 3812,
+      "sha256": "cfc5236884e7d05a4d3f5b746ccb9a4314e6be8d670aeffb6b13f449f8f9d502"
     },
     {
       "path": ".gitignore",
@@ -429,8 +429,8 @@
     },
     {
       "path": "RELEASING.md",
-      "bytes": 3525,
-      "sha256": "fb1c8a1b3961da2911f0c3600b376f2d19995ec763f0decf19d124293fb10f57"
+      "bytes": 3970,
+      "sha256": "f99a044593a1fb66571327339548833092b1fcbab72e94781af749adacef4c5b"
     },
     {
       "path": "scripts/pack.cjs",
@@ -476,6 +476,11 @@
       "path": "scripts/stage.cjs",
       "bytes": 1914,
       "sha256": "bc3469d71bd7615e1d4a0415c1c1af4bef31b9004ce7327d36f54840f55bf695"
+    },
+    {
+      "path": "scripts/verify-oidc.cjs",
+      "bytes": 2509,
+      "sha256": "9950a57d5614c79d8a154798ccfff6b624c5701107cbbf448c5677a631bea5a3"
     },
     {
       "path": "sdk/core/.cargo/config.toml",

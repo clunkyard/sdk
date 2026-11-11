@@ -50,6 +50,13 @@ relationship; complete its authenticated browser challenge when prompted.
 Trusted publisher settings must be exercised within npm's current validity
 window. Inspect existing relationships before replacing any configuration.
 
+Dispatch **Review npm packages** on `main` with `verify_oidc` enabled and `stage`
+disabled to check the relationship without changing registry contents. The
+`verify-oidc` job exchanges GitHub's identity for a temporary package token for
+each package, discards the tokens and saves a credential-free verification
+receipt. This proves authentication; it does not count as a successful publish
+for npm's initial trusted-publisher validity window.
+
 For later versions, dispatch **Review npm packages** on `main` with `stage`
 enabled. Qualification runs first; the stage job uses GitHub OIDC and npm
 provenance to stage exactly those reviewed tarballs. Other branches and pull

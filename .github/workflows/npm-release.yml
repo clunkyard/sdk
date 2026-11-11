@@ -6,6 +6,10 @@ on:
   pull_request:
   workflow_dispatch:
     inputs:
+      verify_oidc:
+        description: Verify npm trusted publishing without staging or publishing
+        type: boolean
+        default: true
       stage:
         description: Stage the qualified tarballs on npm for maintainer review
         type: boolean
@@ -19,6 +23,25 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  verify-oidc:
+    if: github.event_name == 'workflow_dispatch' && (inputs.verify_oidc || inputs.stage) && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    environment: npm-staging
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: 24
+      - run: node scripts/verify-oidc.cjs
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: npm-oidc-verification
+          path: dist/oidc-verification.json
+          if-no-files-found: error
+
   pack:
     runs-on: ubuntu-24.04
     steps:
