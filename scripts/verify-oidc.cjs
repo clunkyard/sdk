@@ -24,7 +24,7 @@ async function main() {
   if (typeof idToken !== 'string' || !idToken) throw Error('GitHub returned no OIDC token.');
 
   const packages = [];
-  for (const name of ['@clunkyard/git', '@clunkyard/sdk']) {
+  for (const name of ['@clunkyard/git', '@clunkyard/sdk', '@clunkyard/cli']) {
     const response = await fetch(`https://registry.npmjs.org/-/npm/v1/oidc/token/exchange/package/${name.replace('/', '%2f')}`, {
       method: 'POST', headers: { Authorization: `Bearer ${idToken}` },
       redirect: 'error', signal: AbortSignal.timeout(30000),

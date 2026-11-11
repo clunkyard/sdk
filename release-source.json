@@ -1,6 +1,6 @@
 {
   "v": 1,
-  "sourceCommit": "d5bde475f2933f1975279474ac725ccdeef391a8",
+  "sourceCommit": "8b1da44aaf16f64c7c8029bf2ebc721c1d75c262",
   "sourceDirty": false,
   "packages": [
     "git",
@@ -15,8 +15,8 @@
     },
     {
       "path": ".github/workflows/npm-release.yml",
-      "bytes": 4004,
-      "sha256": "e39014fd2a4102856ae56ab7a3749d6a39a7635fe211447de6cc079fe075b1b0"
+      "bytes": 4092,
+      "sha256": "9d9d4769c126fabc559b8177f5033c999556a403dc7f8d45f6ded65dcd780fcf"
     },
     {
       "path": ".gitignore",
@@ -525,8 +525,8 @@
     },
     {
       "path": "scripts/verify-oidc.cjs",
-      "bytes": 2509,
-      "sha256": "9950a57d5614c79d8a154798ccfff6b624c5701107cbbf448c5677a631bea5a3"
+      "bytes": 2527,
+      "sha256": "369030b8d5e47e5c34daece087171bbbeaf09b82d6da8895cf0214ec0a352a00"
     },
     {
       "path": "sdk/core/.cargo/config.toml",
