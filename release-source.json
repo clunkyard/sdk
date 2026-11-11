@@ -1,6 +1,6 @@
 {
   "v": 1,
-  "sourceCommit": "2d5af794933567449c59d450e3acb65c98a76fbd",
+  "sourceCommit": "a0ba86a696e761a3586a2485340b8943e7c498e9",
   "sourceDirty": false,
   "packages": [
     "git",
@@ -635,8 +635,8 @@
     },
     {
       "path": "sdk/bindings/rust/clunkyard.rs",
-      "bytes": 53082,
-      "sha256": "36c36c0aade494a1ff49e9f95ff347fdea683ded149ddc65f711faa7573b6a22"
+      "bytes": 53281,
+      "sha256": "9425b060a8fd8cf982da630805ffc72c7ca0b05c56384a7f5c53d4839212430b"
     },
     {
       "path": "sdk/bindings/rust/install.cjs",
@@ -645,8 +645,8 @@
     },
     {
       "path": "sdk/bindings/rust/Makefile",
-      "bytes": 662,
-      "sha256": "e64a74753a6e92908c73616a0b721170cdbc6f8062a468f31b0236b388fabfb3"
+      "bytes": 791,
+      "sha256": "155837d4247949768e9756469b99d5047dbfa6369ca428a98e7ea5681b629492"
     },
     {
       "path": "sdk/bindings/rust/README.md",

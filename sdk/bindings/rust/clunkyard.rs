@@ -104,7 +104,11 @@ pub type Pickup=RawPickup;
 #[repr(C)] #[derive(Default,Clone,Copy,Debug,PartialEq)]
 pub struct RawCompute {pub k:f64,pub quanta:i32,pub unit:i32,}
 pub type Compute=RawCompute;
-pub mod ffi {use super::*;#[link(name="clunkyard",kind="static")] extern "C" {
+pub mod ffi {use super::*;
+#[cfg_attr(target_os="windows",link(name="clunkyard.dll",kind="dylib"))]
+#[cfg_attr(target_os="macos",link(name="clunkyard",kind="dylib"))]
+#[cfg_attr(not(any(target_os="windows",target_os="macos")),link(name="clunkyard",kind="static"))]
+extern "C" {
 pub fn cy_open(major:i32,minor:i32,name:*const u8,name_length:u32,version:*const u8,version_length:u32,out:*mut *mut c_void)->i32;
 pub fn cy_open_memory(major:i32,minor:i32,name:*const u8,name_length:u32,version:*const u8,version_length:u32,out:*mut *mut c_void)->i32;
 pub fn cy_close(robot:*mut c_void);pub fn cy_last_error(robot:*mut c_void,out:*mut u8,capacity:u32,length:*mut u32)->i32;
