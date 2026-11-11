@@ -1,6 +1,6 @@
 {
   "v": 1,
-  "sourceCommit": "697f3585917986b40f88c379ec1335e40a7e36dc",
+  "sourceCommit": "a22e0a83ea6543e334c3db796ae846ebc8b6bf45",
   "sourceDirty": false,
   "packages": [
     "git",
@@ -9,8 +9,8 @@
   "files": [
     {
       "path": ".gitattributes",
-      "bytes": 8,
-      "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da"
+      "bytes": 45,
+      "sha256": "96695717cc7dae5d62e4b31bd3b954c32a820b1ec22d7f5a8a5b184e2455e055"
     },
     {
       "path": ".github/workflows/npm-release.yml",
