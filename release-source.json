@@ -1,6 +1,6 @@
 {
   "v": 1,
-  "sourceCommit": "3e00939f4300d8c0841b653a0453c00b106b2495",
+  "sourceCommit": "178e61e04d2926948a155a9e4907a170f1dc2793",
   "sourceDirty": false,
   "packages": [
     "git",
@@ -60,8 +60,8 @@
     },
     {
       "path": "packages/cli/catalogue.json",
-      "bytes": 138394,
-      "sha256": "e4d2e2727e76af202469692a69c4585198e79b7176e3a16895dd4f20b6bdb83e"
+      "bytes": 138392,
+      "sha256": "cf1047c4439203c2a35a4ca11f6aada718bdfc0e4fff757aabaab1067eb9c774"
     },
     {
       "path": "packages/cli/cli.cjs",
@@ -76,17 +76,17 @@
     {
       "path": "packages/cli/package.json",
       "bytes": 728,
-      "sha256": "cccf6b5d00293f4841967d9563ba160b6ecbe163bd97975698270c87dae2fe11"
+      "sha256": "77bdd0614370f5f544676a8298c5e87db1b4d11580af0e6ffeca388776989e40"
     },
     {
       "path": "packages/cli/project.cjs",
       "bytes": 11453,
-      "sha256": "4c7b4d4424ac4806c591b9ecfce4b8e066f1258874f1d1bcc82b0299f53d275f"
+      "sha256": "abff90ae5718f0cc162ef6ae111d11917f2c5724e99fb2a55da44d0b5d9727ab"
     },
     {
       "path": "packages/cli/README.md",
       "bytes": 3390,
-      "sha256": "a35470e87cd6af626ce6d67f9f9266e1cd26d904f0cd585e38da97cddbf9012b"
+      "sha256": "b6dd75f1ccc927ed43f8bf9488ad0645f5c20b0d2da99b2e11cebd9590ebbd69"
     },
     {
       "path": "packages/cli/runtime.cjs",
@@ -481,7 +481,7 @@
     {
       "path": "README.md",
       "bytes": 3574,
-      "sha256": "f581b6ed366a1e19d8dad44f7017ab23095971e40918a58563db886328ba211d"
+      "sha256": "40cbcb3f8fa1fe5841d74e00f5cc33389e3bd4ebbdba011f6deaefffb038e6d4"
     },
     {
       "path": "RELEASING.md",
@@ -551,7 +551,7 @@
     {
       "path": "scripts/smoke-cli.cjs",
       "bytes": 5162,
-      "sha256": "9b37a1024d04e3c67112cc51c3964a11e5bde799dfee7906fc9f05447dc61f54"
+      "sha256": "8d37e770b2617c87c629834d6b843af72ebdd0b51aaa1e8c451ca3e14800509b"
     },
     {
       "path": "scripts/smoke-git.cjs",

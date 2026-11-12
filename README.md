@@ -46,7 +46,7 @@ npx --yes @clunkyard/cli@2 match
 It downloads only the pinned engine and selected SDK, using your installed
 language tools. Robot repositories keep source and normal build metadata;
 shared tool fixes arrive through compatible CLI releases. For exact tooling,
-use `@clunkyard/cli@2.0.0`.
+use `@clunkyard/cli@2.1.1`.
 
 ## Review and qualify a release
 

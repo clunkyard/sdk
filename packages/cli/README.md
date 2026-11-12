@@ -43,8 +43,8 @@ Python, Rust and .NET binding installation needs no Unix shell or GNU Make.
 JavaScript, TypeScript and the Vane/Cadence/Glyph Node routes use WebAssembly.
 
 `@2` receives compatible tooling updates. For an exact tool version, run
-`npx --yes @clunkyard/cli@2.1.0` or set
-`CLUNKYARD='npx --yes @clunkyard/cli@2.1.0'` with Make. Commit the npm lockfile
+`npx --yes @clunkyard/cli@2.1.1` or set
+`CLUNKYARD='npx --yes @clunkyard/cli@2.1.1'` with Make. Commit the npm lockfile
 for reproducible JavaScript/TypeScript dependencies. Match replays record the
 game rules and robot actions; local timings do not qualify hosted budgets.
 

@@ -1,9 +1,9 @@
 {
   "v": 1,
-  "release": "v2.0.0-kit.3",
+  "release": "v2.0.0-kit.4",
   "sdkVersion": "2.0.0",
-  "source": "a0ba86a696e761a3586a2485340b8943e7c498e9",
-  "generatorSource": "a0ba86a696e761a3586a2485340b8943e7c498e9",
+  "source": "0b70a867d3aa9e497cc35c77d3e83f7bc32d8aa8",
+  "generatorSource": "331c7d1ed0910cd796ddcb99eca6674e8ef3f198",
   "engine": {
     "file": "clunkyard-engine-v2.0.0-kit.3.tar.gz",
     "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.3/clunkyard-engine-v2.0.0-kit.3.tar.gz",
@@ -2764,7 +2764,7 @@
       }
     },
     "cadence": {
-      "version": "v2.0.0-kit.2",
+      "version": "v2.0.0-kit.4",
       "sdkVersion": "2.0.0",
       "language": "cadence",
       "portable": true,
@@ -2788,10 +2788,10 @@
       ],
       "requirements": {},
       "starter": {
-        "file": "starter-cadence-v2.0.0-kit.2.tar.gz",
-        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/starter-cadence-v2.0.0-kit.2.tar.gz",
-        "bytes": 11879,
-        "sha256": "04caaa7a2f9708cb72a10c346020cb67c7b9e36e693665d8747330f497e41639",
+        "file": "starter-cadence-v2.0.0-kit.4.tar.gz",
+        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.4/starter-cadence-v2.0.0-kit.4.tar.gz",
+        "bytes": 5008,
+        "sha256": "05f57fc5fd7dc44e195a75f9ef543caa1c0ade0cde1ae534361d690a13b61d6b",
         "expandedBytes": 1048576
       },
       "boilerplate": {
@@ -2896,7 +2896,7 @@
       }
     },
     "cadence-wasm": {
-      "version": "v2.0.0-kit.2",
+      "version": "v2.0.0-kit.4",
       "sdkVersion": "2.0.0",
       "language": "cadence-wasm",
       "portable": false,
@@ -2922,10 +2922,10 @@
       ],
       "requirements": {},
       "starter": {
-        "file": "starter-cadence-wasm-v2.0.0-kit.2.tar.gz",
-        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/starter-cadence-wasm-v2.0.0-kit.2.tar.gz",
-        "bytes": 11352,
-        "sha256": "277fa15404cc496fbeed10a7bd2c7645652b0b0e3a5e8bf5dd0423460ef22c0c",
+        "file": "starter-cadence-wasm-v2.0.0-kit.4.tar.gz",
+        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.4/starter-cadence-wasm-v2.0.0-kit.4.tar.gz",
+        "bytes": 5075,
+        "sha256": "d29837c2814f8c4704425e993aedc88d20d6569adb6f4c5837c6758cd16119e7",
         "expandedBytes": 1048576
       },
       "boilerplate": {
