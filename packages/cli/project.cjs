@@ -44,7 +44,7 @@ function nodeMetadata(language) {
   },engines:{node:'>=20'},dependencies:{clunkyard:`npm:${sdk.name}@${sdk.version}`}};
   const lock={name:metadata.name,version:metadata.version,lockfileVersion:3,requires:true,packages:{
     '':{name:metadata.name,version:metadata.version,dependencies:metadata.dependencies,engines:metadata.engines},
-    'node_modules/clunkyard':{name:sdk.name,version:sdk.version,resolved:'https://registry.npmjs.org/@clunkyard/sdk/-/sdk-2.0.0.tgz',integrity:sdk.integrity,license:'MIT',engines:{node:'>=20'}},
+    'node_modules/clunkyard':{name:sdk.name,version:sdk.version,resolved:`https://registry.npmjs.org/@clunkyard/sdk/-/sdk-${sdk.version}.tgz`,integrity:sdk.integrity,license:'MIT',engines:{node:'>=20'}},
   }};
   return {'package.json':json(metadata),'package-lock.json':json(lock)};
 }
@@ -146,7 +146,13 @@ async function createProject(language,destination) {
   const bytes=await readAsset(row.starter);
   fs.mkdirSync(path.dirname(root),{recursive:true});
   fs.mkdirSync(root);
-  try{extract(bytes,root,row.starter.expandedBytes);migrate(root);}catch(error){fs.rmSync(root,{recursive:true,force:true});throw error;}
+  try{
+    extract(bytes,root,row.starter.expandedBytes);
+    const manifest=migrate(root);
+    // This is a new project from a verified archive, so its guide is generated.
+    // Existing projects keep migrate's protection for player-written notes.
+    fs.writeFileSync(path.join(root,'README.md'),readme(manifest.language,manifest.entry));
+  }catch(error){fs.rmSync(root,{recursive:true,force:true});throw error;}
   return root;
 }
 

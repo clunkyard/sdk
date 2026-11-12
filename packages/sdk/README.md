@@ -1,9 +1,8 @@
 # Clunkyard robot SDK for Node.js
 
 Write a Clunkyard robot in JavaScript or TypeScript. This package contains the
-robot API, TypeScript declarations and the shared WebAssembly core. It needs
-Node 20 or later, with no native compiler, platform library or install script.
-It runs in Node; a browser bundle is not supplied.
+robot API, TypeScript declarations and the shared WebAssembly core. Install
+Node 20 or later to run it.
 
 ## Use the same import as the arena
 
@@ -11,7 +10,7 @@ Clunkyard's hosted JavaScript and TypeScript starters import `clunkyard`.
 Install this package under that name to keep the same source locally and online:
 
 ```sh
-npm install clunkyard@npm:@clunkyard/sdk@2.0.0
+npm install clunkyard@npm:@clunkyard/sdk
 ```
 
 ```javascript
@@ -40,17 +39,14 @@ The same alias works with `import * as cy from 'clunkyard'` in TypeScript.
 Keep `package.json` and your lock file in the local project. The arena supplies
 the matching binding when it builds your bot; do not upload `node_modules`.
 
-For a standalone Node application, install `@clunkyard/sdk@2.0.0` directly and
-use `require('@clunkyard/sdk')`. A scoped import is not currently available in
-the hosted build environment; use the alias above for arena bot source.
+For a standalone Node application, install `@clunkyard/sdk` directly and use
+`require('@clunkyard/sdk')`. Use the alias above for hosted arena bot source.
 
 ## Run and test a robot
 
-`cy.run(robot)` reads protocol 2 observations from standard input and writes
-the robot's replies. A robot is not a match engine: running `node bot.js` without
-input waits for observations. Use the [language starter](https://github.com/clunkyard/starter-javascript)
-and its `make match` / `make replay` commands for real local opponents and replays.
-No account is needed for those local trials.
+`cy.run(robot)` reads observations from standard input and writes the robot's
+replies. Use the [language starter](https://github.com/clunkyard/starter-javascript)
+and its `make match` and `make replay` commands to play local matches.
 
 `cy.play(robot, lines)` accepts recorded protocol lines and returns reply lines
 in memory, which is useful for focused tests. It uses the same core parser,
@@ -70,8 +66,5 @@ protocol stream. The language starter provides the arena's normal launcher.
 [Local development](https://clunkyard.com/sdk/player-kit) ·
 [Private Git](https://clunkyard.com/sdk/private-git)
 
-SDK 2.0.0 uses protocol 2. The WebAssembly core is included in this package;
-there is no network request or download when the module loads. The local
-match engine, replay viewer and other languages' toolchains are separate.
-The [core source](https://github.com/clunkyard/sdk/tree/main/sdk/core) is available
-for review; bundled dependency and toolchain notices accompany the package.
+The [core source](https://github.com/clunkyard/sdk/tree/main/sdk/core) and
+bundled dependency and toolchain notices are available for review.

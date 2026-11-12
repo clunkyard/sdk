@@ -1,6 +1,6 @@
 {
   "v": 1,
-  "sourceCommit": "bb5db5da14e07db21dd67bb29b06295d2b9ed2c9",
+  "sourceCommit": "a1d2a2dae7132eb648451c727ee6f8d86dc6a2c3",
   "sourceDirty": false,
   "playerDerivation": {
     "packages": [
@@ -13,17 +13,16 @@
       {
         "name": "@clunkyard/sdk",
         "canonicalVersion": "2.0.1",
-        "version": "2.0.1",
-        "contentSHA256": "02d55e58899081ab6fdbe39c975ce7d9d4d0c3f74ce60e8cd6ccd0c87c5d35c8"
+        "version": "2.0.2",
+        "contentSHA256": "955ff168700ef62e6dad5065bf4c6846b46bd37d0b99463bb0f66876f1bb388c"
       },
       {
         "name": "@clunkyard/cli",
         "canonicalVersion": "2.2.2",
-        "version": "2.2.3",
-        "contentSHA256": "244302cbb0ff343091524914a0e835712a7576e8123c712c82d11625f3402d76"
+        "version": "2.2.4",
+        "contentSHA256": "3f03bbb4fff8fb5aca850e409161951d563ada6b8492301828f9038e5689f7f7"
       }
-    ],
-    "catalogueSHA256": "e1442632655d2257bfb8211beeb002ff8222caf1ef5bd1581879d81c42521840"
+    ]
   },
   "packages": [
     "git",
@@ -88,8 +87,8 @@
     },
     {
       "path": "packages/cli/catalogue.json",
-      "bytes": 152344,
-      "sha256": "e1442632655d2257bfb8211beeb002ff8222caf1ef5bd1581879d81c42521840"
+      "bytes": 152810,
+      "sha256": "09cc9458e8c1108b51702cd3589c669032626e0179963ed3a40bb4a07ffa1462"
     },
     {
       "path": "packages/cli/cli.cjs",
@@ -104,12 +103,12 @@
     {
       "path": "packages/cli/package.json",
       "bytes": 753,
-      "sha256": "a7bfea05c92b4cfd0fb601409e8a2e3eacb15dd5c97ee1efbbacdc46f49504f4"
+      "sha256": "2783e9d52d94cfe7ba1f5a162d655699714994bf2b83700cea89a54d373c184f"
     },
     {
       "path": "packages/cli/project.cjs",
-      "bytes": 11325,
-      "sha256": "11e8027ed2ec4ee7c0d2c7218d2e68b5032d76affd8a180a6553edec1a50c234"
+      "bytes": 11612,
+      "sha256": "d57a4a18f189cea4dc784361adc55d7beedfe278c5f1961bafaf7c7b47cb6300"
     },
     {
       "path": "packages/cli/README.md",
@@ -259,12 +258,12 @@
     {
       "path": "packages/sdk/package.json",
       "bytes": 1116,
-      "sha256": "6e08b3a7cec060eab4b42495be9764f86aeda9e7987d8b0383d0d1542f7a28de"
+      "sha256": "6eb3443f5fab0c2a7b0b04bbaea2daf5ab303d9963fe9bd4874202674aa7b406"
     },
     {
       "path": "packages/sdk/README.md",
-      "bytes": 3410,
-      "sha256": "57bde560d41383d602cfbaab84205b847d2d838c26aebcad7aac21637a7d13a3"
+      "bytes": 2824,
+      "sha256": "cbc5bff6c61888bdc4ffa381875332cde066fedfebf4e7ac3ef1b79c98816f30"
     },
     {
       "path": "packages/sdk/THIRD_PARTY_NOTICES.txt",
