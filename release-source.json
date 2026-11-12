@@ -1,30 +1,7 @@
 {
   "v": 1,
-  "sourceCommit": "21c59eaec6bc92b866730d389f214b8281d6bb18",
+  "sourceCommit": "ffa59766b8c3963d4a2bb678fb117f81843b8d32",
   "sourceDirty": false,
-  "playerDerivation": {
-    "packages": [
-      {
-        "name": "@clunkyard/git",
-        "canonicalVersion": "2.0.2",
-        "version": "2.0.3",
-        "contentSHA256": "794d469c8e6463131b2441201d652666b0f83d1f800f78da986ac00e05c83dcb"
-      },
-      {
-        "name": "@clunkyard/sdk",
-        "canonicalVersion": "2.0.1",
-        "version": "2.0.2",
-        "contentSHA256": "955ff168700ef62e6dad5065bf4c6846b46bd37d0b99463bb0f66876f1bb388c"
-      },
-      {
-        "name": "@clunkyard/cli",
-        "canonicalVersion": "2.2.2",
-        "version": "2.2.5",
-        "contentSHA256": "c29a553f11253e47ee81ff4826850c33769f56eb7d13c919ebbd613d33ce5033"
-      }
-    ],
-    "catalogueSHA256": "b96fbb7cd40af2ad4e0b21011eb173769a767a46f0f3001342a07312267cc0ff"
-  },
   "packages": [
     "git",
     "sdk",
@@ -88,8 +65,8 @@
     },
     {
       "path": "packages/cli/catalogue.json",
-      "bytes": 152344,
-      "sha256": "b96fbb7cd40af2ad4e0b21011eb173769a767a46f0f3001342a07312267cc0ff"
+      "bytes": 152810,
+      "sha256": "09cc9458e8c1108b51702cd3589c669032626e0179963ed3a40bb4a07ffa1462"
     },
     {
       "path": "packages/cli/cli.cjs",
@@ -104,7 +81,7 @@
     {
       "path": "packages/cli/package.json",
       "bytes": 753,
-      "sha256": "dc9f86555a2099f16eab96c51ba4f9c93c91ec8cfdbbf0279ee9120b281863d4"
+      "sha256": "a820cee63eca93c015cbfd8b9cb46e3e69e393afb5f06891606a968348ee13c9"
     },
     {
       "path": "packages/cli/project.cjs",
@@ -149,7 +126,7 @@
     {
       "path": "packages/git/package.json",
       "bytes": 876,
-      "sha256": "4c2849cc224eb00931b43214c89330bebb89441ec1a4c28b33f6f55a022caef5"
+      "sha256": "3c023035430b466dd5a4092e9c5d601e8aeebe3a338c36f6d6617afa2ec43b8b"
     },
     {
       "path": "packages/git/README.md",
@@ -259,7 +236,7 @@
     {
       "path": "packages/sdk/package.json",
       "bytes": 1116,
-      "sha256": "6eb3443f5fab0c2a7b0b04bbaea2daf5ab303d9963fe9bd4874202674aa7b406"
+      "sha256": "6e08b3a7cec060eab4b42495be9764f86aeda9e7987d8b0383d0d1542f7a28de"
     },
     {
       "path": "packages/sdk/README.md",
