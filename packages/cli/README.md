@@ -13,39 +13,25 @@ npx @clunkyard/cli replay
 ```
 
 Or clone any [language starter](https://github.com/clunkyard/game-kit) and use
-`make doctor`, `make`, `make match` and `make replay`. A project contains robot
-source, `bot.json` and normal language build metadata. The shared CLI owns the
-tooling; it does not copy a bootstrapper, archive reader or custom lock file
-into every repository. `--project DIRECTORY` works from another directory.
+`make doctor`, `make`, `make match` and `make replay`. Use
+`--project DIRECTORY` to run commands from another directory.
 
-The package contains the reviewed SDK 2.0.0/protocol 2 catalogue, checksums and
-build recipes from immutable game-kit releases, including native desktop
-SDKs in `v2.0.0-kit.3`. It downloads only the
-engine and selected language SDK. It never downloads compilers or the
-all-language builder. SDK/engine caches under ignored `.clunkyard/` are keyed
-by their content hashes and remain reusable across CLI updates. Other
-commands are `list`, `setup`, `clean` and `migrate`.
+The CLI downloads the local match engine and the SDK for your robot's language.
+Install that language's toolchain separately. Downloaded files are cached in
+`.clunkyard/`. Other commands include `list`, `setup`, `clean` and `migrate`.
 
 Local matches use a resource mode supported by `bot.json`. Open-capable robots
 use Open; Wasm- or DSL-only robots keep their fuel or operation meter and play
 the bundled Vane rival with its DSL meter.
 
-JavaScript/TypeScript projects use the ordinary npm alias
-`clunkyard@npm:@clunkyard/sdk@2.0.0`. `package-lock.json` pins the reviewed
-integrity. The first build runs `npm ci --ignore-scripts`; the package has no
-install hooks or runtime dependencies. TypeScript uses your installed
-TypeScript 6+ compiler, preferring a project-local installation. Native SDKs
-support Linux x86-64/glibc 2.39+, C/C++ on Linux AArch64, selected languages on macOS arm64/x86-64,
-and C/C++/Python/Rust/C# on Windows x86-64. See the
-[supported platform table and official toolchain installers](https://clunkyard.com/sdk/player-kit#supported-platforms).
-Use MSVC's Developer Shell or a working Clang toolchain for Windows C/C++.
-Python, Rust and .NET binding installation needs no Unix shell or GNU Make.
-JavaScript, TypeScript and the Vane/Cadence/Glyph Node routes use WebAssembly.
+JavaScript and TypeScript projects install the SDK with npm. TypeScript uses
+your installed compiler, preferring a project-local installation. See the
+[supported platforms and toolchain installers](https://clunkyard.com/sdk/player-kit#supported-platforms)
+for your language. On Windows, use MSVC's Developer Shell or Clang for C/C++.
 
-Use `npx @clunkyard/cli` for current tooling. Record `--version` with your
-source commit when comparing trials. Commit the npm lockfile for reproducible
-JavaScript/TypeScript dependencies. Match replays record the game rules and
-robot actions; local timings do not qualify hosted budgets.
+Commit the npm lockfile to reproduce JavaScript and TypeScript dependencies.
+Match replays record the game rules and robot actions. Hosted matches use their
+own compute budgets, so check your robot in a hosted trial too.
 
 ## Connect a remote robot or strategist
 
