@@ -136,3 +136,19 @@ It checks registry integrity, installed bytes, normal source preservation and
 robot results.
 The same public `scripts/native-registry-smoke.cjs` accepts an explicit platform
 and selected language list for other native hosts; it never installs toolchains.
+
+# Core source
+
+`sdk/core` contains the Rust source, generated ABI, vendored dependencies and
+WebAssembly module. `protocol/v2` contains the core's fixtures and API
+specification. To rebuild the module offline, install Rust 1.96.0, its
+`wasm32-unknown-unknown` target and Binaryen 120, then run:
+
+```sh
+sdk/core/build-wasm.sh rebuilt-core.wasm
+```
+
+`release-source.json` identifies the canonical source commit and hashes each
+exported input. Reconcile SDK contributions with the canonical game source
+before exporting another release.
+
