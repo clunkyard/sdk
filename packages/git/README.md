@@ -1,11 +1,13 @@
 # Private Clunkyard Git
 
-Requires Node 20 or later and Git. Install the reviewed release with `npm install --global @clunkyard/git@2.0.1`;
-no language toolchain is added. A downloaded release tarball can also be installed
-with `npm install --global ./clunkyard-git-2.0.1.tgz`. On Linux/macOS, add
-`--prefix "$HOME/.local"` and put `$HOME/.local/bin` on PATH for a user-owned install.
+Install Node 20 or later and Git, then run:
 
-This package provides command-line tools; it has no supported JavaScript module API.
+```sh
+npm install --global @clunkyard/git
+```
+
+On Linux or macOS, add `--prefix "$HOME/.local"` and put `$HOME/.local/bin`
+on your PATH to install without administrator access.
 
 Create an **agent access key** on your Clunkyard Account page, then run:
 
