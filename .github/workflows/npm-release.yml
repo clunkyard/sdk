@@ -123,7 +123,8 @@ jobs:
           NPM_RELEASE_PACKAGES: ${{ inputs.packages }}
           NPM_RELEASE_ENVIRONMENT: npm-release
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        if: always()
         with:
           name: npm-publication
           path: dist/publication.json
-          if-no-files-found: error
+          if-no-files-found: warn

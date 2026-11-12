@@ -1,6 +1,6 @@
 {
   "v": 1,
-  "sourceCommit": "ef17c39ce0f7953b1d646b12c753965330c53704",
+  "sourceCommit": "f90fa0273fbb60e43cbaed6c4a134731716d2a26",
   "sourceDirty": false,
   "packages": [
     "git",
@@ -30,8 +30,8 @@
     },
     {
       "path": ".github/workflows/npm-release.yml",
-      "bytes": 4428,
-      "sha256": "77aeade19f5b54890220c3fdccb6ba196e301df53412e49ca467e4c2436e4a7f"
+      "bytes": 4448,
+      "sha256": "d8e8cf130228752a24f577bb9e262ed5ac02608949eb0a68688783b98b2d3611"
     },
     {
       "path": ".gitignore",
@@ -525,8 +525,8 @@
     },
     {
       "path": "scripts/publish.cjs",
-      "bytes": 7454,
-      "sha256": "acc288b96fe92e5c4f560a131d524acf413aa1289a0bada4aaae87d70cb9f984"
+      "bytes": 9450,
+      "sha256": "a5093f626c40042c20e0926816f24f4dc3d1f34586ce5786ca773a20fb328eaf"
     },
     {
       "path": "scripts/qualify.cjs",
