@@ -137,7 +137,7 @@ robot results.
 The same public `scripts/native-registry-smoke.cjs` accepts an explicit platform
 and selected language list for other native hosts; it never installs toolchains.
 
-# Core source
+## Core source
 
 `sdk/core` contains the Rust source, generated ABI, vendored dependencies and
 WebAssembly module. `protocol/v2` contains the core's fixtures and API
