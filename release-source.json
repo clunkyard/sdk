@@ -1,6 +1,6 @@
 {
   "v": 1,
-  "sourceCommit": "a1d2a2dae7132eb648451c727ee6f8d86dc6a2c3",
+  "sourceCommit": "b642b4965bd5ff8882bb98cb97f3ebf0ecfd734c",
   "sourceDirty": false,
   "playerDerivation": {
     "packages": [
@@ -593,8 +593,8 @@
     },
     {
       "path": "scripts/smoke-cli.cjs",
-      "bytes": 5899,
-      "sha256": "a7ca557876e09665be6adbade738bdb3cb5c87616a1cafbae71d7566a217cbc2"
+      "bytes": 6517,
+      "sha256": "834a6e6616b95d31c3b26c0d21b3c01e871f8e8f12a2b1186739227ff641bdbf"
     },
     {
       "path": "scripts/smoke-connect.cjs",

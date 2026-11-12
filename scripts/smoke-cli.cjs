@@ -23,6 +23,14 @@ try {
   run(process.execPath,[process.env.npm_execpath,'install','--global','--prefix',prefix,'--ignore-scripts','--no-audit','--no-fund',path.resolve(tarball)]);
   const directory=path.join(prefix,...(process.platform==='win32'?[]:['lib']),'node_modules','@clunkyard','cli');
   const entry=path.join(directory,'cli.cjs');
+  const catalogue=JSON.parse(fs.readFileSync(path.join(directory,'catalogue.json')));
+  function checkNpmSDK(projectDirectory){
+    const expected=catalogue.npmSDK,sdk=JSON.parse(fs.readFileSync(path.join(projectDirectory,'node_modules','clunkyard','package.json')));
+    assert.equal(sdk.name,expected.name);assert.equal(sdk.version,expected.version);
+    const lock=JSON.parse(fs.readFileSync(path.join(projectDirectory,'package-lock.json'))).packages['node_modules/clunkyard'];
+    assert.equal(lock.name,expected.name);assert.equal(lock.version,expected.version);assert.equal(lock.integrity,expected.integrity);
+    assert.equal(lock.resolved,`https://registry.npmjs.org/@clunkyard/sdk/-/sdk-${expected.version}.tgz`);
+  }
   const reviewed=JSON.parse(fs.readFileSync(path.join(path.dirname(path.resolve(tarball)),'packages.json'))).packages.find(row=>row.name==='@clunkyard/cli');
   assert.ok(reviewed,'An exact packed CLI receipt is required.');
   const expectedVersion=reviewed.version;
@@ -37,8 +45,7 @@ try {
   for(const file of ['clunkyard.cjs','clunkyard-archive.cjs','clunkyard.lock.json','clunkyard-template.json'])assert.equal(fs.existsSync(path.join(project,file)),false,'Copied tooling: '+file);
   run(process.execPath,[entry,'doctor','--project',project]);
   run(process.execPath,[entry,'--project',project,'match','42','2d','classic']);
-  const sdk=require(path.join(project,'node_modules','clunkyard','package.json'));
-  assert.equal(sdk.name,'@clunkyard/sdk');assert.equal(sdk.version,'2.0.0');
+  checkNpmSDK(project);
   const replay=JSON.parse(fs.readFileSync(path.join(project,'replays','trial-42.json')));
   assert.deepEqual(replay.failures||[],[]);
   assert.ok(replay.stats.bots[0].combat.shots>0,'Starter never fired.');
@@ -60,6 +67,7 @@ try {
   run(process.execPath,[process.env.npm_execpath,'install','--save-dev','--save-exact','typescript@6.0.2','--ignore-scripts','--no-audit','--no-fund'],{cwd:typescript});
   run(process.execPath,[entry,'doctor','--project',typescript]);
   run(process.execPath,[entry,'match','77','3d','zero-g','--project',typescript]);
+  checkNpmSDK(typescript);
   const tsReplay=JSON.parse(fs.readFileSync(path.join(typescript,'replays','trial-77.json')));
   assert.deepEqual(tsReplay.failures||[],[]);assert.ok(tsReplay.stats.bots[0].combat.shots>0,'TypeScript starter never fired.');
   console.log(JSON.stringify({installedCommand:true,projectWithSpaces:true,explicitProject:true,realMatch:true,npmSDK:true,cacheReuse:true,nestedTypeScript:true,typeModuleProject:true}));
