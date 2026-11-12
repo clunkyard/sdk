@@ -1,6 +1,6 @@
 {
   "v": 1,
-  "sourceCommit": "ffa59766b8c3963d4a2bb678fb117f81843b8d32",
+  "sourceCommit": "a3c11c42bb35a70f81ed819bb703699f454f25a0",
   "sourceDirty": false,
   "playerDerivation": {
     "packages": [
@@ -19,11 +19,11 @@
       {
         "name": "@clunkyard/cli",
         "canonicalVersion": "2.2.2",
-        "version": "2.2.6",
-        "contentSHA256": "c29a553f11253e47ee81ff4826850c33769f56eb7d13c919ebbd613d33ce5033"
+        "version": "2.2.7",
+        "contentSHA256": "7667796678827fcaf07a6d406eda5738b24183bb6f68058f9aee231b687812a7"
       }
     ],
-    "catalogueSHA256": "ad775e9c8a439e3f76002f06577ed7d0c0a1fd995e6874cdedd4bce2fbf131c9"
+    "catalogueSHA256": "38003358cf902ea56f3210a31f57c523fb169a3a201191f3c841d6dfb7827ec6"
   },
   "packages": [
     "git",
@@ -89,7 +89,7 @@
     {
       "path": "packages/cli/catalogue.json",
       "bytes": 152344,
-      "sha256": "ad775e9c8a439e3f76002f06577ed7d0c0a1fd995e6874cdedd4bce2fbf131c9"
+      "sha256": "38003358cf902ea56f3210a31f57c523fb169a3a201191f3c841d6dfb7827ec6"
     },
     {
       "path": "packages/cli/cli.cjs",
@@ -104,7 +104,7 @@
     {
       "path": "packages/cli/package.json",
       "bytes": 753,
-      "sha256": "204a9555b0c305fbff408477b5e70b57c1e21d4fc9dc7807054ef20f240a9779"
+      "sha256": "3d4e6bab06379fabb63e5405c545db3029fb5c0478bff1dd1586c5a2b6f99889"
     },
     {
       "path": "packages/cli/project.cjs",
