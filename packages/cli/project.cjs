@@ -9,12 +9,17 @@ const normalized=data=>data.toString('utf8').replace(/\r\n/g,'\n');
 function managedHashes(expected) {
   if(expected===undefined)return [];
   const hashes=Array.isArray(expected)?expected:[expected];
-  if(!hashes.length||hashes.length>2||hashes.some(value=>typeof value!=='string'||!(/^[a-f0-9]{64}$/).test(value)))throw new Error('Invalid managed-file checksum catalogue.');
+  if(!hashes.length||hashes.length>3||hashes.some(value=>typeof value!=='string'||!(/^[a-f0-9]{64}$/).test(value)))throw new Error('Invalid managed-file checksum catalogue.');
   return hashes;
 }
 function known(data,expected) {
   const hashes=managedHashes(expected);
   return hashes.includes(hash(data))||hashes.includes(hash(normalized(data)));
+}
+const dockerNpm='\nCOPY --from=node /usr/local/lib/node_modules/npm /usr/local/lib/node_modules/npm\nRUN ln -s ../lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm && ln -s ../lib/node_modules/npm/bin/npx-cli.js /usr/local/bin/npx';
+function managedDocker(data,expected){
+  const legacy=normalized(data).replace('ENTRYPOINT ["npx", "--yes", "@clunkyard/cli@2"]','ENTRYPOINT ["node", "clunkyard.cjs"]').replace('ENTRYPOINT ["npx", "--yes", "@clunkyard/cli"]','ENTRYPOINT ["node", "clunkyard.cjs"]').replace(dockerNpm,'');
+  return known(data,expected)||known(legacy,expected);
 }
 const nodeLanguage=language=>['javascript','typescript'].includes(language);
 
@@ -34,8 +39,8 @@ function readManifest(directory) {
 function nodeMetadata(language) {
   const sdk=catalogue.npmSDK;
   const metadata={name:`clunkyard-starter-${language}`,version:'2.0.0',private:true,scripts:{
-    build:'npx --yes @clunkyard/cli@2 build',doctor:'npx --yes @clunkyard/cli@2 doctor',
-    match:'npx --yes @clunkyard/cli@2 match',replay:'npx --yes @clunkyard/cli@2 replay',
+    build:'npx --yes @clunkyard/cli build',doctor:'npx --yes @clunkyard/cli doctor',
+    match:'npx --yes @clunkyard/cli match',replay:'npx --yes @clunkyard/cli replay',
   },engines:{node:'>=20'},dependencies:{clunkyard:`npm:${sdk.name}@${sdk.version}`}};
   const lock={name:metadata.name,version:metadata.version,lockfileVersion:3,requires:true,packages:{
     '':{name:metadata.name,version:metadata.version,dependencies:metadata.dependencies,engines:metadata.engines},
@@ -45,7 +50,7 @@ function nodeMetadata(language) {
 }
 
 function makefile() {
-  return 'CLUNKYARD ?= npx --yes @clunkyard/cli@2\n\n.PHONY: all setup doctor match replay clean\nall:\n\t$(CLUNKYARD) build\nsetup:\n\t$(CLUNKYARD) setup\ndoctor:\n\t$(CLUNKYARD) doctor\nmatch:\n\t$(CLUNKYARD) match\nreplay:\n\t$(CLUNKYARD) replay\nclean:\n\t$(CLUNKYARD) clean\n';
+  return 'CLUNKYARD ?= npx --yes @clunkyard/cli\n\n.PHONY: all setup doctor match replay clean\nall:\n\t$(CLUNKYARD) build\nsetup:\n\t$(CLUNKYARD) setup\ndoctor:\n\t$(CLUNKYARD) doctor\nmatch:\n\t$(CLUNKYARD) match\nreplay:\n\t$(CLUNKYARD) replay\nclean:\n\t$(CLUNKYARD) clean\n';
 }
 
 function readme(language,entry) {
@@ -59,10 +64,10 @@ ${portable?'This language uses the portable Node/WebAssembly route.':'Check the 
 \`\`\`sh
 git clone https://github.com/clunkyard/starter-${language}.git
 cd starter-${language}
-npx --yes @clunkyard/cli@2 doctor
-npx --yes @clunkyard/cli@2 build
-npx --yes @clunkyard/cli@2 match
-npx --yes @clunkyard/cli@2 replay
+npx @clunkyard/cli doctor
+npx @clunkyard/cli build
+npx @clunkyard/cli match
+npx @clunkyard/cli replay
 \`\`\`
 
 If you use Make, the equivalent commands are \`make doctor\`, \`make\`, \`make match\` and \`make replay\`. The shared CLI downloads the checksum-pinned local engine and only this language's SDK${nodeLanguage(language)?' through npm':''}. Downloads, build output and temporary files stay in ignored \`.clunkyard/\`${nodeLanguage(language)?'; the npm SDK is installed in ignored \`node_modules/\`':''}. No account, Docker image, administrator access or all-language builder is needed.
@@ -74,13 +79,13 @@ The [language guide](https://clunkyard.com/sdk/${guide}) lists the adapter, offi
 ## Repeat a trial
 
 \`\`\`sh
-npx --yes @clunkyard/cli@2 match 42 2d classic
-npx --yes @clunkyard/cli@2 match 77 3d zero-g
+npx @clunkyard/cli match 42 2d classic
+npx @clunkyard/cli match 77 3d zero-g
 \`\`\`
 
 Keep a baseline commit. Repeat several seeds and rulesets; compare contacts, battery, aim, shots, hits and eliminations in the replay. Local trials run programs as your user. Use hosted trials to measure arena budgets before a tournament.
 
-The CLI packages SDK ${catalogue.sdkVersion}/protocol 2 asset identities from the immutable [${catalogue.release} release](https://github.com/clunkyard/game-kit/releases/tag/${catalogue.release}). \`@2\` receives compatible tooling fixes without copying scripts into your robot repository. To reproduce an exact tool version, use \`npx --yes @clunkyard/cli@2.1.2\` or set \`CLUNKYARD='npx --yes @clunkyard/cli@2.1.2'\` with Make. SDK/engine caches are identified by their content hashes and remain reusable across CLI updates.
+The CLI packages SDK ${catalogue.sdkVersion}/protocol 2 asset identities from the immutable [${catalogue.release} release](https://github.com/clunkyard/game-kit/releases/tag/${catalogue.release}). Run \`npx @clunkyard/cli\` for current tooling without copying scripts into your robot repository. SDK/engine caches are identified by their content hashes and remain reusable across CLI updates. Record the CLI version reported by \`--version\` with your source commit when comparing trials.
 
 ## Play online
 
@@ -114,20 +119,20 @@ function migrate(directory) {
   const docker=path.join(root,'Dockerfile');
   if(fs.existsSync(docker)){
     const content=fs.readFileSync(docker);
-    if(!known(content,row.boilerplate.Dockerfile)&&/clunkyard(?:-archive)?\.cjs|clunkyard\.lock\.json/.test(content.toString('utf8')))throw new Error('Preserving customized Dockerfile; replace its retired helper command before migrating.');
+    if(!managedDocker(content,row.boilerplate.Dockerfile)&&/clunkyard(?:-archive)?\.cjs|clunkyard\.lock\.json/.test(content.toString('utf8')))throw new Error('Preserving customized Dockerfile; replace its retired helper command before migrating.');
   }
   const guide=path.join(root,'README.md'),oldGuide=fs.existsSync(guide)?fs.readFileSync(guide,'utf8'):null;
   const generated=readme(manifest.language,manifest.entry);
   if(oldGuide===null||oldGuide===generated||known(oldGuide,row.boilerplate['README.md']))fs.writeFileSync(guide,generated);
-  else if(!oldGuide.includes('## Clunkyard CLI'))fs.appendFileSync(guide,'\n## Clunkyard CLI\n\nShared tooling is available through `npx --yes @clunkyard/cli@2 doctor`, `build`, `match` and `replay`. See [the local development guide](https://clunkyard.com/sdk/player-kit) for npm installation and private Git. SDK/engine asset identities are pinned in the CLI package.\n');
+  else if(!oldGuide.includes('## Clunkyard CLI'))fs.appendFileSync(guide,'\n## Clunkyard CLI\n\nShared tooling is available through `npx @clunkyard/cli doctor`, `build`, `match` and `replay`. See [the local development guide](https://clunkyard.com/sdk/player-kit) for npm installation and private Git. SDK/engine asset identities are pinned in the CLI package.\n');
   const ignore=path.join(root,'.gitignore'),ignored=fs.existsSync(ignore)?fs.readFileSync(ignore,'utf8'):'';
   const additions=['.clunkyard/','replays/','build/','node_modules/'].filter(line=>!ignored.split(/\r?\n/).includes(line));
   if(additions.length)fs.writeFileSync(ignore,ignored+(ignored&&!ignored.endsWith('\n')?'\n':'')+additions.join('\n')+'\n');
   for(const [name,data] of Object.entries(files))fs.writeFileSync(path.join(root,name),data);
-  if(fs.existsSync(docker)&&known(fs.readFileSync(docker),row.boilerplate.Dockerfile)){
+  if(fs.existsSync(docker)&&managedDocker(fs.readFileSync(docker),row.boilerplate.Dockerfile)){
     let content=fs.readFileSync(docker,'utf8');
-    content=content.replace('COPY --from=node /usr/local/bin/node /usr/local/bin/node','COPY --from=node /usr/local/bin/node /usr/local/bin/node\nCOPY --from=node /usr/local/lib/node_modules/npm /usr/local/lib/node_modules/npm\nRUN ln -s ../lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm && ln -s ../lib/node_modules/npm/bin/npx-cli.js /usr/local/bin/npx');
-    content=content.replace('ENTRYPOINT ["node", "clunkyard.cjs"]','ENTRYPOINT ["npx", "--yes", "@clunkyard/cli@2"]');
+    if(!content.includes(dockerNpm))content=content.replace('COPY --from=node /usr/local/bin/node /usr/local/bin/node','COPY --from=node /usr/local/bin/node /usr/local/bin/node'+dockerNpm);
+    content=content.replace('ENTRYPOINT ["node", "clunkyard.cjs"]','ENTRYPOINT ["npx", "--yes", "@clunkyard/cli"]').replace('ENTRYPOINT ["npx", "--yes", "@clunkyard/cli@2"]','ENTRYPOINT ["npx", "--yes", "@clunkyard/cli"]');
     fs.writeFileSync(docker,content);
   }
   for(const name of remove)if(fs.existsSync(path.join(root,name)))fs.unlinkSync(path.join(root,name));

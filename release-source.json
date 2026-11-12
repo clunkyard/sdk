@@ -1,6 +1,6 @@
 {
   "v": 1,
-  "sourceCommit": "d3d5c5352b453d77b5c890bb0d44ce5725807260",
+  "sourceCommit": "e9eb84df7ef8da8e169d5b52de5dad648095e631",
   "sourceDirty": false,
   "packages": [
     "git",
@@ -60,13 +60,13 @@
     },
     {
       "path": "packages/cli/catalogue.json",
-      "bytes": 140179,
-      "sha256": "8d97ce57bbb0188e39274a7fbb87b7589b7a15713be5fb8eb64d37199b8129ad"
+      "bytes": 152821,
+      "sha256": "a8a6d1a88b04feb540c0b272f091ed262bb00ac12e6fdbe0ec749c9b9a4273a7"
     },
     {
       "path": "packages/cli/cli.cjs",
-      "bytes": 2194,
-      "sha256": "1ecd9c7af6c9f716a1f22dd1eb349baa661c813007a6c3dd5f960c68d14055a8"
+      "bytes": 3512,
+      "sha256": "179c8aeb27633fd6543d9872f668fd9b05d4eda7bf2b3b70fed1637c89bf07f9"
     },
     {
       "path": "packages/cli/LICENSE",
@@ -75,23 +75,28 @@
     },
     {
       "path": "packages/cli/package.json",
-      "bytes": 728,
-      "sha256": "b6d334004834eb25e596f4e4e1f77b1d122ddef8af9203dd3eabe51a11282c20"
+      "bytes": 753,
+      "sha256": "53f6baf956106508bb7250ba82d53847fa24b1a44ef7b6a7f52ed4a1d1819f57"
     },
     {
       "path": "packages/cli/project.cjs",
-      "bytes": 11927,
-      "sha256": "a0b7ba3a132b263e0a258d725edbfc9c50d564cac66bc7d3c212a7039544d42a"
+      "bytes": 12351,
+      "sha256": "09452475067f353ae15b2b7f66f1f8696f8652612cbb4dfade9aab65c923b366"
     },
     {
       "path": "packages/cli/README.md",
-      "bytes": 3390,
-      "sha256": "54d5dff33925f3d5d12cae15007c3db63f5fc64d39e4b1610b0791c2c9a6fb76"
+      "bytes": 4173,
+      "sha256": "42565fbc54a2c4364d88b04d52e01980772fa347ae9994b39ed60017ba69ebb9"
+    },
+    {
+      "path": "packages/cli/remote-bridge.mjs",
+      "bytes": 7035,
+      "sha256": "286596679ddc452a5f6adeb83f982d79de4c6138fee66d4e5180b7141173bbe8"
     },
     {
       "path": "packages/cli/runtime.cjs",
-      "bytes": 21622,
-      "sha256": "1dbc7741db57581781ea98a0d449983d58fcfd645171a65851c6f3f596f02e44"
+      "bytes": 21614,
+      "sha256": "431cf149b8c726a7956418a552f1b75ad79a6686c9f01096e44cb89fc0cda29c"
     },
     {
       "path": "packages/git/client.cjs",
@@ -480,8 +485,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 3574,
-      "sha256": "49e42281ce71b120693500d2360ddade2cfa01383ace7418aea1105875b0ba9f"
+      "bytes": 3569,
+      "sha256": "e4deabc8ac19db6213738a7fd4d51b125c6a099b227d2630ce43bc767d535bf6"
     },
     {
       "path": "RELEASING.md",
@@ -515,8 +520,8 @@
     },
     {
       "path": "scripts/player-kit/build-native.cjs",
-      "bytes": 4369,
-      "sha256": "39dbbf530e029340c4f1d2d00be9709d12785b246d7b15d39436405121b31dbe"
+      "bytes": 5098,
+      "sha256": "2d2798e21976da83c705d46ffed69be50a3290f9ad698850680f7c18ca16c93a"
     },
     {
       "path": "scripts/qualify.cjs",
@@ -550,8 +555,8 @@
     },
     {
       "path": "scripts/smoke-cli.cjs",
-      "bytes": 5162,
-      "sha256": "fd1a22132da342b7bd835b739c5aaaab1411eff3e0f82dd98d6f5c6b09d1e6f0"
+      "bytes": 5308,
+      "sha256": "fff58a2a1de52e7321d4b88f31e976f78d08fa4b69115092a4fe559217294bbc"
     },
     {
       "path": "scripts/smoke-git.cjs",

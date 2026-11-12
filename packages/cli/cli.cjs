@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 'use strict';
 
-const path=require('node:path');
+const fs=require('node:fs'),path=require('node:path');
+const {pathToFileURL}=require('node:url');
 const {createRuntime}=require('./runtime.cjs');
 const {createProject,migrate}=require('./project.cjs');
 const catalogue=require('./catalogue.json');
@@ -16,7 +17,7 @@ function parse(args) {
     }else if(args[i].startsWith('--project=')){
       if(!args[i].slice(10))throw new Error('--project needs a directory.');
       project=path.resolve(args[i].slice(10));
-    }else positional.push(args[i]);
+    }else{positional.push(args[i]);if(positional[0]==='connect'){positional.push(...args.slice(i+1));break;}}
   }
   return {project,action:positional.shift()||'help',args:positional};
 }
@@ -24,16 +25,22 @@ async function main(argv=process.argv.slice(2)) {
   const {project,action,args}=parse(argv);
   if(action==='--version'||action==='version'){console.log(version);return;}
   if(['help','--help','-h'].includes(action)){
-    console.log('Clunkyard local robot CLI\n\nclunkyard [--project DIRECTORY] doctor|setup|build|match|replay|clean|migrate\nclunkyard new LANGUAGE DIRECTORY\nclunkyard list\n\nmatch [seed] [2d|3d] [ruleset]; replay [file] [port]');return;
+    console.log('Clunkyard local robot CLI\n\nclunkyard [--project DIRECTORY] doctor|setup|build|match|replay|clean|migrate\nclunkyard new LANGUAGE DIRECTORY\nclunkyard connect [--strategist] COMMAND [ARGS...]\nclunkyard list\n\nmatch [seed] [2d|3d] [ruleset]; replay [file] [port]');return;
   }
   if(action==='list'){
-    for(const [language,row] of Object.entries(catalogue.languages))console.log(`${language.padEnd(22)} ${row.portable||['javascript','typescript'].includes(language)?'Node route':'Linux x86-64'}  https://github.com/clunkyard/starter-${language}`);
+    for(const [language,row] of Object.entries(catalogue.languages))console.log(`${language.padEnd(22)} ${platformLabel(language,row)}  https://github.com/clunkyard/starter-${language}`);
     return;
+  }
+  if(action==='connect'){
+    if(args[0]==='--help'||!args.length){console.log('clunkyard connect [--strategist] COMMAND [ARGS...]\n\nUse Node 22+ and set CLUNKYARD_REMOTE_URL, CLUNKYARD_REMOTE_TOKEN and CLUNKYARD_BOT_ID from Connections. Robot commands run without a shell in this directory.');return;}
+    if(typeof globalThis.WebSocket!=='function')throw new Error('Remote connections need Node 22+ with its built-in WebSocket client. Other CLI commands support Node 20+.');
+    const bundled=path.join(__dirname,'remote-bridge.mjs'),bridge=fs.existsSync(bundled)?bundled:path.join(__dirname,'../../sdk/remote-bridge.mjs');
+    process.chdir(project);process.argv=[process.execPath,bridge,...args];await import(pathToFileURL(bridge).href);return;
   }
   if(action==='new'){
     if(args.length!==2)throw new Error('Use clunkyard new LANGUAGE DIRECTORY.');
     const destination=await createProject(args[0],path.resolve(project,args[1]));
-    console.log(`Created ${destination}. Run npx --yes @clunkyard/cli@2 doctor, build and match there.`);return;
+    console.log(`Created ${destination}. Run npx @clunkyard/cli doctor, build and match there.`);return;
   }
   if(action==='migrate'){
     migrate(project);console.log('Updated generated tooling. Robot source files are unchanged.');return;
@@ -41,5 +48,11 @@ async function main(argv=process.argv.slice(2)) {
   await createRuntime(project,__filename).main(action,args);
 }
 
+function platformLabel(language,row){
+  if(row.portable||['javascript','typescript'].includes(language))return 'Linux / macOS / Windows (Node)';
+  const names={'linux-x64':'Linux x86-64','linux-arm64':'Linux AArch64','darwin-arm64':'macOS Apple Silicon','darwin-x64':'macOS Intel','win32-x64':'Windows x86-64'};
+  return [...new Set(['linux-x64',...Object.keys(row.sdkPlatforms||{})])].map(key=>names[key]||key).join(' / ');
+}
+
 if(require.main===module)main().catch(error=>{console.error(error.message);process.exitCode=1});
-module.exports={main,parse};
+module.exports={main,parse,platformLabel};

@@ -177,7 +177,7 @@ async function build() {
   const runtimeSource=path.join(out,'source');fs.rmSync(runtimeSource,{recursive:true,force:true});sources(copied,runtimeSource);
   if(m.language==='typescript')fs.writeFileSync(path.join(out,'package.json'),'{"type":"commonjs"}\n');
   fs.writeFileSync(path.join(cache,'local-bot.json'),JSON.stringify({...m,command:[process.execPath,entry,'--project',root,'stdio']},null,2)+'\n');
-  console.log(`Built ${m.name}. Run make match or npx --yes @clunkyard/cli@2 match.`);
+  console.log(`Built ${m.name}. Run make match or npx @clunkyard/cli match.`);
 }
 function stdio() {
   const m=manifest(),out=path.join(cache,'build'),entry=path.join(out,'source',m.entry);

@@ -1,6 +1,6 @@
 {
   "name": "@clunkyard/cli",
-  "version": "2.1.2",
+  "version": "2.2.0",
   "description": "Shared local builds, matches and replays for Clunkyard robots",
   "license": "MIT",
   "engines": {
@@ -14,6 +14,7 @@
     "runtime.cjs",
     "project.cjs",
     "archive.cjs",
+    "remote-bridge.mjs",
     "catalogue.json",
     "README.md",
     "LICENSE"

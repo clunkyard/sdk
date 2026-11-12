@@ -37,16 +37,16 @@ The shared CLI creates a clean starter and supplies its local build and match
 commands:
 
 ```sh
-npx --yes @clunkyard/cli@2 new python my-robot
+npx @clunkyard/cli new python my-robot
 cd my-robot
-npx --yes @clunkyard/cli@2 doctor
-npx --yes @clunkyard/cli@2 match
+npx @clunkyard/cli doctor
+npx @clunkyard/cli match
 ```
 
 It downloads only the pinned engine and selected SDK, using your installed
 language tools. Robot repositories keep source and normal build metadata;
-shared tool fixes arrive through compatible CLI releases. For exact tooling,
-use `@clunkyard/cli@2.1.2`.
+shared tool fixes arrive through the current CLI release. Record `--version`
+with your source commit when comparing trials.
 
 ## Review and qualify a release
 
