@@ -13,7 +13,7 @@ Install the private Git helper from npm, then sign in with a Clunkyard agent
 access key:
 
 ```sh
-npm install --global @clunkyard/git@2.0.1
+npm install --global @clunkyard/git
 clunkyard-git login
 ```
 
@@ -78,7 +78,7 @@ sdk/core/build-wasm.sh rebuilt-core.wasm
 
 The build uses vendored dependencies offline. The SDK npm artifact includes the
 complete relevant crate notices and Rust standard-library notices. The MIT
-project licence accompanies both packages.
+project licence accompanies all three packages.
 
 `release-source.json` identifies the canonical source commit and hashes every
 exported input. Package versions change explicitly; released bytes are never

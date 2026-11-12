@@ -1,6 +1,6 @@
 {
   "v": 1,
-  "sourceCommit": "f90fa0273fbb60e43cbaed6c4a134731716d2a26",
+  "sourceCommit": "1ddc802d080e3abf708b1a3e7a6570c932a390db",
   "sourceDirty": false,
   "packages": [
     "git",
@@ -485,8 +485,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 3601,
-      "sha256": "1f4e16000cfdf5dcbb603ca82ef92c442475b9f9e82ceb4e97678d1ef841d1f9"
+      "bytes": 3600,
+      "sha256": "5f3c7b1745fb6268ae0da2a8169780d385d9070de6cc80e775fbca07923f24e2"
     },
     {
       "path": "RELEASING.md",
