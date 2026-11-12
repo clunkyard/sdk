@@ -13,8 +13,8 @@
   },
   "npmSDK": {
     "name": "@clunkyard/sdk",
-    "version": "2.0.0",
-    "integrity": "sha512-o6Xs8RItjDjO6ewWhUWUioW5ykdIMQKNE6xAVigROUsTOTRexvcGIZ2ASrPRnOk/bTMrNZMB8Ztmjrk14d8UNQ=="
+    "version": "2.0.2",
+    "integrity": "sha512-arKXAJ+pmYcSzcgcw2bd6HFh/SpIRo/i/MDF5LD/Lcn5NNAfqnJ/Tuq/d4lYz9O8qvallS0YFuj0adO2rEWcRA=="
   },
   "languages": {
     "javascript": {
