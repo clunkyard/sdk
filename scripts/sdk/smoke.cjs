@@ -7,7 +7,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { spawnSync } = require('node:child_process');
 
-const [projectArgument, fixturesArgument, compiler = 'tsc'] = process.argv.slice(2);
+const [projectArgument, fixturesArgument, compiler = 'tsc', expectedVersion] = process.argv.slice(2);
 if (!projectArgument || !fixturesArgument) throw Error('Usage: node smoke.cjs PROJECT FIXTURE_DIRECTORY [TSC]');
 const project = path.resolve(projectArgument), fixtures = path.resolve(fixturesArgument);
 const temporaryRoot = process.env.TMPDIR;
@@ -29,7 +29,7 @@ function compile(args) {
 }
 try {
   for (const specifier of ['@clunkyard/sdk', 'clunkyard']) {
-    console.log(run(process.execPath, [path.join(__dirname, 'probe.cjs'), project, fixtures, specifier]));
+    console.log(run(process.execPath, [path.join(__dirname, 'probe.cjs'), project, fixtures, specifier, expectedVersion || require(path.join(project,'node_modules','@clunkyard','sdk','package.json')).version]));
     const input = fs.readFileSync(path.join(fixtures, '2d-classic.ndjson'), 'utf8');
     const replies = run(process.execPath, [path.join(__dirname, 'probe-stdio.cjs'), project, specifier], {
       input, stderrMatch: /SDK diagnostic belongs on standard error/,

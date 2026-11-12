@@ -610,7 +610,7 @@
       ],
       "requirements": {
         "notes": [
-          "Install the Hew 0.9.3 toolchain and a C compiler. The kit rebuilds its Hew package and shim against that installation."
+          "Install Hew 0.10.0 or later and a C compiler. The SDK builds its Hew binding with your installed toolchain."
         ]
       },
       "starter": {

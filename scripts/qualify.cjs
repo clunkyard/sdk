@@ -15,7 +15,7 @@ for(const value of manifest.packages){
     fs.writeFileSync(path.join(project,'package.json'),JSON.stringify({name:'sdk-consumer',private:true,dependencies:{'@clunkyard/sdk':'file:'+file.replace(/\\/g,'/'),clunkyard:'file:'+file.replace(/\\/g,'/')}}));
     const install=spawnSync(process.execPath,[process.env.npm_execpath,'install','--ignore-scripts','--no-audit','--no-fund','--package-lock=false','--offline'],{cwd:project,env:process.env,stdio:'inherit'});
     if(install.status!==0)process.exit(install.status||1);
-    args=[path.join(root,'scripts/sdk/smoke.cjs'),project,path.join(root,'protocol/v2/fixtures'),require.resolve('typescript/bin/tsc')];
+    args=[path.join(root,'scripts/sdk/smoke.cjs'),project,path.join(root,'protocol/v2/fixtures'),require.resolve('typescript/bin/tsc'),value.version];
   }
   const child=spawnSync(process.execPath,args,{cwd:root,env:process.env,stdio:'inherit'});
   if(project)fs.rmSync(project,{recursive:true,force:true});

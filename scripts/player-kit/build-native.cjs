@@ -7,7 +7,9 @@ const fs=require('node:fs'),path=require('node:path'),os=require('node:os');
 const {execFileSync}=require('node:child_process');
 const option=name=>{const i=process.argv.indexOf(name);return i<0?null:process.argv[i+1]};
 const source=path.resolve(option('--source')||path.join(__dirname,'../..'));
-const sourceDirty=Boolean(execFileSync('git',['status','--porcelain'],{cwd:source,encoding:'utf8'}).trim());
+const verified=process.argv.includes('--verified-export')?require('../npm-release/native-smoke.cjs').verifyExport(source):null;
+const sourceCommit=verified?.sourceCommit||execFileSync('git',['rev-parse','HEAD'],{cwd:source,encoding:'utf8'}).trim();
+const sourceDirty=verified?false:Boolean(execFileSync('git',['status','--porcelain'],{cwd:source,encoding:'utf8'}).trim());
 if(sourceDirty&&!process.argv.includes('--allow-dirty'))throw new Error('Commit native SDK source first, or use --allow-dirty for a nonpublishable preview.');
 const output=option('--out');
 if(!output)throw new Error('Use --out NEW_SDK_DIRECTORY [--build-dir DIRECTORY] [--bindings c,python,rust]');
@@ -35,7 +37,7 @@ if(files.import)fs.copyFileSync(path.join(build,...(target?[target]:[]),'release
 if(files.shared!==files.installed)fs.copyFileSync(path.join(build,...(target?[target]:[]),'release',files.shared),path.join(sdk,'lib',files.shared));
 fs.copyFileSync(path.join(source,'LICENSE'),path.join(sdk,'LICENSE'));
 fs.writeFileSync(path.join(sdk,'VERSION'),'2.0.0\n');
-const metadata={sdkVersion:'2.0.0',platform:`${platform}-${arch}`,arch,library:files.installed,staticLibrary:files.static,rustVersion,rustCompiler,...(target?{target,crossCompiled:true}:{}),sourceCommit:execFileSync('git',['rev-parse','HEAD'],{cwd:source,encoding:'utf8'}).trim(),sourceDirty,...(platform==='darwin'?{minimumOS:env.MACOSX_DEPLOYMENT_TARGET}:{})};
+const metadata={sdkVersion:'2.0.0',platform:`${platform}-${arch}`,arch,library:files.installed,staticLibrary:files.static,rustVersion,rustCompiler,...(target?{target,crossCompiled:true}:{}),sourceCommit,sourceDirty,...(platform==='darwin'?{minimumOS:env.MACOSX_DEPLOYMENT_TARGET}:{})};
 fs.writeFileSync(path.join(sdk,'platform.json'),JSON.stringify(metadata,null,2)+'\n');
 for(const binding of bindings){
   const directory=path.join(source,'sdk/bindings',binding);

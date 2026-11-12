@@ -23,11 +23,14 @@ try {
   run(process.execPath,[process.env.npm_execpath,'install','--global','--prefix',prefix,'--ignore-scripts','--no-audit','--no-fund',path.resolve(tarball)]);
   const directory=path.join(prefix,...(process.platform==='win32'?[]:['lib']),'node_modules','@clunkyard','cli');
   const entry=path.join(directory,'cli.cjs');
+  const reviewed=JSON.parse(fs.readFileSync(path.join(path.dirname(path.resolve(tarball)),'packages.json'))).packages.find(row=>row.name==='@clunkyard/cli');
+  assert.ok(reviewed,'An exact packed CLI receipt is required.');
+  const expectedVersion=reviewed.version;
   const bin=path.join(prefix,...(process.platform==='win32'?[]:['bin']),'clunkyard'+(process.platform==='win32'?'.cmd':''));
   assert.ok(fs.existsSync(bin),'npm did not install the CLI command shim.');
-  if(process.platform==='win32')assert.equal(run(process.env.ComSpec||'cmd.exe',['/d','/s','/c',`""${bin}" --version"`],{windowsVerbatimArguments:true}),'2.2.2');
-  else assert.equal(run(bin,['--version']),'2.2.2');
-  assert.equal(run(process.execPath,[entry,'--version']),'2.2.2');
+  if(process.platform==='win32')assert.equal(run(process.env.ComSpec||'cmd.exe',['/d','/s','/c',`""${bin}" --version"`],{windowsVerbatimArguments:true}),expectedVersion);
+  else assert.equal(run(bin,['--version']),expectedVersion);
+  assert.equal(run(process.execPath,[entry,'--version']),expectedVersion);
   assert.match(run(process.execPath,[entry,'connect','--help']),/Node 22/);
   assert.ok(fs.existsSync(path.join(directory,'remote-bridge.mjs')));
   run(process.execPath,[entry,'new','javascript',project]);
