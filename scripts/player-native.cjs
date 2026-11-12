@@ -3,9 +3,31 @@
 
 // Runs on the actual target runner. A whole-bundle hash and the ordinary
 // export manifest bind every compiler input to the canonical clean snapshot.
-const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto'),{execFileSync}=require('node:child_process');
+const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto'),{execFileSync,spawnSync}=require('node:child_process');
 const hash=bytes=>crypto.createHash('sha256').update(bytes).digest('hex');
-function selectJava(env){const entries=Object.entries(env).filter(([key])=>/^JAVA_HOME(?:_\d+_(?:X64|ARM64))?$/.test(key));for(const [,home]of entries.reverse())if(home&&fs.existsSync(path.join(home,'bin',process.platform==='win32'?'javac.exe':'javac'))){try{const text=execFileSync(path.join(home,'bin','javac'),['-version'],{encoding:'utf8'});if(Number(/javac\s+(\d+)/.exec(text)?.[1])>=22)return{...env,JAVA_HOME:home,PATH:path.join(home,'bin')+path.delimiter+env.PATH};}catch{}}return env;}
+function selectJava(env,{platform=process.platform,exists=fs.existsSync,probe=spawnSync}={}){
+  const paths=platform==='win32'?path.win32:path.posix;
+  const entries=Object.entries(env).filter(([key])=>/^JAVA_HOME(?:_\d+_(?:X64|ARM64))?$/.test(key));
+  for(const [,home]of entries.reverse()){
+    const compiler=home&&paths.join(home,'bin',platform==='win32'?'javac.exe':'javac');
+    if(!compiler||!exists(compiler))continue;
+    const result=probe(compiler,['-version'],{encoding:'utf8',stdio:'pipe',timeout:10000});
+    const text=String(result.stdout||'')+String(result.stderr||'');
+    if(result.error||result.status!==0||Number(/javac\s+(\d+)/.exec(text)?.[1])<22||!/javac\s+\d+/.test(text))continue;
+    const selected={...env,JAVA_HOME:home},javaBin=paths.join(home,'bin');
+    if(platform==='win32'){
+      // A plain object can contain Path and PATH. Node passes only one of
+      // these case-insensitive names on Windows; merge before canonicalising
+      // so selecting Java cannot discard Cargo or the other toolchains.
+      const keys=Object.keys(selected).filter(key=>key.toUpperCase()==='PATH');
+      const values=[javaBin,...keys.flatMap(key=>String(selected[key]||'').split(';'))];
+      for(const key of keys)delete selected[key];
+      const seen=new Set();selected.PATH=values.filter(value=>{const key=value.toLowerCase();if(seen.has(key))return false;seen.add(key);return true;}).join(';');
+    }else selected.PATH=javaBin+(env.PATH?':'+env.PATH:'');
+    return selected;
+  }
+  return env;
+}
 function main(argv=process.argv.slice(2),environment=process.env){
   const option=name=>{const i=argv.indexOf(name);return i<0?null:argv[i+1]},input=option('--bundle'),out=option('--out');if(!input||!out||!/^[a-f0-9]{64}$/.test(environment.PLAYER_BUNDLE_SHA256||''))throw Error('Use a digest-bound --bundle and new --out directory.');
   const platform=process.platform+'-'+process.arch;if(platform!==environment.PLAYER_PLATFORM)throw Error('Native runner platform differs from the planned cohort.');

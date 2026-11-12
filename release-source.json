@@ -1,6 +1,6 @@
 {
   "v": 1,
-  "sourceCommit": "59c3037b8186d0d36e6499f4bfb9f6d66cb531ed",
+  "sourceCommit": "bb5db5da14e07db21dd67bb29b06295d2b9ed2c9",
   "sourceDirty": false,
   "packages": [
     "git",
@@ -530,8 +530,8 @@
     },
     {
       "path": "scripts/player-native.cjs",
-      "bytes": 4077,
-      "sha256": "014f2e1478100129b460a1ed7987d964b1a410c95cc3bb920b0d60cd7dee1030"
+      "bytes": 5111,
+      "sha256": "4bc69df8c69893eb7b819091970aef15d5d8bdc3366f03da551804d8fe5cdbc6"
     },
     {
       "path": "scripts/publish.cjs",
