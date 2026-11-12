@@ -1,6 +1,6 @@
 {
   "v": 1,
-  "sourceCommit": "ea0d6bc2283455354d0305afe42422f3fa9c3e44",
+  "sourceCommit": "ef17c39ce0f7953b1d646b12c753965330c53704",
   "sourceDirty": false,
   "packages": [
     "git",
@@ -30,8 +30,8 @@
     },
     {
       "path": ".github/workflows/npm-release.yml",
-      "bytes": 4092,
-      "sha256": "9d9d4769c126fabc559b8177f5033c999556a403dc7f8d45f6ded65dcd780fcf"
+      "bytes": 4428,
+      "sha256": "77aeade19f5b54890220c3fdccb6ba196e301df53412e49ca467e4c2436e4a7f"
     },
     {
       "path": ".gitignore",
@@ -76,7 +76,7 @@
     {
       "path": "packages/cli/package.json",
       "bytes": 753,
-      "sha256": "c8869af81773e1e1e72c518720a47352ab693d75ea9e6097c0f71080b3e96ced"
+      "sha256": "a820cee63eca93c015cbfd8b9cb46e3e69e393afb5f06891606a968348ee13c9"
     },
     {
       "path": "packages/cli/project.cjs",
@@ -121,7 +121,7 @@
     {
       "path": "packages/git/package.json",
       "bytes": 876,
-      "sha256": "6ab43e6e4e399b5dbd81043cd88ff9324ebfc922fbeb1fabd7e3a4fa5d48846f"
+      "sha256": "3c023035430b466dd5a4092e9c5d601e8aeebe3a338c36f6d6617afa2ec43b8b"
     },
     {
       "path": "packages/git/README.md",
@@ -231,7 +231,7 @@
     {
       "path": "packages/sdk/package.json",
       "bytes": 1116,
-      "sha256": "6f1d471385bbe8246392fd2478cb3f10ae69de2039802fd5f3e7bb08a0fa9d7e"
+      "sha256": "6e08b3a7cec060eab4b42495be9764f86aeda9e7987d8b0383d0d1542f7a28de"
     },
     {
       "path": "packages/sdk/README.md",
@@ -485,13 +485,13 @@
     },
     {
       "path": "README.md",
-      "bytes": 3569,
-      "sha256": "e4deabc8ac19db6213738a7fd4d51b125c6a099b227d2630ce43bc767d535bf6"
+      "bytes": 3601,
+      "sha256": "1f4e16000cfdf5dcbb603ca82ef92c442475b9f9e82ceb4e97678d1ef841d1f9"
     },
     {
       "path": "RELEASING.md",
-      "bytes": 7633,
-      "sha256": "ffbc97791a0d9e4062cf220475d47dcab6c870de74387887c42132cd5a3dd24c"
+      "bytes": 8017,
+      "sha256": "858b966eaef54d972221a6879d7e458b6336b1ae88756abfda9880a984143855"
     },
     {
       "path": "scripts/core-notices.cjs",
@@ -524,6 +524,11 @@
       "sha256": "2d2798e21976da83c705d46ffed69be50a3290f9ad698850680f7c18ca16c93a"
     },
     {
+      "path": "scripts/publish.cjs",
+      "bytes": 7454,
+      "sha256": "acc288b96fe92e5c4f560a131d524acf413aa1289a0bada4aaae87d70cb9f984"
+    },
+    {
       "path": "scripts/qualify.cjs",
       "bytes": 2117,
       "sha256": "029c6965dd437022097b2c93e6f6da53fc3765e05c239c4180d8e029699bae4c"
@@ -541,7 +546,7 @@
     {
       "path": "scripts/sdk/probe.cjs",
       "bytes": 2611,
-      "sha256": "5d2d356d083f52e749e7bf21ed016e07928c541f8c9bdfb995b6e0713a4fe7d1"
+      "sha256": "13b6052dd82d5d04e14b7a9679e580cb066d86076cb20e255d00ae88121a3848"
     },
     {
       "path": "scripts/sdk/probe.ts",
@@ -556,12 +561,12 @@
     {
       "path": "scripts/smoke-cli.cjs",
       "bytes": 5609,
-      "sha256": "d1858a2af3967f6e7718254d10134bf8fe53deb023fd6eee5583fd923f229284"
+      "sha256": "9c66a3d66e01356a683bbe5da1c2ccd95dfffd8e325de2778430f13cc95ca7c2"
     },
     {
       "path": "scripts/smoke-connect.cjs",
-      "bytes": 5369,
-      "sha256": "5535f5a182688b6380bdf8644001a275fef624b17757dca482ff5df78b71adbe"
+      "bytes": 5454,
+      "sha256": "b99129440decf6daf224069e8d10e6d7419b79223216bd889f5bbf154ec3b523"
     },
     {
       "path": "scripts/smoke-git.cjs",
@@ -569,14 +574,9 @@
       "sha256": "9f59255d02d4fb1c5c2b8f6ea31db44f2ec21cf1bef4ddd46d6c3800538449e1"
     },
     {
-      "path": "scripts/stage.cjs",
-      "bytes": 3131,
-      "sha256": "eec0ef0e35a4b8e6f72242d72591a8b17b066d2c3ced831405d11554cfe5ac39"
-    },
-    {
       "path": "scripts/verify-oidc.cjs",
-      "bytes": 2527,
-      "sha256": "369030b8d5e47e5c34daece087171bbbeaf09b82d6da8895cf0214ec0a352a00"
+      "bytes": 2291,
+      "sha256": "1fcf02dd5411030e36d529ef543b993472ed6952a630762798f0fefb3edd23a9"
     },
     {
       "path": "sdk/bindings/c/install.cjs",

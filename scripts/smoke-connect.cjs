@@ -32,7 +32,7 @@ async function trial(mode,source){
       await until(()=>fs.existsSync(pidFile),'busy robot did not start');robotPID=Number(fs.readFileSync(pidFile,'utf8'));assert.ok(alive(robotPID));
       if(mode==='close-session')socket.send(JSON.stringify({v:1,type:'close-session',sessionId:'s'}));else child.kill('SIGTERM');
       await until(()=>!alive(robotPID),`busy robot ${robotPID} survived ${mode}`);
-      if(mode==='close-session')assert.equal(child.exitCode,null,'closing one match must leave bridge available');
+      if(mode==='close-session'){assert.equal(child.exitCode,null,'closing one match must leave bridge available');assert.equal(child.signalCode,null,'closing one match must not signal the bridge');}
     }
     assert.doesNotMatch(output,/fixture-connect-key/);
     return {mode,sdkReady:true,...(mode==='normal'?{sdkAct:true,credentialIsolation:true}:{busyRobotReaped:true})};

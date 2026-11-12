@@ -1,94 +1,91 @@
 # Release the player packages
 
-Both packages are public and scoped to `@clunkyard`. The application root remains
-private. `@clunkyard/git` starts at 2.0.1 to distinguish its npm-ready metadata
-and licence from the earlier 2.0.0 game-kit helper. `@clunkyard/sdk` starts at
-2.0.0, matching the robot API; this does not change protocol 2 or Wasm ABI 4.
+The three public packages are `@clunkyard/git`, `@clunkyard/sdk` and
+`@clunkyard/cli`. The application root stays private. Package versions are
+explicit release identities; the robot API remains 2.0.0, protocol 2 and Wasm
+ABI 4 unless a separately reviewed API change says otherwise.
 
 ## Review exact bytes
 
-Versions and public APIs are explicit in `packages/*/package.json`. Review the
-source diff, licences, packlist and real installed-package qualification before
-changing a version. Run the **Review npm packages** workflow with `stage` left
-off first. All six operating-system/Node jobs must pass. Download the
-`npm-reviewed` artifact: `packages.json` records each tarball's SHA-256, npm
-integrity, file list and canonical source commit. `qualification.json` binds
-the tested packages to those hashes.
+Review source changes, licences, package contents and installed-package tests
+before changing `packages/*/package.json`. Dispatch **Review npm packages** on
+`main` with `publish=false` and `verify_oidc=false` for review. CI packs once on
+Ubuntu/Node 24 and tests those same tarballs on Linux, macOS and Windows with
+Node 20 and 24. All six jobs must pass.
 
-Never publish from the private application checkout or rebuild a different
-tarball after review. The public workflow stages the same Ubuntu/Node 24
-tarballs that its installed-package checks exercised.
+Download `npm-reviewed`: `packages.json` records each archive's SHA-256, npm
+integrity and canonical source commit. Each `qualification-*` artifact records
+the source and package digests actually tested. Do not rebuild different bytes
+after reviewing an archive.
 
-## Bootstrap new package names
+## Configure trusted publishing once
 
-The npm account must own or have write access to the Clunkyard organization.
-Use a current npm CLI with staged publishing support (the workflow pins
-11.21.2). For package names that do not exist yet, stage the reviewed artifacts
-from an authenticated maintainer terminal:
+The npm package owner configures this exact identity for each package:
 
 ```sh
-npm stage publish ./clunkyard-git-2.0.1.tgz --access public --tag latest --ignore-scripts
-npm stage publish ./clunkyard-sdk-2.0.0.tgz --access public --tag latest --ignore-scripts
+npm trust github @clunkyard/git --repo clunkyard/sdk --file npm-release.yml --environment npm-release --allow-publish
+npm trust github @clunkyard/sdk --repo clunkyard/sdk --file npm-release.yml --environment npm-release --allow-publish
+npm trust github @clunkyard/cli --repo clunkyard/sdk --file npm-release.yml --environment npm-release --allow-publish
 ```
 
-Staging reserves the version but does not make it publicly installable. It
-requires no 2FA approval. Review its details and bytes before approving. Do not
-replace a pending staged version blindly; inspect the existing stage first.
+Creating these relationships requires the owner's npm authentication and 2FA.
+The GitHub `npm-release` environment must restrict deployment to `main` and
+must not require a recurring manual environment approval. There is no npm
+publishing token or `NPM_TOKEN` secret. The publish job receives `id-token:
+write`; npm 11.21.2 exchanges that job's GitHub identity automatically.
 
-## Configure trusted publishing
+Read back the exact repository, workflow, environment and direct-publish
+permission before releasing. npm requires a new trusted publisher's first
+successful publication within two days. An authentication-only token exchange
+or a run that skips an unchanged package does not satisfy that requirement.
+Each newly configured package must actually publish a reviewed new version.
 
-Once the package exists, configure the **exact** public workflow identity:
+To check authentication without publication, dispatch on `main` with
+`verify_oidc=true` and `publish=false`. The job discards temporary credentials
+and retains a credential-free verification receipt.
 
-```sh
-npm trust github @clunkyard/git --repo clunkyard/sdk --file npm-release.yml --environment npm-staging --allow-stage-publish
-npm trust github @clunkyard/sdk --repo clunkyard/sdk --file npm-release.yml --environment npm-staging --allow-stage-publish
-npm trust github @clunkyard/cli --repo clunkyard/sdk --file npm-release.yml --environment npm-staging --allow-stage-publish
-```
+## Publish a reviewed release
 
-These settings authorize staging only. There is no registry token in GitHub
-and no automatic direct publish. npm requires account 2FA to configure this
-relationship; complete its authenticated browser challenge when prompted.
-Trusted publisher settings must be exercised within npm's current validity
-window. Inspect existing relationships before replacing any configuration.
+Dispatch **Review npm packages** on `main` with `publish=true`. The optional
+`packages` input selects known names, such as `@clunkyard/cli`; leave it empty
+to release all three reviewed packages.
 
-Dispatch **Review npm packages** on `main` with `verify_oidc` enabled and `stage`
-disabled to check the relationship without changing registry contents. The
-`verify-oidc` job exchanges GitHub's identity for a temporary package token for
-each package, discards the tokens and saves a credential-free verification
-receipt. This proves authentication; it does not count as a successful publish
-for npm's initial trusted-publisher validity window.
+The workflow packs once, qualifies all six platform/Node combinations, verifies
+OIDC, then downloads the same tarballs and all six qualification receipts into
+the `npm-release` job. `scripts/publish.cjs` checks every receipt's platform,
+Node major, source commit and package digests; checks every exported source
+input; and recomputes archive SHA-256 and SHA-512 integrity before running
+`npm publish ARCHIVE --provenance --ignore-scripts`. Pushes and pull requests
+only review and qualify: they cannot publish. No stage approval or per-release
+npm 2FA is part of this normal path.
 
-For later versions, dispatch **Review npm packages** on `main` with `stage`
-enabled. Qualification runs first; the stage job uses GitHub OIDC and npm
-provenance to stage exactly those reviewed tarballs. Other branches and pull
-requests cannot run the stage job.
+Already-published versions are skipped only when registry integrity matches the
+reviewed archive. All selected packages are preflighted before any immutable
+registry write. A conflicting published version fails the run; choose a new
+version instead of replacing bytes. `npm-publication` records the outcome.
+Verify the public registry archive and a fresh anonymous installation before
+updating player instructions or claiming release delivery.
 
-Use the optional `packages` input to select one package, such as
-`@clunkyard/cli`, or a comma-separated list. Already-published versions are
-skipped only when their registry integrity matches the reviewed tarball.
-Different bytes require a new version; the workflow fails rather than
-restaging them.
+## Existing staged candidates and new names
 
-## Approve a release
+The earlier stage-only workflow produced pending CLI 2.2.0 and 2.2.1 candidates.
+They remain unpublished and are outside the normal release path. Staged and
+published versions share npm's unique version index: direct publication cannot
+reuse a version that is still staged. Never silently approve, reject or replace
+one of these candidates. The first direct OIDC cutover therefore uses CLI
+2.2.2, Git 2.0.2 and SDK 2.0.1. These packaging/provenance bootstrap patches keep
+all runtime bytes except package metadata unchanged, including the SDK's API
+and core version, and do not change existing starter dependency locks.
 
-```sh
-npm stage list @clunkyard/git --json
-npm stage view STAGE_ID --json
-npm stage download STAGE_ID
-# Compare the downloaded SHA-256 with the reviewed packages.json.
-npm stage approve STAGE_ID
-```
-
-Approval is the public immutable release and requires npm's interactive 2FA.
-After approval, verify `npm view PACKAGE@VERSION dist --json` and perform a clean
-registry install. Only then switch the website and starter instructions to npm.
-Fixes after publication use a new version; keep prior tarballs and receipts.
+New package names require owner bootstrap before a trusted publisher can be
+configured. Review their exact archive and use npm's supported owner flow;
+keep that exceptional setup separate from routine direct releases.
 
 Official references:
 
-- https://docs.npmjs.com/cli/v11/commands/npm-stage/
-- https://docs.npmjs.com/cli/v11/commands/npm-trust/
-- https://docs.npmjs.com/trusted-publishers/
+- [Trusted publishing](https://docs.npmjs.com/trusted-publishers/)
+- [Trust configuration](https://docs.npmjs.com/cli/v11/commands/npm-trust/)
+- [Staged version uniqueness](https://docs.npmjs.com/cli/v11/commands/npm-stage/)
 
 ## Native SDK qualification
 

@@ -9,7 +9,7 @@ const [project, fixtures, specifier] = process.argv.slice(2);
 const resolve = createRequire(path.join(project, 'package.json'));
 const cy = resolve(specifier);
 assert.equal(resolve(`${specifier}/package.json`).name, '@clunkyard/sdk');
-assert.equal(resolve(`${specifier}/package.json`).version, '2.0.0');
+assert.equal(resolve(`${specifier}/package.json`).version, '2.0.1');
 assert.equal(cy.angles.normalize(-450), 270);
 
 for (const [file, mode, control] of [

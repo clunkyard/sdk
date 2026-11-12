@@ -7,15 +7,15 @@ on:
   workflow_dispatch:
     inputs:
       verify_oidc:
-        description: Verify npm trusted publishing without staging or publishing
+        description: Verify npm trusted publishing without publishing
         type: boolean
-        default: true
-      stage:
-        description: Stage the qualified tarballs on npm for maintainer review
+        default: false
+      publish:
+        description: Publish the qualified tarballs directly using npm trusted publishing
         type: boolean
         default: false
       packages:
-        description: Optional comma-separated package names to stage
+        description: Optional comma-separated package names to publish
         type: string
         default: ''
 
@@ -28,9 +28,9 @@ concurrency:
 
 jobs:
   verify-oidc:
-    if: github.event_name == 'workflow_dispatch' && (inputs.verify_oidc || inputs.stage) && github.ref == 'refs/heads/main'
+    if: github.event_name == 'workflow_dispatch' && (inputs.verify_oidc || inputs.publish) && github.ref == 'refs/heads/main'
     runs-on: ubuntu-24.04
-    environment: npm-staging
+    environment: npm-release
     permissions:
       contents: read
       id-token: write
@@ -40,6 +40,8 @@ jobs:
         with:
           node-version: 24
       - run: node scripts/verify-oidc.cjs
+        env:
+          NPM_RELEASE_ENVIRONMENT: npm-release
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: npm-oidc-verification
@@ -47,7 +49,7 @@ jobs:
           if-no-files-found: error
 
   pack:
-    if: github.event_name != 'workflow_dispatch' || inputs.stage || !inputs.verify_oidc
+    if: github.event_name != 'workflow_dispatch' || inputs.publish || !inputs.verify_oidc
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
@@ -92,11 +94,11 @@ jobs:
           path: dist/qualification.json
           if-no-files-found: error
 
-  stage:
-    if: github.event_name == 'workflow_dispatch' && inputs.stage && github.ref == 'refs/heads/main'
-    needs: qualify
+  publish:
+    if: github.event_name == 'workflow_dispatch' && inputs.publish && github.ref == 'refs/heads/main'
+    needs: [pack, qualify, verify-oidc]
     runs-on: ubuntu-24.04
-    environment: npm-staging
+    environment: npm-release
     permissions:
       contents: read
       id-token: write
@@ -106,7 +108,7 @@ jobs:
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version: 24
-          registry-url: https://registry.npmjs.org
+          package-manager-cache: false
       - run: npm install --global npm@11.21.2 --ignore-scripts
       - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
         with:
@@ -114,8 +116,14 @@ jobs:
           path: dist/
       - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
         with:
-          name: qualification-ubuntu-24.04-node24
-          path: dist/
-      - run: npm exec -- node scripts/stage.cjs --apply
+          pattern: qualification-*
+          path: dist/qualifications/
+      - run: npm exec -- node scripts/publish.cjs --apply
         env:
-          NPM_STAGE_PACKAGES: ${{ inputs.packages }}
+          NPM_RELEASE_PACKAGES: ${{ inputs.packages }}
+          NPM_RELEASE_ENVIRONMENT: npm-release
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: npm-publication
+          path: dist/publication.json
+          if-no-files-found: error

@@ -25,9 +25,9 @@ try {
   const entry=path.join(directory,'cli.cjs');
   const bin=path.join(prefix,...(process.platform==='win32'?[]:['bin']),'clunkyard'+(process.platform==='win32'?'.cmd':''));
   assert.ok(fs.existsSync(bin),'npm did not install the CLI command shim.');
-  if(process.platform==='win32')assert.equal(run(process.env.ComSpec||'cmd.exe',['/d','/s','/c',`""${bin}" --version"`],{windowsVerbatimArguments:true}),'2.2.1');
-  else assert.equal(run(bin,['--version']),'2.2.1');
-  assert.equal(run(process.execPath,[entry,'--version']),'2.2.1');
+  if(process.platform==='win32')assert.equal(run(process.env.ComSpec||'cmd.exe',['/d','/s','/c',`""${bin}" --version"`],{windowsVerbatimArguments:true}),'2.2.2');
+  else assert.equal(run(bin,['--version']),'2.2.2');
+  assert.equal(run(process.execPath,[entry,'--version']),'2.2.2');
   assert.match(run(process.execPath,[entry,'connect','--help']),/Node 22/);
   assert.ok(fs.existsSync(path.join(directory,'remote-bridge.mjs')));
   run(process.execPath,[entry,'new','javascript',project]);

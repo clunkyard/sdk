@@ -7,11 +7,7 @@ const path = require('node:path');
 
 async function main() {
   const env = process.env;
-  if (env.GITHUB_ACTIONS !== 'true' || env.GITHUB_REPOSITORY !== 'clunkyard/sdk' ||
-      env.GITHUB_REF !== 'refs/heads/main' || !env.ACTIONS_ID_TOKEN_REQUEST_URL ||
-      !env.ACTIONS_ID_TOKEN_REQUEST_TOKEN) {
-    throw Error('Run in the main-branch npm-staging GitHub Actions job.');
-  }
+  require('./publish.cjs').assertTrustedWorkflow(env);
   const requestURL = new URL(env.ACTIONS_ID_TOKEN_REQUEST_URL);
   if (requestURL.protocol !== 'https:') throw Error('GitHub OIDC requires HTTPS.');
   requestURL.searchParams.set('audience', 'npm:registry.npmjs.org');

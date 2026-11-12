@@ -1,6 +1,6 @@
 {
   "name": "@clunkyard/git",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Ordinary private Git for Clunkyard bot projects",
   "license": "MIT",
   "engines": {

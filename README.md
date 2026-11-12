@@ -86,5 +86,5 @@ overwritten. Maintainers reconcile SDK contributions with the canonical game
 source before exporting the next release. Issues and proposed changes are
 welcome here.
 
-See [RELEASING.md](RELEASING.md) for staging, trusted publishing and the first
-npm-side setup.
+See [RELEASING.md](RELEASING.md) for direct OIDC publication after all six qualification
+jobs and the one-time npm-side setup.
