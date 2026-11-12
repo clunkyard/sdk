@@ -71,7 +71,7 @@ function run(command, args, options={}) {
 }
 function environment() {
   const paths=[path.join(sdk,'lib'),process.env.LD_LIBRARY_PATH].filter(Boolean).join(path.delimiter);
-  return {...process.env,CLUNKYARD_SDK:sdk,CLUNKYARD_PROJECT:root,CLUNKYARD_LIB:path.join(sdk,'lib',library),LD_LIBRARY_PATH:paths,
+  return {...process.env,CLUNKYARD_SDK:sdk,CLUNKYARD_PROJECT:root,CLUNKYARD_WASM_INCLUDE:path.join(engine,'sdk','wasm','abi4'),CLUNKYARD_LIB:path.join(sdk,'lib',library),LD_LIBRARY_PATH:paths,
     ...(process.platform==='darwin'?{DYLD_LIBRARY_PATH:[path.join(sdk,'lib'),process.env.DYLD_LIBRARY_PATH].filter(Boolean).join(path.delimiter)}:{}),
     ...(process.platform==='win32'?{PATH:[path.join(sdk,'lib'),process.env.PATH].filter(Boolean).join(path.delimiter),CC:cCompiler(false),CXX:cCompiler(true)}:{}),
     TMPDIR:path.join(cache,'tmp'),NODE_PATH:npmSDK?path.join(root,'node_modules'):path.join(sdk,'bindings','javascript'),
@@ -249,7 +249,7 @@ function doctor(){
     const result=spawnSync(command[0],[...command.slice(1),...check.args],{encoding:'utf8',env:environment(),timeout:10000});
     const output=String(result.stdout||'')+String(result.stderr||'');
     const version=check.versionPattern?Number(output.match(new RegExp(check.versionPattern))?.[1]):null;
-    const ok=!result.error&&result.status===0&&(!check.minimum||version>=check.minimum);
+    const ok=!result.error&&result.status===0&&(!check.minimum||version>=check.minimum)&&(!check.outputPattern||new RegExp(check.outputPattern).test(output));
     console.log(`${ok?'ok':'missing'} ${check.label}${ok?'':': '+check.hint}`);if(!ok)missing++;
   }
   if(lock.language==='clojure'){try{console.log('ok Clojure runtime: '+clojureClasspath())}catch(error){console.log('missing '+error.message);missing++}}

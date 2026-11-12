@@ -2801,7 +2801,10 @@
         "clunkyard-template.json": "20574b7c0257af409190a7285ef25d6392e3e2fdec5f19b98fdb6d6246baa12a",
         "Makefile": "e592144ef3560c9efc206b275b54e0eacfa048e447c5f5188eb587db3e3e3e5e",
         "package.json": "22787cf021d078334fe4b55eeaa67cb5c6fe7f09e9929c6fddbe2d4b7e9697e2",
-        "README.md": "4f0c4faa83288a221c4ae844c89940a49dbafbdd149a0dbbfc84b758d9158be2",
+        "README.md": [
+          "4f0c4faa83288a221c4ae844c89940a49dbafbdd149a0dbbfc84b758d9158be2",
+          "28d93ffc6c52a67eacf9401d38173712be1377b87a779856c834b76e6123ffeb"
+        ],
         ".gitignore": "217e0fb356990d296c3d031f78f013157da8897b2b19f8545e66ca9da4acb207",
         "Dockerfile": "326fc3aedb21c5e9b3578a3e56d02bba40fe02f0368aaaef0f2f2e6d60a4b01f",
         ".dockerignore": "42bec36c9d4ba42ddbeb8c715b6c0ce0cc5dd9711ef7fb8ed034f78d944da57c"
@@ -2874,9 +2877,25 @@
       "tools": [
         "node",
         "make",
-        "clang"
+        "clang",
+        "wasm-ld"
       ],
-      "requirements": {},
+      "requirements": {
+        "checks": [
+          {
+            "label": "Clang wasm32 backend",
+            "command": "clang",
+            "args": [
+              "--print-targets"
+            ],
+            "hint": "Install Clang with the wasm32 backend and wasm-ld (clang and lld on Ubuntu).",
+            "outputPattern": "\\bwasm32\\b"
+          }
+        ],
+        "notes": [
+          "Install Clang with the wasm32 backend and wasm-ld (the clang and lld packages on Ubuntu). No WASI sysroot is needed."
+        ]
+      },
       "starter": {
         "file": "starter-vane-wasm-v2.0.0-kit.2.tar.gz",
         "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/starter-vane-wasm-v2.0.0-kit.2.tar.gz",
@@ -2918,9 +2937,25 @@
       "tools": [
         "node",
         "make",
-        "clang"
+        "clang",
+        "wasm-ld"
       ],
-      "requirements": {},
+      "requirements": {
+        "checks": [
+          {
+            "label": "Clang wasm32 backend",
+            "command": "clang",
+            "args": [
+              "--print-targets"
+            ],
+            "hint": "Install Clang with the wasm32 backend and wasm-ld (clang and lld on Ubuntu).",
+            "outputPattern": "\\bwasm32\\b"
+          }
+        ],
+        "notes": [
+          "Install Clang with the wasm32 backend and wasm-ld (the clang and lld packages on Ubuntu). No WASI sysroot is needed."
+        ]
+      },
       "starter": {
         "file": "starter-cadence-wasm-v2.0.0-kit.4.tar.gz",
         "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.4/starter-cadence-wasm-v2.0.0-kit.4.tar.gz",
@@ -2935,7 +2970,10 @@
         "clunkyard-template.json": "57534aa1c8e39312569ab7c771fbe1d557b632545ccff0de0744bc3ea72ca61b",
         "Makefile": "e592144ef3560c9efc206b275b54e0eacfa048e447c5f5188eb587db3e3e3e5e",
         "package.json": "729e27022cdcd2bcaaab508e20d4df8e74cea64e0efbe92077786a4bdda11d40",
-        "README.md": "3daa50f3c62cfdb8fc8e5179f007c7887fbfab456074d359ce2d3e67ce22ebc2",
+        "README.md": [
+          "3daa50f3c62cfdb8fc8e5179f007c7887fbfab456074d359ce2d3e67ce22ebc2",
+          "1b11eca38ddff77a6c4b044eee5e641f256bf36a65c5ceda771858bd02b73761"
+        ],
         ".gitignore": "217e0fb356990d296c3d031f78f013157da8897b2b19f8545e66ca9da4acb207"
       }
     },
@@ -2962,9 +3000,25 @@
       "tools": [
         "node",
         "make",
-        "clang"
+        "clang",
+        "wasm-ld"
       ],
-      "requirements": {},
+      "requirements": {
+        "checks": [
+          {
+            "label": "Clang wasm32 backend",
+            "command": "clang",
+            "args": [
+              "--print-targets"
+            ],
+            "hint": "Install Clang with the wasm32 backend and wasm-ld (clang and lld on Ubuntu).",
+            "outputPattern": "\\bwasm32\\b"
+          }
+        ],
+        "notes": [
+          "Install Clang with the wasm32 backend and wasm-ld (the clang and lld packages on Ubuntu). No WASI sysroot is needed."
+        ]
+      },
       "starter": {
         "file": "starter-glyph-wasm-v2.0.0-kit.2.tar.gz",
         "url": "https://github.com/clunkyard/game-kit/releases/download/v2.0.0-kit.2/starter-glyph-wasm-v2.0.0-kit.2.tar.gz",

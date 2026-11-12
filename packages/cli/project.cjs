@@ -6,7 +6,16 @@ const catalogue=require('./catalogue.json');
 const json=value=>JSON.stringify(value,null,2)+'\n';
 const hash=data=>crypto.createHash('sha256').update(data).digest('hex');
 const normalized=data=>data.toString('utf8').replace(/\r\n/g,'\n');
-const known=(data,expected)=>Boolean(expected)&&(hash(data)===expected||hash(normalized(data))===expected);
+function managedHashes(expected) {
+  if(expected===undefined)return [];
+  const hashes=Array.isArray(expected)?expected:[expected];
+  if(!hashes.length||hashes.length>2||hashes.some(value=>typeof value!=='string'||!(/^[a-f0-9]{64}$/).test(value)))throw new Error('Invalid managed-file checksum catalogue.');
+  return hashes;
+}
+function known(data,expected) {
+  const hashes=managedHashes(expected);
+  return hashes.includes(hash(data))||hashes.includes(hash(normalized(data)));
+}
 const nodeLanguage=language=>['javascript','typescript'].includes(language);
 
 function readManifest(directory) {
@@ -71,7 +80,7 @@ npx --yes @clunkyard/cli@2 match 77 3d zero-g
 
 Keep a baseline commit. Repeat several seeds and rulesets; compare contacts, battery, aim, shots, hits and eliminations in the replay. Local trials run programs as your user. Use hosted trials to measure arena budgets before a tournament.
 
-The CLI packages SDK ${catalogue.sdkVersion}/protocol 2 asset identities from the immutable [${catalogue.release} release](https://github.com/clunkyard/game-kit/releases/tag/${catalogue.release}). \`@2\` receives compatible tooling fixes without copying scripts into your robot repository. To reproduce an exact tool version, use \`npx --yes @clunkyard/cli@2.1.1\` or set \`CLUNKYARD='npx --yes @clunkyard/cli@2.1.1'\` with Make. SDK/engine caches are identified by their content hashes and remain reusable across CLI updates.
+The CLI packages SDK ${catalogue.sdkVersion}/protocol 2 asset identities from the immutable [${catalogue.release} release](https://github.com/clunkyard/game-kit/releases/tag/${catalogue.release}). \`@2\` receives compatible tooling fixes without copying scripts into your robot repository. To reproduce an exact tool version, use \`npx --yes @clunkyard/cli@2.1.2\` or set \`CLUNKYARD='npx --yes @clunkyard/cli@2.1.2'\` with Make. SDK/engine caches are identified by their content hashes and remain reusable across CLI updates.
 
 ## Play online
 
@@ -85,6 +94,7 @@ You can also create your own GitHub repository from this template, connect it in
 
 function migrate(directory) {
   const root=path.resolve(directory),manifest=readManifest(root),row=catalogue.languages[manifest.language];
+  for(const expected of Object.values(row.boilerplate))managedHashes(expected);
   const files={'Makefile':makefile(),...(nodeLanguage(manifest.language)?nodeMetadata(manifest.language):{})};
   const retired=['clunkyard.cjs','clunkyard-archive.cjs','clunkyard.lock.json','clunkyard-template.json'];
   const remove=[...retired,...(!nodeLanguage(manifest.language)?['package.json']:[])];
@@ -108,7 +118,7 @@ function migrate(directory) {
   }
   const guide=path.join(root,'README.md'),oldGuide=fs.existsSync(guide)?fs.readFileSync(guide,'utf8'):null;
   const generated=readme(manifest.language,manifest.entry);
-  if(oldGuide===null||known(oldGuide,row.boilerplate['README.md']))fs.writeFileSync(guide,generated);
+  if(oldGuide===null||oldGuide===generated||known(oldGuide,row.boilerplate['README.md']))fs.writeFileSync(guide,generated);
   else if(!oldGuide.includes('## Clunkyard CLI'))fs.appendFileSync(guide,'\n## Clunkyard CLI\n\nShared tooling is available through `npx --yes @clunkyard/cli@2 doctor`, `build`, `match` and `replay`. See [the local development guide](https://clunkyard.com/sdk/player-kit) for npm installation and private Git. SDK/engine asset identities are pinned in the CLI package.\n');
   const ignore=path.join(root,'.gitignore'),ignored=fs.existsSync(ignore)?fs.readFileSync(ignore,'utf8'):'';
   const additions=['.clunkyard/','replays/','build/','node_modules/'].filter(line=>!ignored.split(/\r?\n/).includes(line));
