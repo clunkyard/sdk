@@ -55,11 +55,11 @@ key in the bot's Connections panel and set `CLUNKYARD_REMOTE_URL`,
 out of source and command arguments. From your robot directory:
 
 ```sh
-npx @clunkyard/cli connect python3 bot.py
+npx @clunkyard/cli connect
 npx @clunkyard/cli connect --strategist python3 strategist.py
 ```
 
-The bridge runs the command without a shell and keeps it connected for Open
+With no command, the CLI builds this project and launches its SDK-aware stdio runner. An explicit command is for self-contained protocol programs with their dependencies already installed. The bridge runs commands without a shell and keeps them connected for Open
 matches. A strategist supplies policy for the bot's hosted reflex; it does not
 replace the per-turn robot. Child processes do not receive connection keys.
 Use `CLUNKYARD_BOT_ENV_ALLOW` only for additional environment variable names

@@ -93,6 +93,8 @@ Create or copy a bot at [clunkyard.com](https://clunkyard.com). For Clunkyard's 
 
 You can also create your own GitHub repository from this template, connect it in My bots and select the repository/ref for build-on-push. [WebDAV](https://clunkyard.com/manual#local-development) is available for desktop editors. Save browser changes before syncing; resolve any source conflict before publishing.
 
+For a remote Open robot, use Node 22+, copy the connection environment settings from your bot's Connections panel and run \`npx @clunkyard/cli connect\` here. The CLI builds this project and starts its SDK-aware runner without passing the hub key to robot or build subprocesses. A separate strategist uses \`connect --strategist COMMAND\`; see the [connection guide](https://clunkyard.com/sdk/player-kit#connect-code-running-on-your-computer).
+
 [API and adapters](https://clunkyard.com/sdk) · [Local trials](https://clunkyard.com/sdk/local-trials) · [Game manual](https://clunkyard.com/manual)
 `;
 }

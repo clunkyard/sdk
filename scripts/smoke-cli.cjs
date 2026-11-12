@@ -25,9 +25,9 @@ try {
   const entry=path.join(directory,'cli.cjs');
   const bin=path.join(prefix,...(process.platform==='win32'?[]:['bin']),'clunkyard'+(process.platform==='win32'?'.cmd':''));
   assert.ok(fs.existsSync(bin),'npm did not install the CLI command shim.');
-  if(process.platform==='win32')assert.equal(run(process.env.ComSpec||'cmd.exe',['/d','/s','/c',`""${bin}" --version"`],{windowsVerbatimArguments:true}),'2.2.0');
-  else assert.equal(run(bin,['--version']),'2.2.0');
-  assert.equal(run(process.execPath,[entry,'--version']),'2.2.0');
+  if(process.platform==='win32')assert.equal(run(process.env.ComSpec||'cmd.exe',['/d','/s','/c',`""${bin}" --version"`],{windowsVerbatimArguments:true}),'2.2.1');
+  else assert.equal(run(bin,['--version']),'2.2.1');
+  assert.equal(run(process.execPath,[entry,'--version']),'2.2.1');
   assert.match(run(process.execPath,[entry,'connect','--help']),/Node 22/);
   assert.ok(fs.existsSync(path.join(directory,'remote-bridge.mjs')));
   run(process.execPath,[entry,'new','javascript',project]);
@@ -39,6 +39,7 @@ try {
   const replay=JSON.parse(fs.readFileSync(path.join(project,'replays','trial-42.json')));
   assert.deepEqual(replay.failures||[],[]);
   assert.ok(replay.stats.bots[0].combat.shots>0,'Starter never fired.');
+  if(Number(process.versions.node.split('.')[0])>=22)run(process.execPath,[path.join(__dirname,'smoke-connect.cjs'),entry,project,fs.existsSync(path.resolve(__dirname,'../protocol/v2/fixtures'))?path.resolve(__dirname,'../protocol/v2/fixtures'):path.resolve(__dirname,'../../protocol/v2/fixtures')]);
   const launch=JSON.parse(fs.readFileSync(path.join(project,'.clunkyard','local-bot.json'))).command;
   assert.equal(launch[1],entry);assert.deepEqual(launch.slice(2),['--project',project,'stdio']);
   // A repeated build reuses the verified engine and installed npm SDK.

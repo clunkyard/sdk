@@ -5,6 +5,11 @@
     "pack": "node scripts/pack.cjs",
     "qualify": "node scripts/qualify.cjs"
   },
-  "engines": { "node": ">=20" },
-  "devDependencies": { "typescript": "6.0.2" }
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "typescript": "6.0.2",
+    "ws": "8.22.0"
+  }
 }

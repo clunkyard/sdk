@@ -25,15 +25,26 @@ async function main(argv=process.argv.slice(2)) {
   const {project,action,args}=parse(argv);
   if(action==='--version'||action==='version'){console.log(version);return;}
   if(['help','--help','-h'].includes(action)){
-    console.log('Clunkyard local robot CLI\n\nclunkyard [--project DIRECTORY] doctor|setup|build|match|replay|clean|migrate\nclunkyard new LANGUAGE DIRECTORY\nclunkyard connect [--strategist] COMMAND [ARGS...]\nclunkyard list\n\nmatch [seed] [2d|3d] [ruleset]; replay [file] [port]');return;
+    console.log('Clunkyard local robot CLI\n\nclunkyard [--project DIRECTORY] doctor|setup|build|match|replay|clean|migrate\nclunkyard new LANGUAGE DIRECTORY\nclunkyard connect [COMMAND [ARGS...]]\nclunkyard connect --strategist COMMAND [ARGS...]\nclunkyard list\n\nmatch [seed] [2d|3d] [ruleset]; replay [file] [port]');return;
   }
   if(action==='list'){
     for(const [language,row] of Object.entries(catalogue.languages))console.log(`${language.padEnd(22)} ${platformLabel(language,row)}  https://github.com/clunkyard/starter-${language}`);
     return;
   }
   if(action==='connect'){
-    if(args[0]==='--help'||!args.length){console.log('clunkyard connect [--strategist] COMMAND [ARGS...]\n\nUse Node 22+ and set CLUNKYARD_REMOTE_URL, CLUNKYARD_REMOTE_TOKEN and CLUNKYARD_BOT_ID from Connections. Robot commands run without a shell in this directory.');return;}
+    if(args[0]==='--help'){console.log('clunkyard connect [COMMAND [ARGS...]]\nclunkyard connect --strategist COMMAND [ARGS...]\n\nUse Node 22+ and set CLUNKYARD_REMOTE_URL, CLUNKYARD_REMOTE_TOKEN and CLUNKYARD_BOT_ID from Connections. Robot commands run without a shell in this directory.');return;}
     if(typeof globalThis.WebSocket!=='function')throw new Error('Remote connections need Node 22+ with its built-in WebSocket client. Other CLI commands support Node 20+.');
+    if(args[0]==='--strategist'&&args.length===1)throw new Error('Pass the strategist command after --strategist.');
+    if(!args.length){
+      if(!process.env.CLUNKYARD_REMOTE_URL||!process.env.CLUNKYARD_REMOTE_TOKEN||!process.env.CLUNKYARD_BOT_ID)throw new Error('Set CLUNKYARD_REMOTE_URL, CLUNKYARD_REMOTE_TOKEN and CLUNKYARD_BOT_ID from Connections, then run connect from your robot project.');
+      // Build subprocesses must not receive hub credentials either. Restore
+      // the transport environment only after the SDK-aware build completes.
+      const transport=Object.fromEntries(Object.entries(process.env).filter(([key])=>key.toUpperCase().startsWith('CLUNKYARD_REMOTE_')||key.toUpperCase()==='CLUNKYARD_BOT_ID'));
+      for(const key of Object.keys(transport))delete process.env[key];
+      try{await createRuntime(project,__filename).main('build');}finally{Object.assign(process.env,transport);}
+      args.push(process.execPath,__filename,'--project',project,'stdio');
+      if(process.env.CLUNKYARD_SDK)process.env.CLUNKYARD_BOT_ENV_ALLOW=[process.env.CLUNKYARD_BOT_ENV_ALLOW,'CLUNKYARD_SDK'].filter(Boolean).join(',');
+    }
     const bundled=path.join(__dirname,'remote-bridge.mjs'),bridge=fs.existsSync(bundled)?bundled:path.join(__dirname,'../../sdk/remote-bridge.mjs');
     process.chdir(project);process.argv=[process.execPath,bridge,...args];await import(pathToFileURL(bridge).href);return;
   }

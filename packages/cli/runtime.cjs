@@ -1,7 +1,7 @@
 'use strict';
 
 const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto');
-const {spawnSync}=require('node:child_process');
+const {spawn,spawnSync}=require('node:child_process');
 const {extract,readAsset}=require('./archive.cjs');
 const catalogue=require('./catalogue.json');
 const {readManifest}=require('./project.cjs');
@@ -68,6 +68,25 @@ function run(command, args, options={}) {
   if(result.error)throw new Error(`${command}: ${result.error.message}. See README.md for this language's toolchain.`);
   if(result.status!==0)throw new Error(`${command} exited with status ${result.status}`);
   return result;
+}
+function stream(command,args,options={}) {
+  const invocation=recipeInvocation(command,args,{cwd:options.cwd||root,env:options.env||environment()});
+  command=invocation.command;
+  if(process.platform==='win32'&&command==='python3')command=process.env.PYTHON||'python';
+  return new Promise((resolve,reject)=>{
+    let child,termTimer,killTimer,failure,stopping=false,settled=false;
+    const cleanup=()=>{clearTimeout(termTimer);clearTimeout(killTimer);process.removeListener('SIGINT',interrupt);process.removeListener('SIGTERM',terminate);process.stdin.removeListener('end',eof);if(child){process.stdin.unpipe(child.stdin);child.stdin?.destroy();}process.stdin.pause();};
+    const finish=error=>{if(settled)return;settled=true;cleanup();if(error)reject(error);else resolve();};
+    const stop=signal=>{if(stopping||settled)return;stopping=true;clearTimeout(termTimer);process.stdin.unpipe(child.stdin);child.stdin.end();child.kill(signal);killTimer=setTimeout(()=>child.kill('SIGKILL'),750);};
+    const interrupt=()=>stop('SIGINT'),terminate=()=>stop('SIGTERM');
+    const eof=()=>{if(!stopping&&!settled)termTimer=setTimeout(terminate,250);};
+    process.once('SIGINT',interrupt);process.once('SIGTERM',terminate);process.stdin.once('end',eof);
+    child=spawn(command,invocation.args,{cwd:invocation.cwd,env:invocation.env,stdio:['pipe','inherit','inherit'],shell:false});
+    child.stdin.on('error',error=>{if(!['EPIPE','ERR_STREAM_DESTROYED'].includes(error.code)){failure=error;stop('SIGTERM');}});
+    child.once('error',error=>finish(new Error(`${command}: ${error.message}. See README.md for this language's toolchain.`)));
+    child.once('exit',(code,signal)=>finish(failure||(!stopping&&code!==0?new Error(`${command} exited with ${signal||'status '+code}`):null)));
+    process.stdin.pipe(child.stdin);
+  });
 }
 function environment() {
   const paths=[path.join(sdk,'lib'),process.env.LD_LIBRARY_PATH].filter(Boolean).join(path.delimiter);
@@ -189,7 +208,7 @@ function stdio() {
   else if(m.language==='scala'&&!fs.existsSync('/usr/share/scala-2.11/lib/scala-library.jar'))command=['scala','-J--enable-native-access=ALL-UNNAMED','-cp',`${path.join(out,'classes')}:${sdk}/bindings/java/clunkyard.jar`,m.mainClass||path.basename(m.entry,'.scala')];
   if(m.language==='php')command=['php','-d','ffi.enable=true','-d',`include_path=${sdk}/bindings/php`,entry];
   const julia=m.language==='julia'?{JULIA_LOAD_PATH:`${sdk}/bindings/julia${path.delimiter}@stdlib`,JULIA_DEPOT_PATH:path.join(cache,'julia-depot'),OPENBLAS_NUM_THREADS:'1'}:{};
-  const values=command.map(rewrite);run(values[0],values.slice(1),{env:{...environment(),...julia}});
+  const values=command.map(rewrite);return stream(values[0],values.slice(1),{env:{...environment(),...julia}});
 }
 async function match(args) {
   const seed=args[0]||'42',mode=args[1]||'2d',ruleset=args[2]||(mode==='3d'?'zero-g':'classic');
