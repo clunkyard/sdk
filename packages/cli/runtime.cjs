@@ -60,6 +60,36 @@ const manifest=()=>readManifest(root);
 const sha=data=>crypto.createHash('sha256').update(data).digest('hex');
 const skip=new Set(['.git','.clunkyard','build','replays','node_modules','__pycache__','obj','bin']);
 
+// A language with a WebAssembly route builds to it, as the hosted builder
+// does (the engine's src/build-targets.js), unless bot.json says "target":
+// "native". That needs this platform's SDK to carry the command libraries
+// and the host; elsewhere the robot builds natively, as before.
+function wasmRoute(){return suppliedSdk?fs.existsSync(path.join(sdk,'wasm32-wasip1')):Boolean(sdkAsset?.wasmTarget);}
+function buildTarget(m){
+  const file=path.join(engine,'src','build-targets.js');
+  const target=fs.existsSync(file)?require(file).buildTarget(m.language,m):m.target==='native'?m.language:sdkAsset?.wasmTarget||m.language;
+  return target===m.language||wasmRoute()?target:m.language;
+}
+function hostedTarget(m){const file=path.join(engine,'src','build-targets.js');return fs.existsSync(file)?require(file).buildTarget(m.language,m):sdkAsset?.wasmTarget&&m.target!=='native'?sdkAsset.wasmTarget:m.language;}
+// The hosted builder's WASI toolchain is Clang 22 with the wasi-sdk 33
+// sysroot in /opt/wasi-sysroot and Hew in /opt/hew. A player's comes from
+// WASI_SDK_PATH (a wasi-sdk installation), WASI_SYSROOT and HEW_ROOT, or the
+// compilers on PATH.
+let wasiCache;
+function wasiTools(){
+  if(wasiCache)return wasiCache;
+  const home=process.env.WASI_SDK_PATH,tool=name=>home?path.join(home,'bin',name):toolAvailable(name+'-22')?name+'-22':name;
+  return wasiCache={executables:{'clang-22':tool('clang'),'clang++-22':tool('clang++'),'wasm-ld-22':tool('wasm-ld')},
+    sysroot:process.env.WASI_SYSROOT||(home?path.join(home,'share','wasi-sysroot'):'/opt/wasi-sysroot'),hew:hewRoot()};
+}
+function hewRoot(){
+  if(process.env.HEW_ROOT)return path.resolve(process.env.HEW_ROOT);
+  for(const directory of (process.env.PATH||'').split(path.delimiter)){
+    try{const prefix=path.dirname(path.dirname(fs.realpathSync(path.join(directory||root,'hew'))));if(fs.existsSync(path.join(prefix,'include','hew.h')))return prefix;}catch{}
+  }
+  return '/opt/hew';
+}
+
 function run(command, args, options={}) {
   const invocation=recipeInvocation(command,args,{cwd:options.cwd||root,env:options.env||environment()});
   command=invocation.command;
@@ -93,6 +123,8 @@ function environment() {
   return {...process.env,CLUNKYARD_SDK:sdk,CLUNKYARD_PROJECT:root,CLUNKYARD_WASM_INCLUDE:path.join(engine,'sdk','wasm','abi4'),CLUNKYARD_LIB:path.join(sdk,'lib',library),LD_LIBRARY_PATH:paths,
     ...(process.platform==='darwin'?{DYLD_LIBRARY_PATH:[path.join(sdk,'lib'),process.env.DYLD_LIBRARY_PATH].filter(Boolean).join(path.delimiter)}:{}),
     ...(process.platform==='win32'?{PATH:[path.join(sdk,'lib'),process.env.PATH].filter(Boolean).join(path.delimiter),CC:cCompiler(false),CXX:cCompiler(true)}:{}),
+    // Hew's binding build and WebAssembly link find Hew's headers and libraries here.
+    ...(lock.language==='hew'&&!process.env.HEW_ROOT?{HEW_ROOT:wasiTools().hew}:{}),
     TMPDIR:path.join(cache,'tmp'),NODE_PATH:npmSDK?path.join(root,'node_modules'):path.join(sdk,'bindings','javascript'),
     DOTNET_CLI_TELEMETRY_OPTOUT:'1',DOTNET_NOLOGO:'1'};
 }
@@ -151,7 +183,12 @@ function worker(project=root) {
   process.env.CLUNKYARD_PROJECT=project;
   const file=path.join(engine,'sandbox','worker.js');delete require.cache[require.resolve(file)];return require(file);
 }
-function rewrite(value) {return value.replaceAll('/opt/arena/libexec/wasm-host',path.join(sdk,'bin','wasm-host')).replaceAll('/opt/arena/',`${engine}/`).replaceAll('/opt/wasmtime/',`${sdk}/`);}
+function rewrite(value) {
+  value=value.replaceAll('/opt/arena/libexec/wasm-host',path.join(sdk,'bin','wasm-host')).replaceAll('/opt/arena/',`${engine}/`).replaceAll('/opt/wasmtime/',`${sdk}/`);
+  if(!/^(?:clang(?:\+\+)?|wasm-ld)-22$|\/opt\/(?:wasi-sysroot|hew\/)/.test(value))return value;
+  const tools=wasiTools();
+  return tools.executables[value]||value.replaceAll('/opt/wasi-sysroot',tools.sysroot).replaceAll('/opt/hew/',`${tools.hew}/`);
+}
 function sources(from,to) {
   fs.mkdirSync(to,{recursive:true});
   for(const entry of fs.readdirSync(from,{withFileTypes:true})){
@@ -168,6 +205,14 @@ function rebuildBinding() {
     const installer=path.join(directory,'install.cjs');
     if(fs.existsSync(installer))run(process.execPath,[installer,sdk]);
     else run('make',['-C',directory,'install',`SDK=${sdk}`,`ROOT=${engine}`,`BUILD=${path.join(cache,'tmp','binding-'+binding)}`]);
+  }
+  // The Rust binding for WebAssembly commands, as scripts/build-wasm-command.sh
+  // builds it: an rlib links only with the rustc that built it. Without the
+  // target installed, the robot's own build reports it (and doctor checks it).
+  const wasm=path.join(sdk,'wasm32-wasip1'),rustc=process.env.RUSTC||'rustc';
+  if(lock.rebuildBindings?.includes('rust')&&fs.existsSync(path.join(wasm,'libclunkyard.a'))){
+    const library=spawnSync(rustc,['--print','target-libdir','--target','wasm32-wasip1'],{encoding:'utf8'});
+    if(library.status===0&&fs.existsSync(String(library.stdout).trim()))run(rustc,['--edition=2021','-O','--target','wasm32-wasip1','--crate-type','rlib','--crate-name','clunkyard','-L',`native=${wasm}`,path.join(sdk,'binding-src','rust','clunkyard.rs'),'-o',path.join(wasm,'libclunkyard.rlib')]);
   }
 }
 function typescriptCompiler() {
@@ -191,16 +236,18 @@ async function build() {
   const bindingStamp=path.join(cache,'bindings-ready'),bindingIdentity=npmSDK?.integrity||sha(Buffer.from(JSON.stringify({asset:suppliedSdk?{sdk,metadata:suppliedMetadata||{},version:lock.sdkVersion}:sdkAsset.sha256,compilers:lock.rebuildBindings?.length?bindingCompilerIdentity(lock,environment()):[]})));
   if(!fs.existsSync(bindingStamp)||fs.readFileSync(bindingStamp,'utf8')!==bindingIdentity){rebuildBinding();fs.writeFileSync(bindingStamp,bindingIdentity);}
   const copied=path.join(cache,'source');fs.rmSync(copied,{recursive:true,force:true});sources(root,copied);
-  const action=npmSDK&&m.language==='typescript'?[...typescriptCompiler(),'--ignoreConfig','--ignoreDeprecations','6.0','--target','ES2022','--module','commonjs','--rootDir',copied,'--outDir',out,path.join(copied,m.entry)]:worker(copied).command(m.language,path.join(copied,m.entry),out,m);
-  if(action){const steps=Array.isArray(action[0])?action:[action];for(const step of steps){const args=step.map(rewrite);if(m.language==='c')args[0]=cCompiler(false);if(m.language==='cpp')args[0]=cCompiler(true);run(args[0],args.slice(1),{cwd:copied});}}
+  const target=buildTarget(m);
+  if(target!==hostedTarget(m))console.log(`Hosted builds compile ${m.name} to WebAssembly; this platform's SDK has no WebAssembly host, so it builds natively here.`);
+  const action=npmSDK&&m.language==='typescript'?[...typescriptCompiler(),'--ignoreConfig','--ignoreDeprecations','6.0','--target','ES2022','--module','commonjs','--rootDir',copied,'--outDir',out,path.join(copied,m.entry)]:worker(copied).command(target,path.join(copied,m.entry),out,m);
+  if(action){const steps=Array.isArray(action[0])?action:[action];for(const step of steps){const args=step.map(rewrite);if(target==='c')args[0]=cCompiler(false);if(target==='cpp')args[0]=cCompiler(true);run(args[0],args.slice(1),{cwd:copied});}}
   const runtimeSource=path.join(out,'source');fs.rmSync(runtimeSource,{recursive:true,force:true});sources(copied,runtimeSource);
   if(m.language==='typescript')fs.writeFileSync(path.join(out,'package.json'),'{"type":"commonjs"}\n');
   fs.writeFileSync(path.join(cache,'local-bot.json'),JSON.stringify({...m,command:[process.execPath,entry,'--project',root,'stdio']},null,2)+'\n');
-  console.log(`Built ${m.name}. Run make match or npx @clunkyard/cli match.`);
+  console.log(`Built ${m.name}${target===m.language?'':` for WebAssembly (${target})`}. Run make match or npx @clunkyard/cli match.`);
 }
 function stdio() {
   const m=manifest(),out=path.join(cache,'build'),entry=path.join(out,'source',m.entry);
-  let command=worker().runCommand(m.language,path.join(root,m.entry),out,m);
+  let command=worker().runCommand(buildTarget(m),path.join(root,m.entry),out,m);
   if(['javascript','typescript'].includes(m.language))command=[process.execPath,m.language==='typescript'?path.join(out,m.entry.replace(/\.ts$/,'.js')):entry];
   if(m.language==='julia')command=['julia','--startup-file=no',entry];
   if(m.language==='clojure')command=command.map(value=>value.replace('/usr/share/java/clojure.jar',clojureClasspath()));
@@ -210,6 +257,19 @@ function stdio() {
   const julia=m.language==='julia'?{JULIA_LOAD_PATH:`${sdk}/bindings/julia${path.delimiter}@stdlib`,JULIA_DEPOT_PATH:path.join(cache,'julia-depot'),OPENBLAS_NUM_THREADS:'1'}:{};
   const values=command.map(rewrite);return stream(values[0],values.slice(1),{env:{...environment(),...julia}});
 }
+// A WebAssembly robot plays on the season's fuel, as hosted: a build of a
+// language with a fuel tier (wasm:<language>) has its Standard budget, in an
+// Open match beside the DSL rival; any other WebAssembly robot has Reflex's.
+function wasmPolicy(m){
+  const ratesFile=path.join(engine,'src','rates.js');if(!fs.existsSync(ratesFile))return null;
+  const run=worker().runCommand(buildTarget(m),path.join(root,m.entry),path.join(cache,'build'),m);
+  if(path.basename(String(run[0]))!=='wasm-host')return null;
+  const rates=require(ratesFile),{table}=rates.loadRates();
+  let runtime=null;try{runtime=rates.runtimeKey(run,m.language);}catch{}
+  const budget=runtime?.startsWith('wasm:')&&rates.wasmEntryBudget(table,runtime);
+  if(budget){const {rate,...limits}=budget;return {matchClass:'open',entry:{mode:'wasm',limits,rate},label:`Season ${table.season} Standard, ${runtime} fuel tier ${rate.tier}`};}
+  return {matchClass:'reflex',entry:{mode:'wasm',limits:{wasmFuelPerTurn:table.reflex.wasmFuelPerTurn,wasmFuelPerMatch:table.reflex.wasmFuelPerMatch}},label:`Season ${table.season} Reflex`};
+}
 async function match(args) {
   const seed=args[0]||'42',mode=args[1]||'2d',ruleset=args[2]||(mode==='3d'?'zero-g':'classic');
   if(!/^\d{1,10}$/.test(seed)||Number(seed)>0xffffffff)throw new Error('Match seed must be an integer from 0 to 4294967295.');
@@ -217,7 +277,7 @@ async function match(args) {
   fs.mkdirSync(path.join(root,'replays'),{recursive:true});
   const replay=path.join(root,'replays',`trial-${seed}.json`);
   const {supportedResourceModes}=require(path.join(engine,'src','resources.js'));
-  const m=manifest(),resourceMode=selectLocalResourceMode(m,supportedResourceModes(m));
+  const m=manifest(),fuel=wasmPolicy(m),resourceMode=fuel?'wasm':selectLocalResourceMode(m,supportedResourceModes(m));
   if(resourceMode==='open'){
     run(process.execPath,[path.join(engine,'src','cli.js'),'match','--bot','@'+path.join(cache,'local-bot.json'),'--bot','@'+path.join(engine,'bots','practice','bot.json'),'--mode',mode,'--ruleset',ruleset,'--resource-mode',resourceMode,'--seed',seed,'--ticks','360','--turn-ms','2000','--startup-ms','60000','--replay',replay]);
   }else{
@@ -227,11 +287,16 @@ async function match(args) {
     const {runMatch,saveReplay}=require(path.join(engine,'src','match.js'));
     const player=resolveBot('@'+path.join(cache,'local-bot.json'),[],engine,mode,ruleset);
     const rival=resolveBot('@'+path.join(engine,'bots','practice','bot.json'),[],engine,mode,ruleset);
-    player.resourcePolicy={mode:resourceMode};rival.resourcePolicy={mode:'dsl'};
+    player.resourcePolicy=fuel?.entry||{mode:resourceMode};rival.resourcePolicy={mode:'dsl'};
     const bots=[player,rival];validateSelection(bots,mode,ruleset);
-    const result=await runMatch(bots,{mode,ruleset,seed:Number(seed),maxTicks:360,turnMs:2000,startupMs:60000,resourcePolicy:{v:3,class:'reflex',policy:'fair-compute-v1'}});
+    const result=await runMatch(bots,{mode,ruleset,seed:Number(seed),maxTicks:360,turnMs:2000,startupMs:60000,resourcePolicy:{v:3,class:fuel?.matchClass||'reflex',policy:'fair-compute-v1'}});
     saveReplay(result.replay,replay);
     console.log(`Result: ${result.result?.winners?.join(', ')||'draw'} (${result.result?.reason||'unknown'})`);
+    if(fuel){
+      const turns=result.replay.frames.flatMap(frame=>frame.telemetry?.decisions||[]).filter(decision=>decision.botId===player.id).map(decision=>decision.resources?.usage?.wasmFuel).filter(Number.isFinite).sort((a,b)=>a-b);
+      const limit=fuel.entry.limits.wasmFuelPerTurn,format=value=>Math.round(value).toLocaleString('en-CA');
+      if(turns.length)console.log(`Fuel: ${format(turns[Math.floor(turns.length/2)])} a turn at the median, ${format(turns.at(-1))} at most, of ${format(limit)} (${fuel.label}).`);
+    }
     console.log(`Replay: ${replay}`);
   }
   const failures=JSON.parse(fs.readFileSync(replay,'utf8')).failures||[];
@@ -254,10 +319,40 @@ function toolAvailable(tool){
   }
   return false;
 }
+// The WebAssembly toolchain a target's build uses, as rewrite() resolves it.
+function wasmChecks(target){
+  if(!['c-wasi','cpp-wasm','hew-wasm','rust-wasi','zig-wasi'].includes(target))return [];
+  const tools=wasiTools(),checks=[],file=(label,name,hint)=>checks.push({label,ok:fs.existsSync(name),hint});
+  const clang=tools.executables[target==='cpp-wasm'?'clang++-22':'clang-22'];
+  if(['c-wasi','cpp-wasm','hew-wasm'].includes(target)){
+    file('WASI sysroot',path.join(tools.sysroot,'lib','wasm32-wasip1','libc.a'),'Install wasi-sdk 33 and set WASI_SDK_PATH, or set WASI_SYSROOT to its share/wasi-sysroot.');
+  }
+  if(['c-wasi','cpp-wasm'].includes(target)){
+    // Clang links the wasm32-wasip1 compiler-rt builtins, which wasi-sdk carries.
+    const result=spawnSync(clang,['--target=wasm32-wasip1','-print-libgcc-file-name'],{encoding:'utf8',timeout:10000});
+    checks.push({label:`${clang} for wasm32-wasip1`,ok:result.status===0&&fs.existsSync(String(result.stdout).trim()),hint:'Use the clang from wasi-sdk 33 (WASI_SDK_PATH), or install its libclang_rt builtins for wasm32-wasip1 into your Clang 22.'});
+  }
+  if(target==='hew-wasm'){
+    checks.push({label:'hew',ok:toolAvailable('hew'),hint:'Install Hew 0.10.0 or later.'});
+    file('Hew wasm32-wasip1 runtime',path.join(tools.hew,'lib','wasm32-wasip1','libhew_runtime.a'),'Install a Hew distribution with its wasm32-wasip1 libraries, or set HEW_ROOT to it.');
+    checks.push({label:tools.executables['wasm-ld-22'],ok:path.isAbsolute(tools.executables['wasm-ld-22'])?fs.existsSync(tools.executables['wasm-ld-22']):toolAvailable(tools.executables['wasm-ld-22']),hint:'Install wasm-ld (lld), or wasi-sdk 33 with WASI_SDK_PATH.'});
+  }
+  if(target==='rust-wasi'){
+    const result=spawnSync(process.env.RUSTC||'rustc',['--print','target-libdir','--target','wasm32-wasip1'],{encoding:'utf8',timeout:10000});
+    checks.push({label:'Rust wasm32-wasip1 target',ok:result.status===0&&fs.existsSync(String(result.stdout).trim()),hint:'Run rustup target add wasm32-wasip1.'});
+  }
+  return checks;
+}
 function doctor(){
   console.log(`Clunkyard SDK ${lock.sdkVersion}; ${lock.language}; ${process.platform}/${process.arch}; Node ${process.versions.node}`);
-  let missing=0;
-  for(const tool of lock.tools.filter(tool=>!(process.platform==='win32'&&lock.language==='rust'&&tool==='cc')).filter(tool=>tool!=='make'||(!npmSDK&&lock.rebuildBindings?.some(binding=>!sdkAsset?.portableBindingInstallers?.includes(binding)&&!fs.existsSync(path.join(sdk,'binding-src',binding,'install.cjs')))))){
+  let missing=0,m=null;try{m=manifest();}catch{}
+  const target=m?buildTarget(m):lock.language,wasm=m&&target!==m.language;
+  if(m&&target!==hostedTarget(m))console.log(`Hosted builds compile this robot to WebAssembly (${hostedTarget(m)}); this platform's SDK has no WebAssembly host, so local builds are native.`);
+  else if(wasm)console.log(`Builds to WebAssembly (${target}) and runs metered by fuel, as hosted. Set "target": "native" in bot.json for a native build.`);
+  else if(m?.target==='native'&&hostedTarget({...m,target:undefined})!==m.language)console.log('bot.json asks for a native build: it plays Open, and Standard refuses it.');
+  // A WebAssembly build needs no native C or C++ compiler for these languages.
+  const native=tool=>!(wasm&&['c','cpp','rust'].includes(lock.language)&&['cc','c++'].includes(tool));
+  for(const tool of lock.tools.filter(native).filter(tool=>!(process.platform==='win32'&&lock.language==='rust'&&tool==='cc')).filter(tool=>tool!=='make'||(!npmSDK&&lock.rebuildBindings?.some(binding=>!sdkAsset?.portableBindingInstallers?.includes(binding)&&!fs.existsSync(path.join(sdk,'binding-src',binding,'install.cjs')))))){
     const command=process.platform==='win32'?({python3:process.env.PYTHON||'python',cc:cCompiler(false),'c++':cCompiler(true)}[tool]||tool):tool;
     const ok=toolAvailable(command);
     console.log(`${ok?'found':'missing'} ${command}`);if(!ok)missing++;
@@ -271,6 +366,7 @@ function doctor(){
     const ok=!result.error&&result.status===0&&(!check.minimum||version>=check.minimum)&&(!check.outputPattern||new RegExp(check.outputPattern).test(output));
     console.log(`${ok?'ok':'missing'} ${check.label}${ok?'':': '+check.hint}`);if(!ok)missing++;
   }
+  for(const check of wasmChecks(target)){console.log(`${check.ok?'ok':'missing'} ${check.label}${check.ok?'':': '+check.hint}`);if(!check.ok)missing++;}
   if(lock.language==='clojure'){try{console.log('ok Clojure runtime: '+clojureClasspath())}catch(error){console.log('missing '+error.message);missing++}}
   if(lock.language==='scala'&&process.env.SCALA_LIBRARY_JAR&&!fs.existsSync(process.env.SCALA_LIBRARY_JAR)){console.log('missing SCALA_LIBRARY_JAR file');missing++}
   if(lock.language==='scala'&&!process.env.SCALA_LIBRARY_JAR&&!fs.existsSync('/usr/share/scala-2.11/lib/scala-library.jar')&&spawnSync('scala',['-version'],{timeout:10000}).error){console.log('missing Scala runtime; set SCALA_LIBRARY_JAR or install the scala launcher.');missing++}
