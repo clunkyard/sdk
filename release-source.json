@@ -1,6 +1,6 @@
 {
   "v": 1,
-  "sourceCommit": "6571ffd0f49f8aa292ad3df6123365bd02737f59",
+  "sourceCommit": "992f4059aa1fc006970d5dac58c4d6793f6b8772",
   "sourceDirty": false,
   "playerDerivation": {
     "packages": [
@@ -283,18 +283,18 @@
     },
     {
       "path": "protocol/v2/fixtures/2d-classic.ndjson",
-      "bytes": 5174,
-      "sha256": "7fc3ebd34fa6a72ff18cd8eb2937577403bc2a0d3c875aa7d96883a84e54c8cb"
+      "bytes": 5225,
+      "sha256": "bbd2b755293fcda09e52d106a2598b546894ad7f3e98786252f09e3523b04a2e"
     },
     {
       "path": "protocol/v2/fixtures/2d-inertial-2d.ndjson",
-      "bytes": 5204,
-      "sha256": "441ad86bdfb5aad88c79c619b1a0f6f20e683bf238e4b1e18947599f1d49c589"
+      "bytes": 5255,
+      "sha256": "80b2715b082fe263dab5835ad4c1b11e87feaecbea340dbabec7889b18515a5e"
     },
     {
       "path": "protocol/v2/fixtures/3d-classic.ndjson",
-      "bytes": 5250,
-      "sha256": "b683f2e85fd25f7dcb55f0127e3524525eadab6799196afa2fa86b3d59af31df"
+      "bytes": 5303,
+      "sha256": "01c6379c55577d465c91ff77e8ac0bbdb31fc2ead4b56e08e4f872b3c4274e93"
     },
     {
       "path": "protocol/v2/fixtures/3d-gravity-flat.ndjson",
@@ -313,8 +313,8 @@
     },
     {
       "path": "protocol/v2/fixtures/compute/2d-classic.ndjson",
-      "bytes": 5247,
-      "sha256": "4bcadf9bedeb7c04622f369649c43c034dc8687b9d740ee225d69fdcef010f3d"
+      "bytes": 5298,
+      "sha256": "8cced084c44d3ad7a10223cc87e54385b191facb8b5bf9dac6a6a4281940f093"
     },
     {
       "path": "protocol/v2/fixtures/compute/3d-zero-g.ndjson",
@@ -323,8 +323,8 @@
     },
     {
       "path": "protocol/v2/fixtures/mechanics/2d-classic.ndjson",
-      "bytes": 6940,
-      "sha256": "860409139b22731ca5c21b2aa9c446244a985e9438cf02909eeac05c4c03024f"
+      "bytes": 6991,
+      "sha256": "c6ac2d1b51d0f7bff6cdd2602c2fad181761d55a3334066b79ffc2957aeeeb37"
     },
     {
       "path": "protocol/v2/fixtures/mechanics/3d-zero-g.ndjson",
@@ -333,18 +333,18 @@
     },
     {
       "path": "protocol/v2/fixtures/off/2d-classic.ndjson",
-      "bytes": 4563,
-      "sha256": "97c589595317084fa2ad593eac32b846db624eeec57735a2037b4c09118bed9a"
+      "bytes": 4614,
+      "sha256": "70dc414a1aacc844cf15e20dc59b59ea952df7d1d0118b8665311379dab4505c"
     },
     {
       "path": "protocol/v2/fixtures/off/2d-inertial-2d.ndjson",
-      "bytes": 4593,
-      "sha256": "bde41ab333e30a85ca2e78c19d02f1e9fbb6f0f0b9d66067d53181d6ecc05eb3"
+      "bytes": 4644,
+      "sha256": "e9afa3d03a7db2b5a00c3e8a12721def051470291c61a736e3a7f56cde1b94ee"
     },
     {
       "path": "protocol/v2/fixtures/off/3d-classic.ndjson",
-      "bytes": 4639,
-      "sha256": "a84e640873d6c65585342681f4d5c46c9e881beb526c58f861b7b2950cd4dd44"
+      "bytes": 4692,
+      "sha256": "74d46563ce52d1eadf273b69d6427c6c64c43c07b9681e952e63761f3c88529b"
     },
     {
       "path": "protocol/v2/fixtures/off/3d-gravity-flat.ndjson",
@@ -363,8 +363,8 @@
     },
     {
       "path": "protocol/v2/fixtures/protocol-1-hello.json",
-      "bytes": 1784,
-      "sha256": "9c1adbfddaa8c0d7affe3813cc5f46bc626e1258239de1b8cf37151441df4aff"
+      "bytes": 1835,
+      "sha256": "ec8520e42032b9f5cc44afde97815f748bd5166d7d6fe4cc3655915e180a62ab"
     },
     {
       "path": "protocol/v2/vectors/api/angles.json",
@@ -378,8 +378,8 @@
     },
     {
       "path": "protocol/v2/vectors/api/battery.json",
-      "bytes": 50635,
-      "sha256": "bed712c48c22dc91a486661f66c34c7f38c8aec99ac17c6d0c1353d6b251a349"
+      "bytes": 50642,
+      "sha256": "3085fdcfff059d1a13a7dfefdfd0e320e30adf45e23af22203e65071aca7c7e7"
     },
     {
       "path": "protocol/v2/vectors/api/clock.json",
@@ -398,23 +398,23 @@
     },
     {
       "path": "protocol/v2/vectors/api/dsl.json",
-      "bytes": 839233,
-      "sha256": "3f74874af86dfb95171a09d1ed34f5991605ddcda44075e5afd2c356d312a2e7"
+      "bytes": 839437,
+      "sha256": "d44d2bd15fc422d6f75393363897d3f903ce146caceb69ee54ef842da809efb1"
     },
     {
       "path": "protocol/v2/vectors/api/gun.json",
-      "bytes": 527556,
-      "sha256": "ba304162135301551a24d62631ff382c933d368aa798733badcacbdc929b1ed2"
+      "bytes": 529003,
+      "sha256": "379b572427fd136d51f7f0ef2103aac9e4ecb72c068f9d0d64ee659ddfc0dc60"
     },
     {
       "path": "protocol/v2/vectors/api/inputs/cue-window.ndjson",
-      "bytes": 51011,
-      "sha256": "407decbaa0559c89f6b7fca946cafc714be2ca8cd919973d02f797b17b9cfcc1"
+      "bytes": 51062,
+      "sha256": "c0c116b0d2844f143544fc4cc28b30881c72b401dc0603024710823920613f64"
     },
     {
       "path": "protocol/v2/vectors/api/inputs/mechanics-2d-classic.ndjson",
-      "bytes": 93287,
-      "sha256": "27c5b6285a3feb3b5aabb6ef7356483ef4cd3f7c940400fe516836962dc76b6b"
+      "bytes": 93338,
+      "sha256": "afb63666dba6fb26d9e9a5b87eae8d18ccdb17ddf2669e29623c9457967bd1df"
     },
     {
       "path": "protocol/v2/vectors/api/inputs/mechanics-3d-zero-g.ndjson",
@@ -423,18 +423,18 @@
     },
     {
       "path": "protocol/v2/vectors/api/inputs/tape-2d-classic.ndjson",
-      "bytes": 19754,
-      "sha256": "b3113091debe01b7d5f70177f004b2a8f5d28548b32e5cd9688048457983f2e9"
+      "bytes": 19745,
+      "sha256": "f5c5ea51b8cca6cbf8f2b4e26c9d910308dc90711600b11d9fe7a60b70dbc623"
     },
     {
       "path": "protocol/v2/vectors/api/inputs/tape-2d-inertial-2d.ndjson",
-      "bytes": 19374,
-      "sha256": "051bcdc764c8e06879adb0fd9e23b8c3a970efc03c6c5f33911dedd9019db222"
+      "bytes": 20010,
+      "sha256": "fa85c6789c08be9ee8593eb95fe32b5c0a4a054f13412d5f0f499f9f9fecbe5b"
     },
     {
       "path": "protocol/v2/vectors/api/inputs/tape-3d-classic.ndjson",
-      "bytes": 19347,
-      "sha256": "d975b8428014635440668e86ef244b8b54f36e8e209ec17fc5f820be931467bb"
+      "bytes": 19663,
+      "sha256": "0eb412d7436736116c7ebf839d857dfe3f6e3273a67b09808c8aa59f8d306f53"
     },
     {
       "path": "protocol/v2/vectors/api/inputs/tape-3d-gravity-flat.ndjson",
@@ -458,33 +458,33 @@
     },
     {
       "path": "protocol/v2/vectors/api/me.json",
-      "bytes": 239628,
-      "sha256": "b5c9e8143c75eea1ddb12b681be1a159786226a45d290d7d324f1a7b6b10c232"
+      "bytes": 239697,
+      "sha256": "f64db1357d0432d4bbbd4b2f5f95f14301590e9bce65519f3a5f86afffb00482"
     },
     {
       "path": "protocol/v2/vectors/api/nav.json",
-      "bytes": 681874,
-      "sha256": "791f819f7faa6eab01930d4a1d3fe528b0a0702f60cb8333931e0700b40855aa"
+      "bytes": 681909,
+      "sha256": "f8ab12a943479d2bfabcece34a807746f81eba183686d1e8bc9cee87a3abd0fd"
     },
     {
       "path": "protocol/v2/vectors/api/raw.json",
-      "bytes": 391289,
-      "sha256": "89974623058bd5cdc79290eb261705f79655a8602e079943da637e761a1e2564"
+      "bytes": 392069,
+      "sha256": "f4c9b40c00962c26a31a3396df145c9c4f548057595451e3b2b7c374f8b4c4b5"
     },
     {
       "path": "protocol/v2/vectors/api/scanner.json",
-      "bytes": 78523,
-      "sha256": "0a7e24f5489bfc1fc499e8195c6b1760edcab5ba5c41c221b03927141e83100b"
+      "bytes": 78538,
+      "sha256": "337fe7f138bb39ada5764aea9b13055cc45d0fb0a896cec128187c2e86739f06"
     },
     {
       "path": "protocol/v2/vectors/api/score.json",
-      "bytes": 54511,
-      "sha256": "8c9c9afc65e0b9a222b6376090fae7e157022ab7b077be342f77ebaa4bd3ed5b"
+      "bytes": 54508,
+      "sha256": "ced0eae8140b8bcb95ad1755b06f69c4c2fdefcecb57e1d5deb585b9c767a6c6"
     },
     {
       "path": "protocol/v2/vectors/api/sensors.json",
-      "bytes": 304476,
-      "sha256": "4a1cab36618c685e2015b6faf4db63f5caaed08ade655e34521eb219c2b44966"
+      "bytes": 306639,
+      "sha256": "55cc6940fae42c34cd609651772f0f866e379fcb1c0267af771536624001d4e0"
     },
     {
       "path": "protocol/v2/vectors/api/session.json",
@@ -493,8 +493,8 @@
     },
     {
       "path": "protocol/v2/vectors/api/tracker.json",
-      "bytes": 351758,
-      "sha256": "08fd5cb27d2abd9463583aaafc0b4e1e878200a2fffce4e59d64c7f1203f0753"
+      "bytes": 351903,
+      "sha256": "117303665f47bcc3ce7fd246633b4d9acdbe251cfe11e9caf6cd2b87ab466b11"
     },
     {
       "path": "protocol/v2/vectors/formulas.json",
@@ -964,7 +964,7 @@
     {
       "path": "sdk/core/tests/vectors.digest",
       "bytes": 43,
-      "sha256": "1a0a846b773d1776271eb10e18d370cbeb0067b91373561083940a41546403c9"
+      "sha256": "fe95c5e7562a38ec30e3403e189cb6a4617d0e0c0c7f5e1b3195d53df093cfa2"
     },
     {
       "path": "sdk/core/tests/vectors.rs",

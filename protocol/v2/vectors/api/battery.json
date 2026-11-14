@@ -331,14 +331,14 @@
       {"tick":5,"slots":["tape-scout","tape-target"],"cases":[{"call":"battery.charge","value":58.42}]},
       {"tick":6,"slots":["tape-scout","tape-target"],"cases":[{"call":"battery.charge","value":58.67}]},
       {"tick":7,"slots":["tape-scout","tape-target"],"cases":[{"call":"battery.charge","value":58.93}]},
-      {"tick":1200,"slots":["tape-scout","tape-target"],"cases":[{"call":"battery.charge","value":42.4}]},
-      {"tick":1201,"slots":["tape-scout","tape-target"],"cases":[{"call":"battery.charge","value":39.65}]},
-      {"tick":1202,"slots":["tape-scout","tape-target"],"cases":[{"call":"battery.charge","value":39.4}]},
-      {"tick":1203,"slots":["tape-scout","tape-target"],"cases":[{"call":"battery.charge","value":39.15}]},
+      {"tick":1200,"slots":["tape-scout","tape-target"],"cases":[{"call":"battery.charge","value":41.79}]},
+      {"tick":1201,"slots":["tape-scout","tape-target"],"cases":[{"call":"battery.charge","value":39.04}]},
+      {"tick":1202,"slots":["tape-scout","tape-target"],"cases":[{"call":"battery.charge","value":38.79}]},
+      {"tick":1203,"slots":["tape-scout","tape-target"],"cases":[{"call":"battery.charge","value":38.84}]},
       {"tick":1204,"slots":["tape-scout","tape-target"],"cases":[{"call":"battery.charge","value":38.9}]},
-      {"tick":1205,"slots":["tape-scout","tape-target"],"cases":[{"call":"battery.charge","value":38.65}]},
-      {"tick":1206,"slots":["tape-scout","tape-target"],"cases":[{"call":"battery.charge","value":38.4}]},
-      {"tick":1207,"slots":["tape-scout","tape-target"],"cases":[{"call":"battery.charge","value":38.15}]}
+      {"tick":1205,"slots":["tape-scout","tape-target"],"cases":[{"call":"battery.charge","value":38.95}]},
+      {"tick":1206,"slots":["tape-scout","tape-target"],"cases":[{"call":"battery.charge","value":39.01}]},
+      {"tick":1207,"slots":["tape-scout","tape-target"],"cases":[{"call":"battery.charge","value":39.07}]}
      ]},
     {"input": "vectors/api/inputs/tape-2d-inertial-2d.ndjson",
      "hello": [
@@ -363,14 +363,14 @@
       {"tick":5,"slots":["tape-scout","tape-target"],"cases":[{"call":"battery.charge","value":58.74}]},
       {"tick":6,"slots":["tape-scout","tape-target"],"cases":[{"call":"battery.charge","value":59.06}]},
       {"tick":7,"slots":["tape-scout","tape-target"],"cases":[{"call":"battery.charge","value":59.38}]},
-      {"tick":1200,"slots":["tape-scout","tape-target"],"cases":[{"call":"battery.charge","value":59.8}]},
-      {"tick":1201,"slots":["tape-scout","tape-target"],"cases":[{"call":"battery.charge","value":57.3}]},
-      {"tick":1202,"slots":["tape-scout","tape-target"],"cases":[{"call":"battery.charge","value":57.45}]},
-      {"tick":1203,"slots":["tape-scout","tape-target"],"cases":[{"call":"battery.charge","value":57.6}]},
-      {"tick":1204,"slots":["tape-scout","tape-target"],"cases":[{"call":"battery.charge","value":57.75}]},
-      {"tick":1205,"slots":["tape-scout","tape-target"],"cases":[{"call":"battery.charge","value":58}]},
-      {"tick":1206,"slots":["tape-scout","tape-target"],"cases":[{"call":"battery.charge","value":58.25}]},
-      {"tick":1207,"slots":["tape-scout","tape-target"],"cases":[{"call":"battery.charge","value":58.51}]}
+      {"tick":1200,"slots":["tape-scout","tape-target"],"cases":[{"call":"battery.charge","value":59.9}]},
+      {"tick":1201,"slots":["tape-scout","tape-target"],"cases":[{"call":"battery.charge","value":57.4}]},
+      {"tick":1202,"slots":["tape-scout","tape-target"],"cases":[{"call":"battery.charge","value":57.65}]},
+      {"tick":1203,"slots":["tape-scout","tape-target"],"cases":[{"call":"battery.charge","value":57.91}]},
+      {"tick":1204,"slots":["tape-scout","tape-target"],"cases":[{"call":"battery.charge","value":58.16}]},
+      {"tick":1205,"slots":["tape-scout","tape-target"],"cases":[{"call":"battery.charge","value":58.41}]},
+      {"tick":1206,"slots":["tape-scout","tape-target"],"cases":[{"call":"battery.charge","value":58.66}]},
+      {"tick":1207,"slots":["tape-scout","tape-target"],"cases":[{"call":"battery.charge","value":58.91}]}
      ]},
     {"input": "vectors/api/inputs/tape-3d-classic.ndjson",
      "hello": [
@@ -400,9 +400,9 @@
       {"tick":1202,"slots":["tape-scout","tape-target"],"cases":[{"call":"battery.charge","value":57.65}]},
       {"tick":1203,"slots":["tape-scout","tape-target"],"cases":[{"call":"battery.charge","value":57.93}]},
       {"tick":1204,"slots":["tape-scout","tape-target"],"cases":[{"call":"battery.charge","value":58.21}]},
-      {"tick":1205,"slots":["tape-scout","tape-target"],"cases":[{"call":"battery.charge","value":58.36}]},
-      {"tick":1206,"slots":["tape-scout","tape-target"],"cases":[{"call":"battery.charge","value":58.51}]},
-      {"tick":1207,"slots":["tape-scout","tape-target"],"cases":[{"call":"battery.charge","value":58.66}]}
+      {"tick":1205,"slots":["tape-scout","tape-target"],"cases":[{"call":"battery.charge","value":58.49}]},
+      {"tick":1206,"slots":["tape-scout","tape-target"],"cases":[{"call":"battery.charge","value":58.76}]},
+      {"tick":1207,"slots":["tape-scout","tape-target"],"cases":[{"call":"battery.charge","value":59.04}]}
      ]},
     {"input": "vectors/api/inputs/tape-3d-gravity-flat.ndjson",
      "hello": [
