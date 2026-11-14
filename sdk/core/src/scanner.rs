@@ -1,10 +1,15 @@
-//! The scanner: the last scan, the proximity range, reach and arc_for_reach.
+//! The scanner: the last scan, whether it was on, the proximity range, reach
+//! and arc_for_reach.
 
 use crate::generated::*;
 use crate::runtime::Robot;
 
 pub fn last(r: &Robot) -> Result<ScanV1, Error> {
     Ok(r.current()?.scan)
+}
+
+pub fn is_on(r: &Robot) -> Result<bool, Error> {
+    Ok(r.current()?.scan_on)
 }
 
 pub fn proximity_range(r: &Robot) -> Result<f64, Error> {

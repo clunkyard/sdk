@@ -146,7 +146,7 @@ class Applied(_Record):
     _names = ("force", "torque", "brake",)
 
 class Scan(_Record):
-    """The scan that produced this tick's contacts: the one your previous act asked for."""
+    """The scan that produced this tick's contacts: where the scanner points now, after slewing toward your previous act's scan."""
     _fields_ = [("heading", c_double), ("pitch", c_double), ("arc", c_double), ("range", c_double)]
     _names = ("heading", "pitch", "arc", "range",)
 
@@ -307,9 +307,12 @@ _fn("cy_scanner_arc_for_reach", 0, c_void_p, c_double, _PD)
 _fn("cy_scanner_heading", 0, c_void_p, c_double)
 _fn("cy_scanner_arc", 0, c_void_p, c_double)
 _fn("cy_scanner_pitch", 0, c_void_p, c_double)
+_fn("cy_scanner_is_on", 0, c_void_p, _PI)
+_fn("cy_scanner_on", 0, c_void_p, c_double)
 _fn("cy_scanner_get_heading", 0, c_void_p, _PD)
 _fn("cy_scanner_get_arc", 0, c_void_p, _PD)
 _fn("cy_scanner_get_pitch", 0, c_void_p, _PD)
+_fn("cy_scanner_get_on", 0, c_void_p, _PD)
 _fn("cy_sensors_contacts", 1, c_void_p, POINTER(Contact), c_uint32, _PU)
 _fn("cy_sensors_nearest", 1, c_void_p, POINTER(Contact))
 _fn("cy_sensors_cues", 1, c_void_p, POINTER(Contact), c_uint32, _PU)
@@ -666,7 +669,15 @@ class _Scanner:
         if pitch is not None:
             _do(_c.cy_scanner_pitch, (self._h, pitch))
 
-    _fields = {"heading": (_c.cy_scanner_get_heading, False), "arc": (_c.cy_scanner_get_arc, False), "pitch": (_c.cy_scanner_get_pitch, False)}
+    @property
+    def is_on(self):
+        return _bool(_c.cy_scanner_is_on, (self._h,))
+
+    def power(self, on=None):
+        if on is not None:
+            _do(_c.cy_scanner_on, (self._h, on))
+
+    _fields = {"heading": (_c.cy_scanner_get_heading, False), "arc": (_c.cy_scanner_get_arc, False), "pitch": (_c.cy_scanner_get_pitch, False), "on": (_c.cy_scanner_get_on, False)}
 
     def get(self, field):
         """The field's value as set this tick, or None."""

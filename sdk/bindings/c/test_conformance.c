@@ -319,6 +319,12 @@ if(answer){printf("%s %d",label,status);if(status==CY_OK && 0){putchar(' ');}put
 if(!strcmp(op,"set")&&!strcmp(name,"scanner.set")&&!strcmp(field,"pitch")){double value = number();
 int32_t status=cy_scanner_pitch(robot,value);
 if(answer){printf("%s %d",label,status);if(status==CY_OK && 0){putchar(' ');}putchar('\n');}return;}
+if(!strcmp(op,"call")&&!strcmp(name,"scanner.is_on")){int32_t out=0;
+int32_t status=cy_scanner_is_on(robot,&out);
+if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');fputs(out?"t":"f",stdout);}putchar('\n');}return;}
+if(!strcmp(op,"set")&&!strcmp(name,"scanner.power")&&!strcmp(field,"on")){double value = number();
+int32_t status=cy_scanner_on(robot,value);
+if(answer){printf("%s %d",label,status);if(status==CY_OK && 0){putchar(' ');}putchar('\n');}return;}
 if(!strcmp(op,"get")&&!strcmp(name,"scanner.get")&&!strcmp(field,"heading")){double out=0;
 int32_t status=cy_scanner_get_heading(robot,&out);
 if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');bits((double)out);}putchar('\n');}return;}
@@ -327,6 +333,9 @@ int32_t status=cy_scanner_get_arc(robot,&out);
 if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');bits((double)out);}putchar('\n');}return;}
 if(!strcmp(op,"get")&&!strcmp(name,"scanner.get")&&!strcmp(field,"pitch")){double out=0;
 int32_t status=cy_scanner_get_pitch(robot,&out);
+if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');bits((double)out);}putchar('\n');}return;}
+if(!strcmp(op,"get")&&!strcmp(name,"scanner.get")&&!strcmp(field,"on")){double out=0;
+int32_t status=cy_scanner_get_on(robot,&out);
 if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');bits((double)out);}putchar('\n');}return;}
 if(!strcmp(op,"call")&&!strcmp(name,"sensors.contacts")){cy_contact_v1 out[CAP]; uint32_t count=0;
 int32_t status=cy_sensors_contacts_v1(robot,out,CAP,&count);

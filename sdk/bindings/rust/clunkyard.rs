@@ -194,9 +194,12 @@ pub fn cy_scanner_arc_for_reach(robot:*mut std::ffi::c_void,range:f64,out:*mut f
 pub fn cy_scanner_heading(robot:*mut std::ffi::c_void,value:f64)->i32;
 pub fn cy_scanner_arc(robot:*mut std::ffi::c_void,value:f64)->i32;
 pub fn cy_scanner_pitch(robot:*mut std::ffi::c_void,value:f64)->i32;
+pub fn cy_scanner_is_on(robot:*mut std::ffi::c_void,out:*mut i32)->i32;
+pub fn cy_scanner_on(robot:*mut std::ffi::c_void,value:f64)->i32;
 pub fn cy_scanner_get_heading(robot:*mut std::ffi::c_void,out:*mut f64)->i32;
 pub fn cy_scanner_get_arc(robot:*mut std::ffi::c_void,out:*mut f64)->i32;
 pub fn cy_scanner_get_pitch(robot:*mut std::ffi::c_void,out:*mut f64)->i32;
+pub fn cy_scanner_get_on(robot:*mut std::ffi::c_void,out:*mut f64)->i32;
 pub fn cy_sensors_contacts_v1(robot:*mut std::ffi::c_void,out:*mut RawContact,capacity:u32,count:*mut u32)->i32;
 pub fn cy_sensors_nearest_v1(robot:*mut std::ffi::c_void,out:*mut RawContact)->i32;
 pub fn cy_sensors_cues_v1(robot:*mut std::ffi::c_void,out:*mut RawContact,capacity:u32,count:*mut u32)->i32;
@@ -343,9 +346,12 @@ pub fn proximity_range(&self) -> Result<f64,Error> {let mut out=f64::default();l
 pub fn reach(&self,arc: f64) -> Result<f64,Error> {let mut out=f64::default();let mut status=unsafe{ffi::cy_scanner_reach(self.handle,arc,&mut out)};check(self.handle,status)?;Ok(out)}
 pub fn arc_for_reach(&self,range: f64) -> Result<f64,Error> {let mut out=f64::default();let mut status=unsafe{ffi::cy_scanner_arc_for_reach(self.handle,range,&mut out)};check(self.handle,status)?;Ok(out)}
 pub fn set(&self,heading:Option<f64>,arc:Option<f64>,pitch:Option<f64>)->Result<(),Error>{if let Some(value)=heading{check(self.handle,unsafe{ffi::cy_scanner_heading(self.handle,value)})?;}if let Some(value)=arc{check(self.handle,unsafe{ffi::cy_scanner_arc(self.handle,value)})?;}if let Some(value)=pitch{check(self.handle,unsafe{ffi::cy_scanner_pitch(self.handle,value)})?;}Ok(())}
+pub fn is_on(&self) -> Result<bool,Error> {let mut out=i32::default();let mut status=unsafe{ffi::cy_scanner_is_on(self.handle,&mut out)};check(self.handle,status)?;Ok(out!=0)}
+pub fn power(&self,on:Option<f64>)->Result<(),Error>{if let Some(value)=on{check(self.handle,unsafe{ffi::cy_scanner_on(self.handle,value)})?;}Ok(())}
 pub fn get_heading(&self) -> Result<Option<f64>,Error> {let mut out=f64::default();let mut status=unsafe{ffi::cy_scanner_get_heading(self.handle,&mut out)};if status==NONE{return Ok(None);}check(self.handle,status)?;Ok(Some(out))}
 pub fn get_arc(&self) -> Result<Option<f64>,Error> {let mut out=f64::default();let mut status=unsafe{ffi::cy_scanner_get_arc(self.handle,&mut out)};if status==NONE{return Ok(None);}check(self.handle,status)?;Ok(Some(out))}
 pub fn get_pitch(&self) -> Result<Option<f64>,Error> {let mut out=f64::default();let mut status=unsafe{ffi::cy_scanner_get_pitch(self.handle,&mut out)};if status==NONE{return Ok(None);}check(self.handle,status)?;Ok(Some(out))}
+pub fn get_on(&self) -> Result<Option<f64>,Error> {let mut out=f64::default();let mut status=unsafe{ffi::cy_scanner_get_on(self.handle,&mut out)};if status==NONE{return Ok(None);}check(self.handle,status)?;Ok(Some(out))}
 }
 #[derive(Clone,Copy)] pub struct Sensors {handle:*mut c_void} impl Sensors {
 pub fn contacts(&self) -> Result<Vec<Contact>,Error> {let mut out=vec![RawContact::default();16];let mut count=0;let mut status=unsafe{ffi::cy_sensors_contacts_v1(self.handle,out.as_mut_ptr(),out.len() as u32,&mut count)};while status==SHORT {out.resize(count as usize,RawContact::default());status=unsafe{ffi::cy_sensors_contacts_v1(self.handle,out.as_mut_ptr(),out.len() as u32,&mut count)};}check(self.handle,status)?;out.truncate(count as usize);Ok(out)}

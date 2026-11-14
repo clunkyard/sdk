@@ -225,6 +225,8 @@ pub struct State {
     pub tick: f64,
     pub me: Me,
     pub scan: ScanV1,
+    /// sensors.scan.on; true when the state leaves it out.
+    pub scan_on: bool,
     pub contacts: Vec<SeenContact>,
     pub zone: Option<Region>,
     pub storm: Option<StormV1>,
@@ -320,6 +322,7 @@ impl State {
             tick: number(&raw, "tick"),
             me,
             scan,
+            scan_on: raw.at("sensors.scan.on").and_then(Value::as_bool).unwrap_or(true),
             contacts,
             zone,
             storm,

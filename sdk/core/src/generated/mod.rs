@@ -91,6 +91,7 @@
 //!     crate::scanner::proximity_range(r: &Robot) -> Result<f64, Error>
 //!     crate::scanner::reach(r: &Robot, arc: f64) -> Result<f64, Error>
 //!     crate::scanner::arc_for_reach(r: &Robot, range: f64) -> Result<f64, Error>
+//!     crate::scanner::is_on(r: &Robot) -> Result<bool, Error>
 //!     crate::sensors::contacts(r: &Robot) -> Result<Vec<ContactV1>, Error>
 //!     crate::sensors::nearest(r: &Robot) -> Result<Option<ContactV1>, Error>
 //!     crate::sensors::cues(r: &Robot) -> Result<Vec<ContactV1>, Error>

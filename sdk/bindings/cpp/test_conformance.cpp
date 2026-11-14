@@ -135,9 +135,12 @@ static int32_t binding_cy_scanner_arc_for_reach(cy_robot *robot,double range,dou
 static int32_t binding_cy_scanner_heading(cy_robot *robot,double value){try{clunkyard::Robot binding(robot);binding.scanner.set(value,std::nullopt,std::nullopt);return CY_OK;}catch(const clunkyard::Error &error){return error.status;}}
 static int32_t binding_cy_scanner_arc(cy_robot *robot,double value){try{clunkyard::Robot binding(robot);binding.scanner.set(std::nullopt,value,std::nullopt);return CY_OK;}catch(const clunkyard::Error &error){return error.status;}}
 static int32_t binding_cy_scanner_pitch(cy_robot *robot,double value){try{clunkyard::Robot binding(robot);binding.scanner.set(std::nullopt,std::nullopt,value);return CY_OK;}catch(const clunkyard::Error &error){return error.status;}}
+static int32_t binding_cy_scanner_is_on(cy_robot *robot,int32_t *out){try{clunkyard::Robot binding(robot);auto got=binding.scanner.is_on();*out=got;return CY_OK;}catch(const clunkyard::Error &error){return error.status;}}
+static int32_t binding_cy_scanner_on(cy_robot *robot,double value){try{clunkyard::Robot binding(robot);binding.scanner.power(value);return CY_OK;}catch(const clunkyard::Error &error){return error.status;}}
 static int32_t binding_cy_scanner_get_heading(cy_robot *robot,double *out){try{clunkyard::Robot binding(robot);auto got=binding.scanner.get_heading();if(!got)return CY_NONE;*out=*got;return CY_OK;}catch(const clunkyard::Error &error){return error.status;}}
 static int32_t binding_cy_scanner_get_arc(cy_robot *robot,double *out){try{clunkyard::Robot binding(robot);auto got=binding.scanner.get_arc();if(!got)return CY_NONE;*out=*got;return CY_OK;}catch(const clunkyard::Error &error){return error.status;}}
 static int32_t binding_cy_scanner_get_pitch(cy_robot *robot,double *out){try{clunkyard::Robot binding(robot);auto got=binding.scanner.get_pitch();if(!got)return CY_NONE;*out=*got;return CY_OK;}catch(const clunkyard::Error &error){return error.status;}}
+static int32_t binding_cy_scanner_get_on(cy_robot *robot,double *out){try{clunkyard::Robot binding(robot);auto got=binding.scanner.get_on();if(!got)return CY_NONE;*out=*got;return CY_OK;}catch(const clunkyard::Error &error){return error.status;}}
 static int32_t binding_cy_sensors_contacts_v1(cy_robot *robot,cy_contact_v1 *out,uint32_t capacity,uint32_t *count){try{clunkyard::Robot binding(robot);auto got=binding.sensors.contacts();*count=(uint32_t)(got).size();if(capacity<*count)return CY_SHORT;for(uint32_t i=0;i<*count;i++)out[i]=(got)[i];return CY_OK;}catch(const clunkyard::Error &error){return error.status;}}
 static int32_t binding_cy_sensors_nearest_v1(cy_robot *robot,cy_contact_v1 *out){try{clunkyard::Robot binding(robot);auto got=binding.sensors.nearest();if(!got)return CY_NONE;*out=*got;return CY_OK;}catch(const clunkyard::Error &error){return error.status;}}
 static int32_t binding_cy_sensors_cues_v1(cy_robot *robot,cy_contact_v1 *out,uint32_t capacity,uint32_t *count){try{clunkyard::Robot binding(robot);auto got=binding.sensors.cues();*count=(uint32_t)(got).size();if(capacity<*count)return CY_SHORT;for(uint32_t i=0;i<*count;i++)out[i]=(got)[i];return CY_OK;}catch(const clunkyard::Error &error){return error.status;}}
@@ -451,6 +454,12 @@ if(answer){printf("%s %d",label,status);if(status==CY_OK && 0){putchar(' ');}put
 if(!strcmp(op,"set")&&!strcmp(name,"scanner.set")&&!strcmp(field,"pitch")){double value = number();
 int32_t status=binding_cy_scanner_pitch(robot,value);
 if(answer){printf("%s %d",label,status);if(status==CY_OK && 0){putchar(' ');}putchar('\n');}return;}
+if(!strcmp(op,"call")&&!strcmp(name,"scanner.is_on")){int32_t out=0;
+int32_t status=binding_cy_scanner_is_on(robot,&out);
+if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');fputs(out?"t":"f",stdout);}putchar('\n');}return;}
+if(!strcmp(op,"set")&&!strcmp(name,"scanner.power")&&!strcmp(field,"on")){double value = number();
+int32_t status=binding_cy_scanner_on(robot,value);
+if(answer){printf("%s %d",label,status);if(status==CY_OK && 0){putchar(' ');}putchar('\n');}return;}
 if(!strcmp(op,"get")&&!strcmp(name,"scanner.get")&&!strcmp(field,"heading")){double out=0;
 int32_t status=binding_cy_scanner_get_heading(robot,&out);
 if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');bits((double)out);}putchar('\n');}return;}
@@ -459,6 +468,9 @@ int32_t status=binding_cy_scanner_get_arc(robot,&out);
 if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');bits((double)out);}putchar('\n');}return;}
 if(!strcmp(op,"get")&&!strcmp(name,"scanner.get")&&!strcmp(field,"pitch")){double out=0;
 int32_t status=binding_cy_scanner_get_pitch(robot,&out);
+if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');bits((double)out);}putchar('\n');}return;}
+if(!strcmp(op,"get")&&!strcmp(name,"scanner.get")&&!strcmp(field,"on")){double out=0;
+int32_t status=binding_cy_scanner_get_on(robot,&out);
 if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');bits((double)out);}putchar('\n');}return;}
 if(!strcmp(op,"call")&&!strcmp(name,"sensors.contacts")){cy_contact_v1 out[CAP]; uint32_t count=0;
 int32_t status=binding_cy_sensors_contacts_v1(robot,out,CAP,&count);

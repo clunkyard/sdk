@@ -167,7 +167,9 @@ export interface Scanner {
   reach(arc: number): number;
   arcForReach(range: number): number;
   set(fields?: { heading?: number; arc?: number; pitch?: number }): void;
-  get(field: "heading" | "arc" | "pitch"): number | string | null;
+  readonly isOn: boolean;
+  power(fields?: { on?: number }): void;
+  get(field: "heading" | "arc" | "pitch" | "on"): number | string | null;
 }
 export interface Sensors {
   readonly contacts: Array<Contact>;

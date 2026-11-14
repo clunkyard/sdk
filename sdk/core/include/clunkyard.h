@@ -148,8 +148,8 @@ typedef struct cy_applied_v1 {
 } cy_applied_v1;
 
 /*
- * The scan that produced this tick's contacts: the one your previous act asked
- * for. 32 bytes.
+ * The scan that produced this tick's contacts: where the scanner points now,
+ * after slewing toward your previous act's scan. 32 bytes.
  */
 typedef struct cy_scan_v1 {
   double heading; /* Scan heading. */
@@ -536,7 +536,10 @@ CY_API int32_t cy_gun_get_fire(cy_robot *robot, double *out);
 CY_API int32_t cy_gun_get_power(cy_robot *robot, double *out);
 
 /* ---- scanner: The scanner ---- */
-/* scanner.last: The scan that produced this tick's contacts. */
+/*
+ * scanner.last: The scan that produced this tick's contacts: where the scanner
+ * points now.
+ */
 CY_API int32_t cy_scanner_last_v1(cy_robot *robot, cy_scan_v1 *out);
 /* scanner.proximity_range: Robots this close are detected in any direction. */
 CY_API int32_t cy_scanner_proximity_range(cy_robot *robot, double *out);
@@ -557,6 +560,13 @@ CY_API int32_t cy_scanner_arc(cy_robot *robot, double value);
 /* scanner.set (pitch): Sets scan.pitch. CY_E_NOT_FINITE keeps it as it was. */
 CY_API int32_t cy_scanner_pitch(cy_robot *robot, double value);
 /*
+ * scanner.is_on: The scanner was on for the tick this state's contacts come
+ * from.
+ */
+CY_API int32_t cy_scanner_is_on(cy_robot *robot, int32_t *out);
+/* scanner.power (on): Sets scan.on. CY_E_NOT_FINITE keeps it as it was. */
+CY_API int32_t cy_scanner_on(cy_robot *robot, double value);
+/*
  * scanner.get (heading): Reads back scan.heading. The value as set, before
  * clamping; CY_NONE while unset.
  */
@@ -571,6 +581,11 @@ CY_API int32_t cy_scanner_get_arc(cy_robot *robot, double *out);
  * clamping; CY_NONE while unset.
  */
 CY_API int32_t cy_scanner_get_pitch(cy_robot *robot, double *out);
+/*
+ * scanner.get (on): Reads back scan.on. The value as set, before clamping;
+ * CY_NONE while unset.
+ */
+CY_API int32_t cy_scanner_get_on(cy_robot *robot, double *out);
 
 /* ---- sensors: What the sensors detect this tick ---- */
 /*

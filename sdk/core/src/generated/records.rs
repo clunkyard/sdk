@@ -419,7 +419,7 @@ const _: () = assert!(offset_of!(AppliedV1, force) == 0);
 const _: () = assert!(offset_of!(AppliedV1, torque) == 24);
 const _: () = assert!(offset_of!(AppliedV1, brake) == 48);
 
-/// The scan that produced this tick's contacts: the one your previous act asked for. 32 bytes.
+/// The scan that produced this tick's contacts: where the scanner points now, after slewing toward your previous act's scan. 32 bytes.
 #[repr(C)]
 #[derive(Clone, Copy, Debug, Default, PartialEq)]
 pub struct ScanV1 {
@@ -730,13 +730,13 @@ pub struct DslWordsV1 {
     pub aim_pitch: f64,
     /// Ticks until the gun can fire; 0 means it can fire this tick.
     pub cooldown: f64,
-    /// The scan that produced this tick's contacts.
+    /// The scan that produced this tick's contacts: where the scanner points now.
     pub scan_heading: f64,
-    /// The scan that produced this tick's contacts.
+    /// The scan that produced this tick's contacts: where the scanner points now.
     pub scan_pitch: f64,
-    /// The scan that produced this tick's contacts.
+    /// The scan that produced this tick's contacts: where the scanner points now.
     pub scan_arc: f64,
-    /// The scan that produced this tick's contacts.
+    /// The scan that produced this tick's contacts: where the scanner points now.
     pub scan_range: f64,
     /// The nearest precise contact this tick. Passive contacts are never returned.
     pub contact: f64,
@@ -865,12 +865,13 @@ pub enum Field {
     ScannerHeading,
     ScannerArc,
     ScannerPitch,
+    ScannerOn,
     StatusText,
     StatusValue,
 }
 
 impl Field {
-    pub const ALL: [Field; 19] = [Field::DriveThrottle, Field::DriveTurn, Field::DrivePitchTurn, Field::DriveThrust, Field::DriveStrafe, Field::DriveLift, Field::DriveYawTorque, Field::DrivePitchTorque, Field::DriveRollTorque, Field::DriveBrake, Field::GunAimHeading, Field::GunAimPitch, Field::GunFire, Field::GunPower, Field::ScannerHeading, Field::ScannerArc, Field::ScannerPitch, Field::StatusText, Field::StatusValue];
+    pub const ALL: [Field; 20] = [Field::DriveThrottle, Field::DriveTurn, Field::DrivePitchTurn, Field::DriveThrust, Field::DriveStrafe, Field::DriveLift, Field::DriveYawTorque, Field::DrivePitchTorque, Field::DriveRollTorque, Field::DriveBrake, Field::GunAimHeading, Field::GunAimPitch, Field::GunFire, Field::GunPower, Field::ScannerHeading, Field::ScannerArc, Field::ScannerPitch, Field::ScannerOn, Field::StatusText, Field::StatusValue];
 
     /// The act group and field it writes: ("drive", Some("throttle")); a flag names only its group.
     pub fn wire(self) -> (&'static str, Option<&'static str>) {
@@ -892,6 +893,7 @@ impl Field {
             Field::ScannerHeading => ("scan", Some("heading")),
             Field::ScannerArc => ("scan", Some("arc")),
             Field::ScannerPitch => ("scan", Some("pitch")),
+            Field::ScannerOn => ("scan", Some("on")),
             Field::StatusText => ("status", Some("text")),
             Field::StatusValue => ("status", Some("value")),
         }
@@ -916,6 +918,7 @@ impl Field {
             Field::ScannerHeading => FieldKind::Number,
             Field::ScannerArc => FieldKind::Number,
             Field::ScannerPitch => FieldKind::Number,
+            Field::ScannerOn => FieldKind::Number,
             Field::StatusText => FieldKind::Text,
             Field::StatusValue => FieldKind::Number,
         }
@@ -941,6 +944,7 @@ impl Field {
             Field::ScannerHeading => None,
             Field::ScannerArc => None,
             Field::ScannerPitch => None,
+            Field::ScannerOn => None,
             Field::StatusText => None,
             Field::StatusValue => None,
         }

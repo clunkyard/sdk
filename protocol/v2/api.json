@@ -480,7 +480,7 @@
     },
     {
       "name": "scan",
-      "description": "The scan that produced this tick's contacts: the one your previous act asked for.",
+      "description": "The scan that produced this tick's contacts: where the scanner points now, after slewing toward your previous act's scan.",
       "versioned": true,
       "since": "2.0",
       "cName": "cy_scan_v1",
@@ -3721,7 +3721,7 @@
       "kind": "query",
       "form": "property",
       "since": "2.0",
-      "fact": "The scan that produced this tick's contacts.",
+      "fact": "The scan that produced this tick's contacts: where the scanner points now.",
       "subsystem": "scanner",
       "member": "last",
       "path": [
@@ -3878,7 +3878,7 @@
       "kind": "control",
       "form": "call",
       "since": "2.0",
-      "fact": "Ask where the scanner points for the next state.",
+      "fact": "Ask the scanner to turn toward a direction for the next state; it slews at scanner.turnRate, and the arc changes at once.",
       "subsystem": "scanner",
       "member": "set",
       "path": [
@@ -3931,7 +3931,7 @@
           ],
           "limits": null,
           "optional": true,
-          "description": "Scan pitch; ignored in 2D.",
+          "description": "Scan pitch, within ±robot.maxPitch; ignored in 2D.",
           "symbol": "cy_scanner_pitch",
           "getter": "cy_scanner_get_pitch",
           "dsl": "scan-pitch",
@@ -3950,6 +3950,87 @@
       "rust": {
         "module": "scanner",
         "fn": "set"
+      }
+    },
+    {
+      "name": "scanner.is_on",
+      "kind": "query",
+      "form": "property",
+      "since": "2.0",
+      "fact": "The scanner was on for the tick this state's contacts come from.",
+      "subsystem": "scanner",
+      "member": "is_on",
+      "path": [
+        "scanner",
+        "is_on"
+      ],
+      "stateless": false,
+      "args": [],
+      "returns": {
+        "kind": "bool",
+        "description": "The scanner was on for the tick these contacts come from. While it is off there are no scan or faint contacts, and other robots hear no beam from you; proximity contacts are unchanged.",
+        "from": "state.sensors.scan.on"
+      },
+      "fields": [],
+      "of": null,
+      "dsl": null,
+      "rename": {},
+      "wasm": true,
+      "bindings": true,
+      "version": 1,
+      "vectors": "protocol/v2/vectors/api/scanner.json#is_on",
+      "symbol": "cy_scanner_is_on",
+      "alias": null,
+      "rust": {
+        "module": "scanner",
+        "fn": "is_on"
+      }
+    },
+    {
+      "name": "scanner.power",
+      "kind": "control",
+      "form": "call",
+      "since": "2.0",
+      "fact": "Switch the scanner on (1) or off (0) for this tick; it is on unless an act switches it off. Off, it still slews and re-arcs but sees no scan or faint contacts and shows no beam.",
+      "subsystem": "scanner",
+      "member": "power",
+      "path": [
+        "scanner",
+        "power"
+      ],
+      "stateless": false,
+      "args": [],
+      "returns": null,
+      "fields": [
+        {
+          "key": "on",
+          "arg": "on",
+          "type": "number",
+          "act": [
+            "scan",
+            "on"
+          ],
+          "limits": null,
+          "optional": true,
+          "description": "false switches the scanner off for this tick: it still slews and re-arcs, but sees no scan or faint contacts, shows no beam and costs no battery (scanner.energyPerSecond).",
+          "symbol": "cy_scanner_on",
+          "getter": "cy_scanner_get_on",
+          "dsl": null,
+          "glyph": null
+        }
+      ],
+      "of": null,
+      "dsl": null,
+      "rename": {},
+      "wasm": true,
+      "bindings": true,
+      "version": 1,
+      "vectors": "protocol/v2/vectors/api/scanner.json#power",
+      "symbol": "cy_scanner_power",
+      "alias": null,
+      "rust": {
+        "module": "scanner",
+        "fn": "power"
       }
     },
     {
@@ -4014,15 +4095,32 @@
           ],
           "limits": null,
           "optional": true,
-          "description": "Scan pitch; ignored in 2D.",
+          "description": "Scan pitch, within ±robot.maxPitch; ignored in 2D.",
           "symbol": "cy_scanner_pitch",
           "getter": "cy_scanner_get_pitch",
           "dsl": "scan-pitch",
           "glyph": "scan-pitch!"
+        },
+        {
+          "key": "on",
+          "arg": "on",
+          "type": "number",
+          "act": [
+            "scan",
+            "on"
+          ],
+          "limits": null,
+          "optional": true,
+          "description": "false switches the scanner off for this tick: it still slews and re-arcs, but sees no scan or faint contacts, shows no beam and costs no battery (scanner.energyPerSecond).",
+          "symbol": "cy_scanner_on",
+          "getter": "cy_scanner_get_on",
+          "dsl": null,
+          "glyph": null
         }
       ],
       "of": [
-        "scanner.set"
+        "scanner.set",
+        "scanner.power"
       ],
       "dsl": null,
       "rename": {},
@@ -6761,7 +6859,7 @@
         "query": "scanner.last",
         "select": "heading"
       },
-      "fact": "The scan that produced this tick's contacts."
+      "fact": "The scan that produced this tick's contacts: where the scanner points now."
     },
     {
       "name": "scan-pitch",
@@ -6770,7 +6868,7 @@
         "query": "scanner.last",
         "select": "pitch"
       },
-      "fact": "The scan that produced this tick's contacts."
+      "fact": "The scan that produced this tick's contacts: where the scanner points now."
     },
     {
       "name": "scan-arc",
@@ -6779,7 +6877,7 @@
         "query": "scanner.last",
         "select": "arc"
       },
-      "fact": "The scan that produced this tick's contacts."
+      "fact": "The scan that produced this tick's contacts: where the scanner points now."
     },
     {
       "name": "scan-range",
@@ -6788,7 +6886,7 @@
         "query": "scanner.last",
         "select": "range"
       },
-      "fact": "The scan that produced this tick's contacts."
+      "fact": "The scan that produced this tick's contacts: where the scanner points now."
     },
     {
       "name": "contact",

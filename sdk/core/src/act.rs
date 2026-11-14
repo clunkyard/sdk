@@ -6,7 +6,8 @@
 //! set, clamped as the arena would clamp them: drive fields to their schema
 //! limits, headings by normalize, pitches to ±robot.maxPitch, the scan arc
 //! to scanner.minArc to maxArc, the power to gun.power.min to max, the
-//! status value to ±1,000,000,000 and its text to 32 code points. fire is
+//! status value to ±1,000,000,000 and its text to 32 code points, and the
+//! scanner switch is written true for any non-zero value. fire is
 //! sent only after gun.fire, with the power if gun.power was set. The
 //! members come in a fixed order: v, type, tick, drive, forces, aim, scan,
 //! fire, status, then the extra fields in the order they were first given.
@@ -30,7 +31,7 @@ const GROUPS: [(&str, &[Field]); 6] = [
         &[Field::DriveThrust, Field::DriveStrafe, Field::DriveLift, Field::DriveYawTorque, Field::DrivePitchTorque, Field::DriveRollTorque, Field::DriveBrake],
     ),
     ("aim", &[Field::GunAimHeading, Field::GunAimPitch]),
-    ("scan", &[Field::ScannerHeading, Field::ScannerPitch, Field::ScannerArc]),
+    ("scan", &[Field::ScannerHeading, Field::ScannerPitch, Field::ScannerArc, Field::ScannerOn]),
     ("fire", &[Field::GunPower]),
     ("status", &[Field::StatusText, Field::StatusValue]),
 ];
@@ -104,7 +105,9 @@ impl Act {
                         block.insert(name, Value::String(text.chars().take(STATUS_TEXT).collect()));
                     }
                 } else if let Some(value) = self.number(*field) {
-                    block.insert(name, Value::Number(Act::clamped(*field, value, hello)));
+                    // The scanner switch is a boolean on the wire: any non-zero value is on.
+                    let value = if *field == Field::ScannerOn { Value::Bool(value != 0.0) } else { Value::Number(Act::clamped(*field, value, hello)) };
+                    block.insert(name, value);
                 }
             }
             if group == "fire" || matches!(&block, Value::Object(members) if !members.is_empty()) {

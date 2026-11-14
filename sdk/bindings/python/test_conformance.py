@@ -60,6 +60,7 @@ CALLS = {
     "scanner.proximity_range": ([], "f64"),
     "scanner.reach": (["f64"], "f64"),
     "scanner.arc_for_reach": (["f64"], "f64"),
+    "scanner.is_on": ([], "bool"),
     "sensors.contacts": ([], "list:contact"),
     "sensors.nearest": ([], "record:contact"),
     "sensors.cues": ([], "list:contact"),

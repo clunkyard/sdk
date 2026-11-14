@@ -876,7 +876,7 @@ pub extern "C" fn cy_gun_get_power(robot: *mut Robot, out: *mut f64) -> i32 {
     })
 }
 
-/// The scan that produced this tick's contacts.
+/// The scan that produced this tick's contacts: where the scanner points now.
 #[unsafe(no_mangle)]
 pub extern "C" fn cy_scanner_last_v1(robot: *mut Robot, out: *mut ScanV1) -> i32 {
     guard(robot, "cy_scanner_last_v1", |r| {
@@ -912,7 +912,7 @@ pub extern "C" fn cy_scanner_arc_for_reach(robot: *mut Robot, range: f64, out: *
     })
 }
 
-/// Ask where the scanner points for the next state. Field: scan.heading.
+/// Ask the scanner to turn toward a direction for the next state; it slews at scanner.turnRate, and the arc changes at once. Field: scan.heading.
 #[unsafe(no_mangle)]
 pub extern "C" fn cy_scanner_heading(robot: *mut Robot, value: f64) -> i32 {
     guard(robot, "cy_scanner_heading", |r| {
@@ -921,7 +921,7 @@ pub extern "C" fn cy_scanner_heading(robot: *mut Robot, value: f64) -> i32 {
     })
 }
 
-/// Ask where the scanner points for the next state. Field: scan.arc.
+/// Ask the scanner to turn toward a direction for the next state; it slews at scanner.turnRate, and the arc changes at once. Field: scan.arc.
 #[unsafe(no_mangle)]
 pub extern "C" fn cy_scanner_arc(robot: *mut Robot, value: f64) -> i32 {
     guard(robot, "cy_scanner_arc", |r| {
@@ -930,11 +930,29 @@ pub extern "C" fn cy_scanner_arc(robot: *mut Robot, value: f64) -> i32 {
     })
 }
 
-/// Ask where the scanner points for the next state. Field: scan.pitch.
+/// Ask the scanner to turn toward a direction for the next state; it slews at scanner.turnRate, and the arc changes at once. Field: scan.pitch.
 #[unsafe(no_mangle)]
 pub extern "C" fn cy_scanner_pitch(robot: *mut Robot, value: f64) -> i32 {
     guard(robot, "cy_scanner_pitch", |r| {
         act::set_number(r, Field::ScannerPitch, finite(value, "pitch")?)?;
+        Ok(CY_OK)
+    })
+}
+
+/// The scanner was on for the tick this state's contacts come from.
+#[unsafe(no_mangle)]
+pub extern "C" fn cy_scanner_is_on(robot: *mut Robot, out: *mut i32) -> i32 {
+    guard(robot, "cy_scanner_is_on", |r| {
+        let value = crate::scanner::is_on(&*r)?;
+        write(out, i32::from(value))
+    })
+}
+
+/// Switch the scanner on (1) or off (0) for this tick; it is on unless an act switches it off. Off, it still slews and re-arcs but sees no scan or faint contacts and shows no beam. Field: scan.on.
+#[unsafe(no_mangle)]
+pub extern "C" fn cy_scanner_on(robot: *mut Robot, value: f64) -> i32 {
+    guard(robot, "cy_scanner_on", |r| {
+        act::set_number(r, Field::ScannerOn, finite(value, "on")?)?;
         Ok(CY_OK)
     })
 }
@@ -966,6 +984,17 @@ pub extern "C" fn cy_scanner_get_arc(robot: *mut Robot, out: *mut f64) -> i32 {
 pub extern "C" fn cy_scanner_get_pitch(robot: *mut Robot, out: *mut f64) -> i32 {
     guard(robot, "cy_scanner_get_pitch", |r| {
         match act::get(r, Field::ScannerPitch)? {
+            Some(value) => write(out, value),
+            None => Ok(CY_NONE),
+        }
+    })
+}
+
+/// What this tick's act holds for a scanner field so far, as set. Field: scan.on.
+#[unsafe(no_mangle)]
+pub extern "C" fn cy_scanner_get_on(robot: *mut Robot, out: *mut f64) -> i32 {
+    guard(robot, "cy_scanner_get_on", |r| {
+        match act::get(r, Field::ScannerOn)? {
             Some(value) => write(out, value),
             None => Ok(CY_NONE),
         }

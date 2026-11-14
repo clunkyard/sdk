@@ -122,9 +122,12 @@ struct Scanner {cy_robot *&handle; explicit Scanner(cy_robot *&robot):handle(rob
   double reach(double arc) const { double out{}; int32_t status = cy_scanner_reach(handle, arc, &out); check(handle,status); return out; }
   double arc_for_reach(double range) const { double out{}; int32_t status = cy_scanner_arc_for_reach(handle, range, &out); check(handle,status); return out; }
   void set(std::optional<double> heading = std::nullopt, std::optional<double> arc = std::nullopt, std::optional<double> pitch = std::nullopt) {if(heading)check(handle,cy_scanner_heading(handle,*heading));if(arc)check(handle,cy_scanner_arc(handle,*arc));if(pitch)check(handle,cy_scanner_pitch(handle,*pitch));}
+  bool is_on() const { int32_t out{}; int32_t status = cy_scanner_is_on(handle, &out); check(handle,status); return out != 0; }
+  void power(std::optional<double> on = std::nullopt) {if(on)check(handle,cy_scanner_on(handle,*on));}
   std::optional<double> get_heading() const { double out{}; int32_t status = cy_scanner_get_heading(handle, &out); if(status==CY_NONE)return std::nullopt; check(handle,status); return out; }
   std::optional<double> get_arc() const { double out{}; int32_t status = cy_scanner_get_arc(handle, &out); if(status==CY_NONE)return std::nullopt; check(handle,status); return out; }
   std::optional<double> get_pitch() const { double out{}; int32_t status = cy_scanner_get_pitch(handle, &out); if(status==CY_NONE)return std::nullopt; check(handle,status); return out; }
+  std::optional<double> get_on() const { double out{}; int32_t status = cy_scanner_get_on(handle, &out); if(status==CY_NONE)return std::nullopt; check(handle,status); return out; }
 };
 struct Sensors {cy_robot *&handle; explicit Sensors(cy_robot *&robot):handle(robot){}
   std::vector<Contact> contacts() const { std::vector<cy_contact_v1> out(16);uint32_t count=0; int32_t status = cy_sensors_contacts_v1(handle, out.data(), (uint32_t)out.size(), &count); while(status==CY_SHORT){out.resize(count);status=cy_sensors_contacts_v1(handle, out.data(), (uint32_t)out.size(), &count);} check(handle,status); out.resize(count);return out; }
