@@ -23,7 +23,7 @@
         "contentSHA256": "3c9802c192130f0834487fa63aa6ba474b626634c98a4b7d5a7080958a50e74a"
       }
     ],
-    "catalogueSHA256": "5b422ae174eb1e0c7778d94762c7a549a75b89d884692da98b7462b5c1a6ff16"
+    "catalogueSHA256": "317c2c24382557faa841693ec99f88c44ea7a833a3052f05ca82f4d4a0791c53"
   },
   "packages": [
     "git",
@@ -88,8 +88,8 @@
     },
     {
       "path": "packages/cli/catalogue.json",
-      "bytes": 155801,
-      "sha256": "5b422ae174eb1e0c7778d94762c7a549a75b89d884692da98b7462b5c1a6ff16"
+      "bytes": 156425,
+      "sha256": "317c2c24382557faa841693ec99f88c44ea7a833a3052f05ca82f4d4a0791c53"
     },
     {
       "path": "packages/cli/cli.cjs",
