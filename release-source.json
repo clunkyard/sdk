@@ -1,6 +1,6 @@
 {
   "v": 1,
-  "sourceCommit": "b39463efecc4f150d927700add2c3d889c4a471d",
+  "sourceCommit": "c8852da1f51f9d387977d08985cbcf19e1132ca1",
   "sourceDirty": false,
   "playerDerivation": {
     "packages": [
@@ -23,7 +23,7 @@
         "contentSHA256": "1c45ab3da44815aaeecd3d57ae8f0ae7e484f7c041270299cfb6df404064b3d0"
       }
     ],
-    "catalogueSHA256": "aafcec7ebdc2ec6bdd8e1c588b4ad073b1d11026cc421ebf32e62ae4504c573b"
+    "catalogueSHA256": "7e6f317f0b090e306b3238f992ba45feb754a807216ef00c6f377978ea5a325f"
   },
   "packages": [
     "git",
@@ -89,7 +89,7 @@
     {
       "path": "packages/cli/catalogue.json",
       "bytes": 156425,
-      "sha256": "aafcec7ebdc2ec6bdd8e1c588b4ad073b1d11026cc421ebf32e62ae4504c573b"
+      "sha256": "7e6f317f0b090e306b3238f992ba45feb754a807216ef00c6f377978ea5a325f"
     },
     {
       "path": "packages/cli/cli.cjs",
