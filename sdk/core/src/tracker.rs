@@ -7,12 +7,14 @@
 //! within forget_ticks updates its track: its first velocity is the
 //! measured one, later ones are smoothed as old × smoothing + measured ×
 //! (1 − smoothing). A contact seen after longer starts a new track at rest.
+//! Each robot's last TRACKER_HISTORY sightings are kept apart from its track,
+//! as measured, oldest first; a track restart leaves them.
 
 use crate::generated::*;
 use crate::maths::{add, contact_position, scale, sub};
 use crate::message::{Id, SeenContact};
 use crate::runtime::Robot;
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, VecDeque};
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub struct Settings {
@@ -51,6 +53,7 @@ pub struct Heard {
 pub struct Tracker {
     pub settings: Settings,
     pub tracks: BTreeMap<String, Track>,
+    pub sightings: BTreeMap<String, VecDeque<SightingV1>>,
     pub latest: Option<Heard>,
     pub tick: f64,
 }
@@ -83,6 +86,17 @@ impl Tracker {
         for contact in contacts {
             let Some(id) = contact.id.robot() else { continue };
             let position = contact_position(origin, contact.range, contact.bearing, contact.elevation);
+            let sightings = self.sightings.entry(id.to_string()).or_default();
+            if sightings.len() == TRACKER_HISTORY {
+                sightings.pop_front();
+            }
+            sightings.push_back(SightingV1 {
+                tick: tick as i32,
+                source: contact.source,
+                bearing_error: contact.bearing_error.unwrap_or(0.0),
+                range_error: contact.range_error.unwrap_or(0.0),
+                position,
+            });
             let track = match self.tracks.get(id) {
                 Some(old) if tick > old.tick && tick - old.tick <= self.settings.forget_ticks => {
                     let measured = scale(sub(position, old.position), tick_rate / (tick - old.tick));
@@ -135,6 +149,11 @@ pub fn position(r: &Robot, slot: i32) -> Result<Option<Vec3>, Error> {
     Ok(track(r, slot)?.map(|t| t.position))
 }
 
+pub fn history(r: &Robot, slot: i32) -> Result<Vec<SightingV1>, Error> {
+    let id = r.slot_id(slot)?;
+    Ok(id.and_then(|id| r.tracker.sightings.get(id)).map_or_else(Vec::new, |s| s.iter().copied().collect()))
+}
+
 pub fn last_seen(r: &Robot, slot: i32) -> Result<Option<i32>, Error> {
     Ok(track(r, slot)?.map(|t| t.tick as i32))
 }
@@ -154,4 +173,50 @@ pub fn configure(r: &mut Robot, smoothing: f64, forget_ticks: i32, cue_ticks: i3
     r.tracker = Tracker::new(settings);
     r.tracker_settings = settings;
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn seen(id: &str, range: f64, bearing_error: Option<f64>, range_error: Option<f64>) -> SeenContact {
+        SeenContact { id: Id::Text(id.to_string()), source: 1, range, bearing: 0.0, elevation: 0.0, bearing_error, range_error }
+    }
+
+    fn ticks(tracker: &Tracker, id: &str) -> Vec<i32> {
+        tracker.sightings[id].iter().map(|s| s.tick).collect()
+    }
+
+    #[test]
+    fn history_keeps_the_last_sightings_oldest_first() {
+        let mut tracker = Tracker::default();
+        let total = TRACKER_HISTORY as i32 + 5;
+        for tick in 0..total {
+            tracker.update(f64::from(tick), Vec3::default(), &[seen("a", 100.0 + f64::from(tick), None, None)], 20.0);
+        }
+        assert_eq!(ticks(&tracker, "a"), (5..total).collect::<Vec<_>>());
+        let last = tracker.sightings["a"].back().unwrap();
+        assert_eq!(last.position, Vec3 { x: 100.0 + f64::from(total - 1), y: 0.0, z: 0.0 });
+        assert_eq!((last.source, last.bearing_error, last.range_error), (1, 0.0, 0.0));
+    }
+
+    #[test]
+    fn history_carries_the_reported_errors() {
+        let mut tracker = Tracker::default();
+        tracker.update(3.0, Vec3::default(), &[seen("a", 50.0, Some(2.5), Some(0.125))], 20.0);
+        let sighting = tracker.sightings["a"][0];
+        assert_eq!((sighting.tick, sighting.bearing_error, sighting.range_error), (3, 2.5, 0.125));
+    }
+
+    #[test]
+    fn history_outlives_a_track_restart_and_skips_passive_contacts() {
+        let mut tracker = Tracker::new(Settings { forget_ticks: 3.0, ..Settings::default() });
+        let passive = SeenContact { id: Id::Null, ..seen("", 80.0, Some(5.0), Some(0.2)) };
+        tracker.update(0.0, Vec3::default(), &[seen("a", 100.0, None, None), passive], 20.0);
+        tracker.update(1.0, Vec3::default(), &[seen("a", 110.0, None, None)], 20.0);
+        tracker.update(10.0, Vec3::default(), &[seen("a", 120.0, None, None)], 20.0);
+        assert_eq!(tracker.tracks["a"].seen, 1);
+        assert_eq!(ticks(&tracker, "a"), vec![0, 1, 10]);
+        assert_eq!(tracker.sightings.len(), 1);
+    }
 }

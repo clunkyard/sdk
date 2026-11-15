@@ -45,6 +45,12 @@ _Static_assert(offsetof(cy_cue_v1, source) == 0, "cy_cue_v1.source");
 _Static_assert(offsetof(cy_cue_v1, tick) == 4, "cy_cue_v1.tick");
 _Static_assert(offsetof(cy_cue_v1, bearing_error) == 8, "cy_cue_v1.bearing_error");
 _Static_assert(offsetof(cy_cue_v1, position) == 16, "cy_cue_v1.position");
+_Static_assert(sizeof(cy_sighting_v1) == 48, "cy_sighting_v1 size");
+_Static_assert(offsetof(cy_sighting_v1, tick) == 0, "cy_sighting_v1.tick");
+_Static_assert(offsetof(cy_sighting_v1, source) == 4, "cy_sighting_v1.source");
+_Static_assert(offsetof(cy_sighting_v1, bearing_error) == 8, "cy_sighting_v1.bearing_error");
+_Static_assert(offsetof(cy_sighting_v1, range_error) == 16, "cy_sighting_v1.range_error");
+_Static_assert(offsetof(cy_sighting_v1, position) == 24, "cy_sighting_v1.position");
 _Static_assert(sizeof(cy_solution_v1) == 24, "cy_solution_v1 size");
 _Static_assert(offsetof(cy_solution_v1, heading) == 0, "cy_solution_v1.heading");
 _Static_assert(offsetof(cy_solution_v1, pitch) == 8, "cy_solution_v1.pitch");
@@ -186,6 +192,7 @@ static const cy_any_fn SYMBOLS[] = {
   (cy_any_fn)cy_tracker_nearest_bearing_rate,
   (cy_any_fn)cy_tracker_velocity,
   (cy_any_fn)cy_tracker_position,
+  (cy_any_fn)cy_tracker_history_v1,
   (cy_any_fn)cy_tracker_last_seen,
   (cy_any_fn)cy_tracker_configure,
   (cy_any_fn)cy_nav_zone_v1,

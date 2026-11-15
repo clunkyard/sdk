@@ -1,6 +1,6 @@
 {
   "v": 1,
-  "sourceCommit": "54d8a1ec5e417d35695febbf8cbdff0919d4bd09",
+  "sourceCommit": "6c5e6f569ef15aa72b1e992e479e9c432c8d3217",
   "sourceDirty": false,
   "playerDerivation": {
     "packages": [
@@ -13,14 +13,14 @@
       {
         "name": "@clunkyard/sdk",
         "canonicalVersion": "2.0.1",
-        "version": "2.0.3",
-        "contentSHA256": "d69cfe85e827ccd8f3bed7e4468894615deaad6162cc10068a094fa226ad1832"
+        "version": "2.0.4",
+        "contentSHA256": "8efb162bd0e101c28f61c3456fd0710a0c70431897b67d1c19ceab9bf7fa6109"
       },
       {
         "name": "@clunkyard/cli",
         "canonicalVersion": "2.2.2",
-        "version": "2.2.10",
-        "contentSHA256": "4ed6aee226e7f32e1441c3664973bacf09aee2b2f49a6f04222dcd5bae8cc48f"
+        "version": "2.2.11",
+        "contentSHA256": "b69a820fbfa5b0237d2f9bd3c284a8864f13a701916c968f8fb9927abd0afc06"
       }
     ],
     "catalogueSHA256": "30a5100961a1ad9d974dc20879f9f76e44a9d9a5d005828f78d01fdbebd58898"
@@ -104,7 +104,7 @@
     {
       "path": "packages/cli/package.json",
       "bytes": 754,
-      "sha256": "13bcd5c455981cb72301ac6d4d32c8b0740f80c2873d0d283b6698234bfbcecf"
+      "sha256": "d096b852d6fe1e33c8f05f49aebfc31d8f0e89a841300f92b7987c4671571a0c"
     },
     {
       "path": "packages/cli/project.cjs",
@@ -158,13 +158,13 @@
     },
     {
       "path": "packages/sdk/api.js",
-      "bytes": 106614,
-      "sha256": "3bb24894ec608ff7a9a92f0507362a96255e34275f0a476106d54ed8e06f1035"
+      "bytes": 109425,
+      "sha256": "8772e75cbaf3f61c6750c37ac7439236cc697608f747c11eaf345568397cbb65"
     },
     {
       "path": "packages/sdk/clunkyard-core.wasm",
-      "bytes": 217586,
-      "sha256": "a368e9a6c2ec0d977ba7eea9c54ce1893e7083bad5be1dd709bb669e7ae01104"
+      "bytes": 223957,
+      "sha256": "860440663232f7ed2a5857087ff7fd274381158cf0a980e12730858b0d4bf8a5"
     },
     {
       "path": "packages/sdk/core.js",
@@ -173,8 +173,8 @@
     },
     {
       "path": "packages/sdk/index.d.ts",
-      "bytes": 7460,
-      "sha256": "2bf7b3a9a8fcef0311d96085782598a33441ee64df5a0b9a58b69010c7ae6615"
+      "bytes": 7694,
+      "sha256": "feabe2786df95da91c33fa40bb4e4b0b33ba7421ad9a474ac30c9c4bcd608986"
     },
     {
       "path": "packages/sdk/index.js",
@@ -259,7 +259,7 @@
     {
       "path": "packages/sdk/package.json",
       "bytes": 1116,
-      "sha256": "16da1361d0782c6a068debe50f9ecb505d4aa5a358c259d867f5a70e0207aaac"
+      "sha256": "815814c3d6a792ac16ff5f53d6fbfe75079748cdf581b322cdf67ec30681f460"
     },
     {
       "path": "packages/sdk/README.md",
@@ -278,8 +278,8 @@
     },
     {
       "path": "protocol/v2/api.json",
-      "bytes": 182494,
-      "sha256": "7d10c6a689e5073497fee0396197be0e9c078e45d7f41100920f0768fc1261bb"
+      "bytes": 186363,
+      "sha256": "c4c5a0962da9aa3642259af68a0122f6dd51a69e02f60280e75e0f5d3344cbc8"
     },
     {
       "path": "protocol/v2/fixtures/2d-classic.ndjson",
@@ -398,8 +398,8 @@
     },
     {
       "path": "protocol/v2/vectors/api/dsl.json",
-      "bytes": 839437,
-      "sha256": "d44d2bd15fc422d6f75393363897d3f903ce146caceb69ee54ef842da809efb1"
+      "bytes": 940365,
+      "sha256": "ed0fa61bf70a1e0d875bd747cb42d414d5c0288cd8d652e0d63969661074db6f"
     },
     {
       "path": "protocol/v2/vectors/api/gun.json",
@@ -410,6 +410,11 @@
       "path": "protocol/v2/vectors/api/inputs/cue-window.ndjson",
       "bytes": 51062,
       "sha256": "c0c116b0d2844f143544fc4cc28b30881c72b401dc0603024710823920613f64"
+    },
+    {
+      "path": "protocol/v2/vectors/api/inputs/history.ndjson",
+      "bytes": 47970,
+      "sha256": "8c0fb772bf198173fac2f8cce1223d6af213c370ab27713eca3243a5fc078fac"
     },
     {
       "path": "protocol/v2/vectors/api/inputs/mechanics-2d-classic.ndjson",
@@ -493,8 +498,8 @@
     },
     {
       "path": "protocol/v2/vectors/api/tracker.json",
-      "bytes": 351903,
-      "sha256": "117303665f47bcc3ce7fd246633b4d9acdbe251cfe11e9caf6cd2b87ab466b11"
+      "bytes": 1142013,
+      "sha256": "2cd67b1f1feb14077221313c5b4973cecb8447d4284d096fb0b141fe0bd114e4"
     },
     {
       "path": "protocol/v2/vectors/formulas.json",
@@ -628,13 +633,13 @@
     },
     {
       "path": "sdk/bindings/c/test_conformance.c",
-      "bytes": 45932,
-      "sha256": "070dc653b252cc6ad78bc0d0836ea0a674dc2b137528fab12a9891893607013f"
+      "bytes": 46902,
+      "sha256": "2049d6a774bba89961f1cb036e1a22107c12732b6fe937a6efd3397002868576"
     },
     {
       "path": "sdk/bindings/cpp/clunkyard.hpp",
-      "bytes": 30889,
-      "sha256": "1b9e6b4c2386248dd9438229924ab1cd90d6712da121a95ae3fb35dfc99df48f"
+      "bytes": 31309,
+      "sha256": "42e4095a96e0a0a9aa44471edad7adf5f952cc6432ba3f02976f51026efec53f"
     },
     {
       "path": "sdk/bindings/cpp/install.cjs",
@@ -653,8 +658,8 @@
     },
     {
       "path": "sdk/bindings/cpp/test_conformance.cpp",
-      "bytes": 81491,
-      "sha256": "fabaea9da183d066403daf5483fbaf5a7f0aaff12f2b570a4ed4f8917a1c16c4"
+      "bytes": 82858,
+      "sha256": "f4c54f7c77c21fb3692da54196d8780eb4724bdd40f71f5d4c487d7c70f7a87a"
     },
     {
       "path": "sdk/bindings/python/clunkyard/__init__.py",
@@ -663,8 +668,8 @@
     },
     {
       "path": "sdk/bindings/python/clunkyard/_api.py",
-      "bytes": 32442,
-      "sha256": "0f6866904606f7aa198b3a6ef60c5ca1a12af6a233cff2174c3f821bc0e41c55"
+      "bytes": 33026,
+      "sha256": "b8625f81684bd173d1c4ef1f5a5205fc316d146dc899504f59a57ca587765693"
     },
     {
       "path": "sdk/bindings/python/clunkyard/_core.py",
@@ -688,8 +693,8 @@
     },
     {
       "path": "sdk/bindings/python/test_conformance.py",
-      "bytes": 9888,
-      "sha256": "af2bae5c224b391e507c34020ce0340e5820c2216641a0c299582ecf545f9db9"
+      "bytes": 10097,
+      "sha256": "31f5753673289ddbf30a1caf4058471190b47356535d27703f1d8612a63aa8b1"
     },
     {
       "path": "sdk/bindings/python/test_loop.py",
@@ -698,8 +703,8 @@
     },
     {
       "path": "sdk/bindings/rust/clunkyard.rs",
-      "bytes": 54039,
-      "sha256": "427fefbdeac6a63772f7a356511b0db8bb7f222575bafc2262e1bb6bbc23a55e"
+      "bytes": 54845,
+      "sha256": "6ac7de3504dbe8b29c608473361926396a57e5e14798aa1f89dfde391a3942e1"
     },
     {
       "path": "sdk/bindings/rust/install.cjs",
@@ -718,13 +723,13 @@
     },
     {
       "path": "sdk/bindings/rust/test_conformance.c",
-      "bytes": 58142,
-      "sha256": "17f5b9bfe4ddc42c67e2594fda67df21cd1e72ecbb96a77a9e545553a63b560d"
+      "bytes": 59250,
+      "sha256": "8c56a8be8f97b6b32e812865969053190ef5c90b879a4fbab241feafa6fa870b"
     },
     {
       "path": "sdk/bindings/rust/test_conformance.rs",
-      "bytes": 44370,
-      "sha256": "43e115aebb530c198526b1a3825e0f37cae362d08a5d68ae76c409aada3b0ac4"
+      "bytes": 44814,
+      "sha256": "df3d6ebafa5b4ed6243ab436618994bac7cfff9921a80a72f6ed5145f5ab3fda"
     },
     {
       "path": "sdk/core/.cargo/config.toml",
@@ -763,13 +768,13 @@
     },
     {
       "path": "sdk/core/dist/clunkyard-core.wasm",
-      "bytes": 217586,
-      "sha256": "a368e9a6c2ec0d977ba7eea9c54ce1893e7083bad5be1dd709bb669e7ae01104"
+      "bytes": 223957,
+      "sha256": "860440663232f7ed2a5857087ff7fd274381158cf0a980e12730858b0d4bf8a5"
     },
     {
       "path": "sdk/core/include/clunkyard.h",
-      "bytes": 41519,
-      "sha256": "48eb9b9eb15154f59eca5346369c348c535a987c2a071538cc87c3538bd3a3a5"
+      "bytes": 43130,
+      "sha256": "d9837f5c014364acd6b51c44575b9b81e113746d5ac8299677839e272a7882f2"
     },
     {
       "path": "sdk/core/notices/rust-Apache-2.0.txt",
@@ -828,18 +833,18 @@
     },
     {
       "path": "sdk/core/src/generated/ffi.rs",
-      "bytes": 56198,
-      "sha256": "c07bba0e6ad9ed6a6fcf35e1c2415dfab9d973545ead262960b7ec8f80f532db"
+      "bytes": 56985,
+      "sha256": "c17906c2beaeb78eac3e34d07ac756d9a67342bf6af11834a13d196afbdb18af"
     },
     {
       "path": "sdk/core/src/generated/mod.rs",
-      "bytes": 12519,
-      "sha256": "b00eef26aaabdefa88116470c096084d24456ce393c7e6c8dc8b75ab0bc1d848"
+      "bytes": 12607,
+      "sha256": "58fb7f2b7c3a8ee2579ed462f3a739fbab4fbcdf9587c0eb34a437af749391b8"
     },
     {
       "path": "sdk/core/src/generated/records.rs",
-      "bytes": 35025,
-      "sha256": "d28f6a13f95bb33908f38138eb9392fae8930dbeb379d1953cde67b1a2bff91e"
+      "bytes": 36417,
+      "sha256": "7ef57fff77fda6735d9d3d650d735125e829b160ffec5b9a808adea49d07d1f3"
     },
     {
       "path": "sdk/core/src/generated/words.rs",
@@ -928,8 +933,8 @@
     },
     {
       "path": "sdk/core/src/tracker.rs",
-      "bytes": 5616,
-      "sha256": "a1b53edff7593efb758a1744a911377cf406d0b4c97116f867fb98c1cd508947"
+      "bytes": 8634,
+      "sha256": "0c04b60f380fb0ea4e8fdcabac753b0c4ba85b7371aec6be3e458a1c47fafe17"
     },
     {
       "path": "sdk/core/src/wasm.rs",
@@ -938,13 +943,13 @@
     },
     {
       "path": "sdk/core/tests/abi_layout.c",
-      "bytes": 10924,
-      "sha256": "020f5b4c549783849891083d5d76867f0c0a003eb176dcc0b2421450d0fd2bca"
+      "bytes": 11455,
+      "sha256": "ea11f508a3f014c54926a4266236225b780449ee8b5a74b372cbca3b4e04ba49"
     },
     {
       "path": "sdk/core/tests/harness/dispatch.rs",
-      "bytes": 10144,
-      "sha256": "6ac55f1dc1bda2cc782ff0ae8d6080eae44072028b2ffef3d7b3f052b4963f12"
+      "bytes": 10240,
+      "sha256": "1c461c468e42f76e6becdfe1e28a6e58c174e34bbfc5ac803a3f1d208ba1feb4"
     },
     {
       "path": "sdk/core/tests/harness/mod.rs",
@@ -964,7 +969,7 @@
     {
       "path": "sdk/core/tests/vectors.digest",
       "bytes": 43,
-      "sha256": "fe95c5e7562a38ec30e3403e189cb6a4617d0e0c0c7f5e1b3195d53df093cfa2"
+      "sha256": "dbb146f3ce11a5a2d8e9fd1605ff78e63362f1545710ba5d574275d69fac7847"
     },
     {
       "path": "sdk/core/tests/vectors.rs",

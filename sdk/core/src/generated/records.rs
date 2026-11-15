@@ -10,6 +10,8 @@ pub const API_MINOR: i32 = 0;
 pub const API_PATCH: i32 = 0;
 /// The Tracker keeps a passive cue this many ticks unless configured otherwise.
 pub const CUE_TICKS: i32 = 60;
+/// The most sightings the Tracker keeps for each robot.
+pub const TRACKER_HISTORY: usize = 32;
 /// What a DSL distance reads when the thing it measures to is absent.
 pub const FAR: f64 = 1000000000000.0;
 
@@ -493,6 +495,30 @@ const _: () = assert!(offset_of!(CueV1, source) == 0);
 const _: () = assert!(offset_of!(CueV1, tick) == 4);
 const _: () = assert!(offset_of!(CueV1, bearing_error) == 8);
 const _: () = assert!(offset_of!(CueV1, position) == 16);
+
+/// One sighting of a robot, as the sensors measured it: no smoothing and no derived velocity. 48 bytes.
+#[repr(C)]
+#[derive(Clone, Copy, Debug, Default, PartialEq)]
+pub struct SightingV1 {
+    /// The tick it was seen.
+    pub tick: i32,
+    /// What detected it: scan or proximity. A Source as i32.
+    pub source: i32,
+    /// The standard deviation of its bearing and elevation as the sensor reported it, degrees; 0 when the sensor reports none, as scan and proximity do today.
+    pub bearing_error: f64,
+    /// The standard deviation of the natural log of its range as the sensor reported it; 0 when the sensor reports none, as scan and proximity do today.
+    pub range_error: f64,
+    /// Where the sighting placed the robot, in world axes: your position then plus its range along its bearing and elevation. Not smoothed.
+    pub position: Vec3,
+}
+/// The latest version of SightingV1.
+pub type Sighting = SightingV1;
+const _: () = assert!(size_of::<SightingV1>() == 48);
+const _: () = assert!(offset_of!(SightingV1, tick) == 0);
+const _: () = assert!(offset_of!(SightingV1, source) == 4);
+const _: () = assert!(offset_of!(SightingV1, bearing_error) == 8);
+const _: () = assert!(offset_of!(SightingV1, range_error) == 16);
+const _: () = assert!(offset_of!(SightingV1, position) == 24);
 
 /// Where to aim for a shot fired now to meet a target, and when it meets it. 24 bytes.
 #[repr(C)]

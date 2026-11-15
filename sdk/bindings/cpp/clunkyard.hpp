@@ -19,6 +19,7 @@ using Applied = cy_applied_v1;
 using Scan = cy_scan_v1;
 using Contact = cy_contact_v1;
 using Cue = cy_cue_v1;
+using Sighting = cy_sighting_v1;
 using Solution = cy_solution_v1;
 struct Zone:public cy_zone_v1{cy_robot *handle;Zone(cy_robot *h,const cy_zone_v1 &value):cy_zone_v1(value),handle(h){}
   std::optional<double> margin(const Vec3 & point) const { double out{}; int32_t status = cy_nav_zone_margin(handle, &point, &out); if(status==CY_NONE)return std::nullopt; check(handle,status); return out; }
@@ -141,6 +142,7 @@ struct Tracker {cy_robot *&handle; explicit Tracker(cy_robot *&robot):handle(rob
   double nearest_bearing_rate() const { double out{}; int32_t status = cy_tracker_nearest_bearing_rate(handle, &out); check(handle,status); return out; }
   Vec3 velocity(int32_t slot) const { cy_vec3 out{}; int32_t status = cy_tracker_velocity(handle, slot, &out); check(handle,status); return out; }
   std::optional<Vec3> position(int32_t slot) const { cy_vec3 out{}; int32_t status = cy_tracker_position(handle, slot, &out); if(status==CY_NONE)return std::nullopt; check(handle,status); return out; }
+  std::vector<Sighting> history(int32_t slot) const { std::vector<cy_sighting_v1> out(16);uint32_t count=0; int32_t status = cy_tracker_history_v1(handle, slot, out.data(), (uint32_t)out.size(), &count); while(status==CY_SHORT){out.resize(count);status=cy_tracker_history_v1(handle, slot, out.data(), (uint32_t)out.size(), &count);} check(handle,status); out.resize(count);return out; }
   std::optional<int32_t> last_seen(int32_t slot) const { int32_t out{}; int32_t status = cy_tracker_last_seen(handle, slot, &out); if(status==CY_NONE)return std::nullopt; check(handle,status); return out; }
   void configure(double smoothing = 0.5, int32_t forget_ticks = 40, int32_t cue_ticks = 60) { int32_t status = cy_tracker_configure(handle, smoothing, forget_ticks, cue_ticks); check(handle,status); }
 };

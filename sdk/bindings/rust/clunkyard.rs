@@ -69,6 +69,9 @@ pub type Contact=RawContact;
 pub struct RawCue {pub source:i32,pub tick:i32,pub bearing_error:f64,pub position:RawVec3,}
 pub type Cue=RawCue;
 #[repr(C)] #[derive(Default,Clone,Copy,Debug,PartialEq)]
+pub struct RawSighting {pub tick:i32,pub source:i32,pub bearing_error:f64,pub range_error:f64,pub position:RawVec3,}
+pub type Sighting=RawSighting;
+#[repr(C)] #[derive(Default,Clone,Copy,Debug,PartialEq)]
 pub struct RawSolution {pub heading:f64,pub pitch:f64,pub time:f64,}
 pub type Solution=RawSolution;
 #[repr(C)] #[derive(Default,Clone,Copy,Debug,PartialEq)]
@@ -209,6 +212,7 @@ pub fn cy_tracker_cue_v1(robot:*mut std::ffi::c_void,out:*mut RawCue)->i32;
 pub fn cy_tracker_nearest_bearing_rate(robot:*mut std::ffi::c_void,out:*mut f64)->i32;
 pub fn cy_tracker_velocity(robot:*mut std::ffi::c_void,slot:i32,out:*mut RawVec3)->i32;
 pub fn cy_tracker_position(robot:*mut std::ffi::c_void,slot:i32,out:*mut RawVec3)->i32;
+pub fn cy_tracker_history_v1(robot:*mut std::ffi::c_void,slot:i32,out:*mut RawSighting,capacity:u32,count:*mut u32)->i32;
 pub fn cy_tracker_last_seen(robot:*mut std::ffi::c_void,slot:i32,out:*mut i32)->i32;
 pub fn cy_tracker_configure(robot:*mut std::ffi::c_void,smoothing:f64,forget_ticks:i32,cue_ticks:i32)->i32;
 pub fn cy_nav_zone_v1(robot:*mut std::ffi::c_void,out:*mut RawZone)->i32;
@@ -365,6 +369,7 @@ pub fn cue(&self) -> Result<Option<Cue>,Error> {let mut out=RawCue::default();le
 pub fn nearest_bearing_rate(&self) -> Result<f64,Error> {let mut out=f64::default();let mut status=unsafe{ffi::cy_tracker_nearest_bearing_rate(self.handle,&mut out)};check(self.handle,status)?;Ok(out)}
 pub fn velocity(&self,slot: i32) -> Result<Vec3,Error> {let mut out=RawVec3::default();let mut status=unsafe{ffi::cy_tracker_velocity(self.handle,slot,&mut out)};check(self.handle,status)?;Ok(out)}
 pub fn position(&self,slot: i32) -> Result<Option<Vec3>,Error> {let mut out=RawVec3::default();let mut status=unsafe{ffi::cy_tracker_position(self.handle,slot,&mut out)};if status==NONE{return Ok(None);}check(self.handle,status)?;Ok(Some(out))}
+pub fn history(&self,slot: i32) -> Result<Vec<Sighting>,Error> {let mut out=vec![RawSighting::default();16];let mut count=0;let mut status=unsafe{ffi::cy_tracker_history_v1(self.handle,slot,out.as_mut_ptr(),out.len() as u32,&mut count)};while status==SHORT {out.resize(count as usize,RawSighting::default());status=unsafe{ffi::cy_tracker_history_v1(self.handle,slot,out.as_mut_ptr(),out.len() as u32,&mut count)};}check(self.handle,status)?;out.truncate(count as usize);Ok(out)}
 pub fn last_seen(&self,slot: i32) -> Result<Option<i32>,Error> {let mut out=i32::default();let mut status=unsafe{ffi::cy_tracker_last_seen(self.handle,slot,&mut out)};if status==NONE{return Ok(None);}check(self.handle,status)?;Ok(Some(out))}
 pub fn configure(&self,smoothing: f64,forget_ticks: i32,cue_ticks: i32) -> Result<(),Error> {let mut status=unsafe{ffi::cy_tracker_configure(self.handle,smoothing,forget_ticks,cue_ticks)};check(self.handle,status)?;Ok(())}
 }

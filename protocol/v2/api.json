@@ -688,6 +688,66 @@
       ]
     },
     {
+      "name": "sighting",
+      "description": "One sighting of a robot, as the sensors measured it: no smoothing and no derived velocity.",
+      "versioned": true,
+      "since": "2.0",
+      "cName": "cy_sighting_v1",
+      "alias": "cy_sighting",
+      "size": 48,
+      "align": 8,
+      "fields": [
+        {
+          "name": "tick",
+          "type": {
+            "kind": "i32",
+            "description": "The tick it was seen."
+          },
+          "description": "The tick it was seen.",
+          "offset": 0
+        },
+        {
+          "name": "source",
+          "type": {
+            "kind": "enum",
+            "description": "What detected it: scan or proximity.",
+            "from": "state.sensors.contacts[].source",
+            "enum": "source"
+          },
+          "description": "What detected it: scan or proximity.",
+          "offset": 4
+        },
+        {
+          "name": "bearing_error",
+          "type": {
+            "kind": "f64",
+            "description": "The standard deviation of its bearing and elevation as the sensor reported it, degrees; 0 when the sensor reports none, as scan and proximity do today."
+          },
+          "description": "The standard deviation of its bearing and elevation as the sensor reported it, degrees; 0 when the sensor reports none, as scan and proximity do today.",
+          "offset": 8
+        },
+        {
+          "name": "range_error",
+          "type": {
+            "kind": "f64",
+            "description": "The standard deviation of the natural log of its range as the sensor reported it; 0 when the sensor reports none, as scan and proximity do today."
+          },
+          "description": "The standard deviation of the natural log of its range as the sensor reported it; 0 when the sensor reports none, as scan and proximity do today.",
+          "offset": 16
+        },
+        {
+          "name": "position",
+          "type": {
+            "kind": "record",
+            "record": "vec3",
+            "description": "Where the sighting placed the robot, in world axes: your position then plus its range along its bearing and elevation. Not smoothed."
+          },
+          "description": "Where the sighting placed the robot, in world axes: your position then plus its range along its bearing and elevation. Not smoothed.",
+          "offset": 24
+        }
+      ]
+    },
+    {
       "name": "solution",
       "description": "Where to aim for a shot fired now to meet a target, and when it meets it.",
       "versioned": true,
@@ -3378,7 +3438,7 @@
       "kind": "query",
       "form": "call",
       "since": "2.0",
-      "fact": "The aim at which a shot fired now meets the contact if it holds its tracked velocity; absent when no shot reaches it.",
+      "fact": "The intercept if the contact holds its tracked velocity: the aim at which a shot fired now meets it then; absent when no shot reaches it. It is a starting point, and a target that turns, reverses or weaves beats it; for your own prediction, use lead_point.",
       "subsystem": "gun",
       "member": "lead",
       "path": [
@@ -3431,7 +3491,7 @@
       "kind": "query",
       "form": "call",
       "since": "2.0",
-      "fact": "The aim at which a shot fired now meets a point moving at this velocity; absent when no shot reaches it.",
+      "fact": "The intercept geometry for your own prediction: the aim at which a shot fired now meets a point that starts at this position and moves at this velocity; absent when no shot reaches it.",
       "subsystem": "gun",
       "member": "lead_point",
       "path": [
@@ -4503,6 +4563,50 @@
       "rust": {
         "module": "tracker",
         "fn": "position"
+      }
+    },
+    {
+      "name": "tracker.history",
+      "kind": "query",
+      "form": "call",
+      "since": "2.0",
+      "fact": "The robot's last 32 precise sightings, oldest first, as measured: positions as the sensors placed them, with the errors they reported; empty when it has none. A gap in the ticks is a gap in the sightings, and a track restart does not clear them.",
+      "subsystem": "tracker",
+      "member": "history",
+      "path": [
+        "tracker",
+        "history"
+      ],
+      "stateless": false,
+      "args": [
+        {
+          "name": "slot",
+          "type": {
+            "kind": "i32",
+            "description": "A slot, 1 to match.robots."
+          },
+          "description": "A slot, 1 to match.robots."
+        }
+      ],
+      "returns": {
+        "kind": "record",
+        "record": "sighting",
+        "description": "",
+        "list": true
+      },
+      "fields": [],
+      "of": null,
+      "dsl": null,
+      "rename": {},
+      "wasm": true,
+      "bindings": true,
+      "version": 1,
+      "vectors": "protocol/v2/vectors/api/tracker.json#history",
+      "symbol": "cy_tracker_history_v1",
+      "alias": "cy_tracker_history",
+      "rust": {
+        "module": "tracker",
+        "fn": "history"
       }
     },
     {
@@ -7330,5 +7434,6 @@
     }
   ],
   "cueTicks": 60,
+  "history": 32,
   "far": 1000000000000
 }

@@ -46,6 +46,13 @@ export interface Cue {
   bearingError: number;
   position: Vec3;
 }
+export interface Sighting {
+  tick: number;
+  source: "scan" | "proximity" | "faint" | "beam" | "muzzle" | "motion" | "ping";
+  bearingError: number;
+  rangeError: number;
+  position: Vec3;
+}
 export interface Solution {
   heading: number;
   pitch: number;
@@ -183,6 +190,7 @@ export interface Tracker {
   readonly nearestBearingRate: number;
   velocity(slot: number): Vec3;
   position(slot: number): Vec3 | null;
+  history(slot: number): Array<Sighting>;
   lastSeen(slot: number): number | null;
   configure(smoothing?: number, forgetTicks?: number, cueTicks?: number): void;
 }

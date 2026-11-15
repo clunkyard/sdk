@@ -162,6 +162,12 @@ class Cue(_Record):
     _names = ("source", "tick", "bearing_error", "position",)
     source = property(lambda self: _N_SOURCE.get(self._source))
 
+class Sighting(_Record):
+    """One sighting of a robot, as the sensors measured it: no smoothing and no derived velocity."""
+    _fields_ = [("tick", c_int32), ("_source", c_int32), ("bearing_error", c_double), ("range_error", c_double), ("position", Vec3)]
+    _names = ("tick", "source", "bearing_error", "range_error", "position",)
+    source = property(lambda self: _N_SOURCE.get(self._source))
+
 class Solution(_Record):
     """Where to aim for a shot fired now to meet a target, and when it meets it."""
     _fields_ = [("heading", c_double), ("pitch", c_double), ("time", c_double)]
@@ -322,6 +328,7 @@ _fn("cy_tracker_cue", 1, c_void_p, POINTER(Cue))
 _fn("cy_tracker_nearest_bearing_rate", 0, c_void_p, _PD)
 _fn("cy_tracker_velocity", 0, c_void_p, c_int32, POINTER(Vec3))
 _fn("cy_tracker_position", 0, c_void_p, c_int32, POINTER(Vec3))
+_fn("cy_tracker_history", 1, c_void_p, c_int32, POINTER(Sighting), c_uint32, _PU)
 _fn("cy_tracker_last_seen", 0, c_void_p, c_int32, _PI)
 _fn("cy_tracker_configure", 0, c_void_p, c_double, c_int32, c_int32)
 _fn("cy_nav_zone", 1, c_void_p, POINTER(Zone))
@@ -728,6 +735,9 @@ class _Tracker:
 
     def position(self, slot):
         return _rec(_c.cy_tracker_position, (self._h, slot), Vec3)
+
+    def history(self, slot):
+        return _list(_c.cy_tracker_history, (self._h, slot), Sighting)
 
     def last_seen(self, slot):
         return _num(_c.cy_tracker_last_seen, (self._h, slot), c_int32)

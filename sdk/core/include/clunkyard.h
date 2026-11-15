@@ -33,6 +33,8 @@ extern "C" {
 #define CY_API_PATCH 0
 /* The Tracker keeps a passive cue this many ticks unless configured otherwise. */
 #define CY_CUE_TICKS 60
+/* The most sightings tracker.history returns for a robot. */
+#define CY_TRACKER_HISTORY 32
 
 /* Statuses. Every function returns one. A binding treats an unknown negative one as a generic error. */
 #define CY_OK 0
@@ -180,6 +182,18 @@ typedef struct cy_cue_v1 {
   double bearing_error; /* The standard deviation of its bearing and elevation, degrees. */
   cy_vec3 position; /* Where it placed the robot it heard, in world axes. */
 } cy_cue_v1;
+
+/*
+ * One sighting of a robot, as the sensors measured it: no smoothing and no
+ * derived velocity. 48 bytes.
+ */
+typedef struct cy_sighting_v1 {
+  int32_t tick; /* The tick it was seen. */
+  int32_t source; /* CY_SOURCE_*. What detected it: scan or proximity. */
+  double bearing_error; /* The standard deviation of its bearing and elevation as the sensor reported it, degrees; 0 when the sensor reports none, as scan and proximity do today. */
+  double range_error; /* The standard deviation of the natural log of its range as the sensor reported it; 0 when the sensor reports none, as scan and proximity do today. */
+  cy_vec3 position; /* Where the sighting placed the robot, in world axes: your position then plus its range along its bearing and elevation. Not smoothed. */
+} cy_sighting_v1;
 
 /*
  * Where to aim for a shot fired now to meet a target, and when it meets it. 24
@@ -497,13 +511,16 @@ CY_API int32_t cy_gun_power_for_speed(cy_robot *robot, double speed, double *out
  */
 CY_API int32_t cy_gun_power_for_flight_time(cy_robot *robot, double range, double seconds, double *out);
 /*
- * gun.lead: The aim at which a shot fired now meets the contact if it holds
- * its tracked velocity; absent when no shot reaches it. CY_NONE when absent.
+ * gun.lead: The intercept if the contact holds its tracked velocity: the aim
+ * at which a shot fired now meets it then; absent when no shot reaches it. It
+ * is a starting point, and a target that turns, reverses or weaves beats it;
+ * for your own prediction, use lead_point. CY_NONE when absent.
  */
 CY_API int32_t cy_gun_lead_v1(cy_robot *robot, const cy_contact_v1 *contact, double power, cy_solution_v1 *out);
 /*
- * gun.lead_point: The aim at which a shot fired now meets a point moving at
- * this velocity; absent when no shot reaches it. CY_NONE when absent.
+ * gun.lead_point: The intercept geometry for your own prediction: the aim at
+ * which a shot fired now meets a point that starts at this position and moves
+ * at this velocity; absent when no shot reaches it. CY_NONE when absent.
  */
 CY_API int32_t cy_gun_lead_point_v1(cy_robot *robot, const cy_vec3 *position, const cy_vec3 *velocity, double power, cy_solution_v1 *out);
 /* gun.aim (heading): Sets aim.heading. CY_E_NOT_FINITE keeps it as it was. */
@@ -632,6 +649,13 @@ CY_API int32_t cy_tracker_velocity(cy_robot *robot, int32_t slot, cy_vec3 *out);
  * absent.
  */
 CY_API int32_t cy_tracker_position(cy_robot *robot, int32_t slot, cy_vec3 *out);
+/*
+ * tracker.history: The robot's last 32 precise sightings, oldest first, as
+ * measured: positions as the sensors placed them, with the errors they
+ * reported; empty when it has none. A gap in the ticks is a gap in the
+ * sightings, and a track restart does not clear them.
+ */
+CY_API int32_t cy_tracker_history_v1(cy_robot *robot, int32_t slot, cy_sighting_v1 *out, uint32_t capacity, uint32_t *count);
 /*
  * tracker.last_seen: The tick the robot was last seen, if it was. CY_NONE when
  * absent.
@@ -923,6 +947,7 @@ typedef cy_applied_v1 cy_applied;
 typedef cy_scan_v1 cy_scan;
 typedef cy_contact_v1 cy_contact;
 typedef cy_cue_v1 cy_cue;
+typedef cy_sighting_v1 cy_sighting;
 typedef cy_solution_v1 cy_solution;
 typedef cy_zone_v1 cy_zone;
 typedef cy_storm_v1 cy_storm;
@@ -941,6 +966,7 @@ typedef cy_compute_v1 cy_compute;
 #define cy_sensors_contact cy_sensors_contact_v1
 #define cy_sensors_position_of cy_sensors_position_of_v1
 #define cy_tracker_cue cy_tracker_cue_v1
+#define cy_tracker_history cy_tracker_history_v1
 #define cy_nav_zone cy_nav_zone_v1
 #define cy_nav_storm cy_nav_storm_v1
 #define cy_nav_hill cy_nav_hill_v1

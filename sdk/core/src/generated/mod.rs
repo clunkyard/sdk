@@ -101,6 +101,7 @@
 //!     crate::tracker::nearest_bearing_rate(r: &Robot) -> Result<f64, Error>
 //!     crate::tracker::velocity(r: &Robot, slot: i32) -> Result<Vec3, Error>
 //!     crate::tracker::position(r: &Robot, slot: i32) -> Result<Option<Vec3>, Error>
+//!     crate::tracker::history(r: &Robot, slot: i32) -> Result<Vec<SightingV1>, Error>
 //!     crate::tracker::last_seen(r: &Robot, slot: i32) -> Result<Option<i32>, Error>
 //!     crate::tracker::configure(r: &mut Robot, smoothing: f64, forget_ticks: i32, cue_ticks: i32) -> Result<(), Error>
 //!     crate::nav::zone(r: &Robot) -> Result<Option<ZoneV1>, Error>

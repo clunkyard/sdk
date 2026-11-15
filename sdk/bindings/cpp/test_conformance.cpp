@@ -41,6 +41,8 @@ static void read_contact(cy_contact_v1 *out){out->slot = integer();out->source =
 static void print_contact(const cy_contact_v1 *out){putchar('{');fputs("slot=",stdout);bits((double)out->slot);putchar(',');fputs("source=",stdout);enum_source(out->source);putchar(',');fputs("range=",stdout);bits((double)out->range);putchar(',');fputs("bearing=",stdout);bits((double)out->bearing);putchar(',');fputs("elevation=",stdout);bits((double)out->elevation);putchar(',');fputs("bearing_error=",stdout);bits((double)out->bearing_error);putchar(',');fputs("range_error=",stdout);bits((double)out->range_error);putchar(',');fputs("position=",stdout);print_vec3(&out->position);putchar('}');}
 static void read_cue(cy_cue_v1 *out){out->source = integer();out->tick = integer();out->bearing_error = number();read_vec3(&out->position);}
 static void print_cue(const cy_cue_v1 *out){putchar('{');fputs("source=",stdout);enum_source(out->source);putchar(',');fputs("tick=",stdout);bits((double)out->tick);putchar(',');fputs("bearing_error=",stdout);bits((double)out->bearing_error);putchar(',');fputs("position=",stdout);print_vec3(&out->position);putchar('}');}
+static void read_sighting(cy_sighting_v1 *out){out->tick = integer();out->source = integer();out->bearing_error = number();out->range_error = number();read_vec3(&out->position);}
+static void print_sighting(const cy_sighting_v1 *out){putchar('{');fputs("tick=",stdout);bits((double)out->tick);putchar(',');fputs("source=",stdout);enum_source(out->source);putchar(',');fputs("bearing_error=",stdout);bits((double)out->bearing_error);putchar(',');fputs("range_error=",stdout);bits((double)out->range_error);putchar(',');fputs("position=",stdout);print_vec3(&out->position);putchar('}');}
 static void read_solution(cy_solution_v1 *out){out->heading = number();out->pitch = number();out->time = number();}
 static void print_solution(const cy_solution_v1 *out){putchar('{');fputs("heading=",stdout);bits((double)out->heading);putchar(',');fputs("pitch=",stdout);bits((double)out->pitch);putchar(',');fputs("time=",stdout);bits((double)out->time);putchar('}');}
 static void read_zone(cy_zone_v1 *out){out->shape = integer();out->reserved = integer();out->radius = number();read_vec3(&out->center);}
@@ -150,6 +152,7 @@ static int32_t binding_cy_tracker_cue_v1(cy_robot *robot,cy_cue_v1 *out){try{clu
 static int32_t binding_cy_tracker_nearest_bearing_rate(cy_robot *robot,double *out){try{clunkyard::Robot binding(robot);auto got=binding.tracker.nearest_bearing_rate();*out=got;return CY_OK;}catch(const clunkyard::Error &error){return error.status;}}
 static int32_t binding_cy_tracker_velocity(cy_robot *robot,int32_t slot,cy_vec3 *out){try{clunkyard::Robot binding(robot);auto got=binding.tracker.velocity(slot);*out=got;return CY_OK;}catch(const clunkyard::Error &error){return error.status;}}
 static int32_t binding_cy_tracker_position(cy_robot *robot,int32_t slot,cy_vec3 *out){try{clunkyard::Robot binding(robot);auto got=binding.tracker.position(slot);if(!got)return CY_NONE;*out=*got;return CY_OK;}catch(const clunkyard::Error &error){return error.status;}}
+static int32_t binding_cy_tracker_history_v1(cy_robot *robot,int32_t slot,cy_sighting_v1 *out,uint32_t capacity,uint32_t *count){try{clunkyard::Robot binding(robot);auto got=binding.tracker.history(slot);*count=(uint32_t)(got).size();if(capacity<*count)return CY_SHORT;for(uint32_t i=0;i<*count;i++)out[i]=(got)[i];return CY_OK;}catch(const clunkyard::Error &error){return error.status;}}
 static int32_t binding_cy_tracker_last_seen(cy_robot *robot,int32_t slot,int32_t *out){try{clunkyard::Robot binding(robot);auto got=binding.tracker.last_seen(slot);if(!got)return CY_NONE;*out=*got;return CY_OK;}catch(const clunkyard::Error &error){return error.status;}}
 static int32_t binding_cy_tracker_configure(cy_robot *robot,double smoothing,int32_t forget_ticks,int32_t cue_ticks){try{clunkyard::Robot binding(robot);binding.tracker.configure(smoothing,forget_ticks,cue_ticks);return CY_OK;}catch(const clunkyard::Error &error){return error.status;}}
 static int32_t binding_cy_nav_zone_v1(cy_robot *robot,cy_zone_v1 *out){try{clunkyard::Robot binding(robot);auto got=binding.nav.zone();if(!got)return CY_NONE;*out=*got;return CY_OK;}catch(const clunkyard::Error &error){return error.status;}}
@@ -503,6 +506,10 @@ if(!strcmp(op,"call")&&!strcmp(name,"tracker.position")){int32_t slot = integer(
 cy_vec3 out={};
 int32_t status=binding_cy_tracker_position(robot,slot,&out);
 if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');print_vec3(&out);}putchar('\n');}return;}
+if(!strcmp(op,"call")&&!strcmp(name,"tracker.history")){int32_t slot = integer();
+cy_sighting_v1 out[CAP]; uint32_t count=0;
+int32_t status=binding_cy_tracker_history_v1(robot,slot,out,CAP,&count);
+if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');putchar('[');for(uint32_t i=0;i<count;i++){if(i)putchar(',');print_sighting(&out[i]);}putchar(']');}putchar('\n');}return;}
 if(!strcmp(op,"call")&&!strcmp(name,"tracker.last_seen")){int32_t slot = integer();
 int32_t out=0;
 int32_t status=binding_cy_tracker_last_seen(robot,slot,&out);

@@ -774,7 +774,7 @@ pub extern "C" fn cy_gun_power_for_flight_time(robot: *mut Robot, range: f64, se
     })
 }
 
-/// The aim at which a shot fired now meets the contact if it holds its tracked velocity; absent when no shot reaches it.
+/// The intercept if the contact holds its tracked velocity: the aim at which a shot fired now meets it then; absent when no shot reaches it. It is a starting point, and a target that turns, reverses or weaves beats it; for your own prediction, use lead_point.
 #[unsafe(no_mangle)]
 pub extern "C" fn cy_gun_lead_v1(robot: *mut Robot, contact: *const ContactV1, power: f64, out: *mut SolutionV1) -> i32 {
     guard(robot, "cy_gun_lead_v1", |r| {
@@ -785,7 +785,7 @@ pub extern "C" fn cy_gun_lead_v1(robot: *mut Robot, contact: *const ContactV1, p
     })
 }
 
-/// The aim at which a shot fired now meets a point moving at this velocity; absent when no shot reaches it.
+/// The intercept geometry for your own prediction: the aim at which a shot fired now meets a point that starts at this position and moves at this velocity; absent when no shot reaches it.
 #[unsafe(no_mangle)]
 pub extern "C" fn cy_gun_lead_point_v1(robot: *mut Robot, position: *const Vec3, velocity: *const Vec3, power: f64, out: *mut SolutionV1) -> i32 {
     guard(robot, "cy_gun_lead_point_v1", |r| {
@@ -1087,6 +1087,15 @@ pub extern "C" fn cy_tracker_position(robot: *mut Robot, slot: i32, out: *mut Ve
             Some(value) => write(out, value),
             None => Ok(CY_NONE),
         }
+    })
+}
+
+/// The robot's last 32 precise sightings, oldest first, as measured: positions as the sensors placed them, with the errors they reported; empty when it has none. A gap in the ticks is a gap in the sightings, and a track restart does not clear them.
+#[unsafe(no_mangle)]
+pub extern "C" fn cy_tracker_history_v1(robot: *mut Robot, slot: i32, out: *mut SightingV1, capacity: u32, count: *mut u32) -> i32 {
+    guard(robot, "cy_tracker_history_v1", |r| {
+        let items = crate::tracker::history(&*r, slot)?;
+        write_list(out, capacity, count, &items)
     })
 }
 

@@ -105,6 +105,7 @@ pub fn dispatch(symbol: &str, r: *mut Robot, a: &Args, o: &mut Out) -> Option<i3
         "cy_tracker_nearest_bearing_rate" => cy_tracker_nearest_bearing_rate(r, o.ptr()),
         "cy_tracker_velocity" => cy_tracker_velocity(r, a.i(0), o.ptr()),
         "cy_tracker_position" => cy_tracker_position(r, a.i(0), o.ptr()),
+        "cy_tracker_history_v1" => cy_tracker_history_v1(r, a.i(0), o.ptr(), o.cap(), o.len()),
         "cy_tracker_last_seen" => cy_tracker_last_seen(r, a.i(0), o.ptr()),
         "cy_tracker_configure" => cy_tracker_configure(r, a.f(0), a.i(1), a.i(2)),
         "cy_nav_zone_v1" => cy_nav_zone_v1(r, o.ptr()),
