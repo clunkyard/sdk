@@ -46,7 +46,10 @@ pub fn battery_fraction(r: &Robot) -> Result<f64, Error> {
 
 pub fn aim_error(r: &Robot) -> Result<f64, Error> {
     let state = r.current()?;
-    Ok(crate::sensors::nearest_seen(state).map_or(0.0, |nearest| angle_diff(nearest.bearing, state.me.aim.heading)))
+    match crate::sensors::nearest_seen(state) {
+        Some(nearest) => Ok(angle_diff(nearest.bearing, crate::me::from_mount(r, state.me.aim.heading, state.me.aim.pitch)?.heading)),
+        None => Ok(0.0),
+    }
 }
 
 // The zone as the DSL sees it: height counts in a sphere-shaped field.

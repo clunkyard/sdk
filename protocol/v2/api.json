@@ -572,56 +572,56 @@
           "name": "range",
           "type": {
             "kind": "f64",
-            "description": "Straight-line distance between centres. For a passive source, noisy and rounded to sensing.rangeBin.",
+            "description": "Straight-line distance between centres. For a passive source, noisy and rounded to sensing.rangeBin; for a scan source with hello.scanner.bearing, noisy.",
             "from": "state.sensors.contacts[].range"
           },
-          "description": "Straight-line distance between centres. For a passive source, noisy and rounded to sensing.rangeBin.",
+          "description": "Straight-line distance between centres. For a passive source, noisy and rounded to sensing.rangeBin; for a scan source with hello.scanner.bearing, noisy.",
           "offset": 8
         },
         {
           "name": "bearing",
           "type": {
             "kind": "f64",
-            "description": "Heading from you to it. For a passive source, noisy.",
+            "description": "Heading from you to it, in world axes whatever the mounts. For a passive source, noisy; for a scan source with hello.scanner.bearing, noisy by the scan arc.",
             "from": "state.sensors.contacts[].bearing",
             "limits": [
               0,
               360
             ]
           },
-          "description": "Heading from you to it. For a passive source, noisy.",
+          "description": "Heading from you to it, in world axes whatever the mounts. For a passive source, noisy; for a scan source with hello.scanner.bearing, noisy by the scan arc.",
           "offset": 16
         },
         {
           "name": "elevation",
           "type": {
             "kind": "f64",
-            "description": "Elevation from you to it; 0 in 2D. For a passive source, noisy.",
+            "description": "Elevation from you to it; 0 in 2D. Noisy as bearing is.",
             "from": "state.sensors.contacts[].elevation",
             "limits": [
               -90,
               90
             ]
           },
-          "description": "Elevation from you to it; 0 in 2D. For a passive source, noisy.",
+          "description": "Elevation from you to it; 0 in 2D. Noisy as bearing is.",
           "offset": 24
         },
         {
           "name": "bearing_error",
           "type": {
             "kind": "f64",
-            "description": "Passive sources only: the standard deviation of bearing and elevation, degrees; 0 for scan and proximity."
+            "description": "The standard deviation of bearing and elevation, degrees, as the sensor reports it: for passive sources, and for scan sources when the match earns bearing (hello.scanner.bearing); 0 otherwise."
           },
-          "description": "Passive sources only: the standard deviation of bearing and elevation, degrees; 0 for scan and proximity.",
+          "description": "The standard deviation of bearing and elevation, degrees, as the sensor reports it: for passive sources, and for scan sources when the match earns bearing (hello.scanner.bearing); 0 otherwise.",
           "offset": 32
         },
         {
           "name": "range_error",
           "type": {
             "kind": "f64",
-            "description": "Passive sources only: the standard deviation of the natural log of range; 0 for scan and proximity."
+            "description": "The standard deviation of the natural log of range, as the sensor reports it; 0 when it reports none."
           },
-          "description": "Passive sources only: the standard deviation of the natural log of range; 0 for scan and proximity.",
+          "description": "The standard deviation of the natural log of range, as the sensor reports it; 0 when it reports none.",
           "offset": 40
         },
         {
@@ -721,18 +721,18 @@
           "name": "bearing_error",
           "type": {
             "kind": "f64",
-            "description": "The standard deviation of its bearing and elevation as the sensor reported it, degrees; 0 when the sensor reports none, as scan and proximity do today."
+            "description": "The standard deviation of its bearing and elevation as the sensor reported it, degrees; 0 when the sensor reports none, as proximity never does and scan does only when the match earns bearing."
           },
-          "description": "The standard deviation of its bearing and elevation as the sensor reported it, degrees; 0 when the sensor reports none, as scan and proximity do today.",
+          "description": "The standard deviation of its bearing and elevation as the sensor reported it, degrees; 0 when the sensor reports none, as proximity never does and scan does only when the match earns bearing.",
           "offset": 8
         },
         {
           "name": "range_error",
           "type": {
             "kind": "f64",
-            "description": "The standard deviation of the natural log of its range as the sensor reported it; 0 when the sensor reports none, as scan and proximity do today."
+            "description": "The standard deviation of the natural log of its range as the sensor reported it; 0 when the sensor reports none."
           },
-          "description": "The standard deviation of the natural log of its range as the sensor reported it; 0 when the sensor reports none, as scan and proximity do today.",
+          "description": "The standard deviation of the natural log of its range as the sensor reported it; 0 when the sensor reports none.",
           "offset": 16
         },
         {
@@ -2209,6 +2209,185 @@
       }
     },
     {
+      "name": "me.hull_mounts",
+      "kind": "query",
+      "form": "property",
+      "since": "2.0",
+      "fact": "Your turret and scanner are mounted on the hull: gun.aim, scanner.set, gun.aim_now and scanner.last are in your chassis frame, not world axes.",
+      "subsystem": "me",
+      "member": "hull_mounts",
+      "path": [
+        "me",
+        "hull_mounts"
+      ],
+      "stateless": false,
+      "args": [],
+      "returns": {
+        "kind": "bool",
+        "description": "True when the match mounts them on the hull (hello.robot.mounts)."
+      },
+      "fields": [],
+      "of": null,
+      "dsl": null,
+      "rename": {},
+      "wasm": true,
+      "bindings": true,
+      "version": 1,
+      "vectors": "protocol/v2/vectors/api/me.json#hull_mounts",
+      "symbol": "cy_me_hull_mounts",
+      "alias": null,
+      "rust": {
+        "module": "me",
+        "fn": "hull_mounts"
+      }
+    },
+    {
+      "name": "me.to_mount",
+      "kind": "query",
+      "form": "call",
+      "since": "2.0",
+      "fact": "A world direction in the frame your mounts take: in your chassis frame (angles.to_chassis with me.attitude) when me.hull_mounts, unchanged otherwise.",
+      "subsystem": "me",
+      "member": "to_mount",
+      "path": [
+        "me",
+        "to_mount"
+      ],
+      "stateless": false,
+      "args": [
+        {
+          "name": "heading",
+          "type": {
+            "kind": "f64",
+            "description": "Heading, degrees."
+          },
+          "description": "Heading, degrees."
+        },
+        {
+          "name": "pitch",
+          "type": {
+            "kind": "f64",
+            "description": "Pitch, degrees; 0 in 2D."
+          },
+          "description": "Pitch, degrees; 0 in 2D."
+        }
+      ],
+      "returns": {
+        "kind": "record",
+        "record": "direction",
+        "description": "The direction in the frame gun.aim and scanner.set take."
+      },
+      "fields": [],
+      "of": null,
+      "dsl": null,
+      "rename": {},
+      "wasm": true,
+      "bindings": true,
+      "version": 1,
+      "vectors": "protocol/v2/vectors/api/me.json#to_mount",
+      "symbol": "cy_me_to_mount",
+      "alias": null,
+      "rust": {
+        "module": "me",
+        "fn": "to_mount"
+      }
+    },
+    {
+      "name": "me.from_mount",
+      "kind": "query",
+      "form": "call",
+      "since": "2.0",
+      "fact": "A direction in your mounts' frame, such as gun.aim_now, in world axes: angles.from_chassis with me.attitude when me.hull_mounts, unchanged otherwise.",
+      "subsystem": "me",
+      "member": "from_mount",
+      "path": [
+        "me",
+        "from_mount"
+      ],
+      "stateless": false,
+      "args": [
+        {
+          "name": "heading",
+          "type": {
+            "kind": "f64",
+            "description": "Heading, degrees."
+          },
+          "description": "Heading, degrees."
+        },
+        {
+          "name": "pitch",
+          "type": {
+            "kind": "f64",
+            "description": "Pitch, degrees; 0 in 2D."
+          },
+          "description": "Pitch, degrees; 0 in 2D."
+        }
+      ],
+      "returns": {
+        "kind": "record",
+        "record": "direction",
+        "description": "The direction in world axes."
+      },
+      "fields": [],
+      "of": null,
+      "dsl": null,
+      "rename": {},
+      "wasm": true,
+      "bindings": true,
+      "version": 1,
+      "vectors": "protocol/v2/vectors/api/me.json#from_mount",
+      "symbol": "cy_me_from_mount",
+      "alias": null,
+      "rust": {
+        "module": "me",
+        "fn": "from_mount"
+      }
+    },
+    {
+      "name": "me.mount_toward",
+      "kind": "query",
+      "form": "call",
+      "since": "2.0",
+      "fact": "The direction from you to a point, in the frame your mounts take: me.to_mount of its bearing and elevation from you.",
+      "subsystem": "me",
+      "member": "mount_toward",
+      "path": [
+        "me",
+        "mount_toward"
+      ],
+      "stateless": false,
+      "args": [
+        {
+          "name": "point",
+          "type": {
+            "kind": "record",
+            "record": "vec3",
+            "description": "A point in world axes."
+          },
+          "description": "A point in world axes."
+        }
+      ],
+      "returns": {
+        "kind": "record",
+        "record": "direction",
+        "description": "The direction in the frame gun.aim and scanner.set take."
+      },
+      "fields": [],
+      "of": null,
+      "dsl": null,
+      "rename": {},
+      "wasm": true,
+      "bindings": true,
+      "version": 1,
+      "vectors": "protocol/v2/vectors/api/me.json#mount_toward",
+      "symbol": "cy_me_mount_toward",
+      "alias": null,
+      "rust": {
+        "module": "me",
+        "fn": "mount_toward"
+      }
+    },
+    {
       "name": "battery.charge",
       "kind": "query",
       "form": "property",
@@ -2952,7 +3131,7 @@
       "kind": "query",
       "form": "property",
       "since": "2.0",
-      "fact": "Where the turret points now; a shot leaves along it.",
+      "fact": "Where the turret points now, in your mounts' frame (me.from_mount gives world axes); a shot leaves along it.",
       "subsystem": "gun",
       "member": "aim_now",
       "path": [
@@ -2963,7 +3142,7 @@
       "args": [],
       "returns": {
         "kind": "record",
-        "description": "Where the turret points now. It slews toward act.aim at gun.turnRate; a shot leaves along it.",
+        "description": "Where the turret points now. It slews toward act.aim at gun.turnRate; a shot leaves along it. In your chassis frame with hello.robot.mounts.",
         "from": "state.self.aim",
         "record": "direction"
       },
@@ -3781,7 +3960,7 @@
       "kind": "query",
       "form": "property",
       "since": "2.0",
-      "fact": "The scan that produced this tick's contacts: where the scanner points now.",
+      "fact": "The scan that produced this tick's contacts: where the scanner points now, in your mounts' frame.",
       "subsystem": "scanner",
       "member": "last",
       "path": [
@@ -5812,6 +5991,126 @@
       }
     },
     {
+      "name": "angles.to_chassis",
+      "kind": "query",
+      "form": "call",
+      "since": "2.0",
+      "fact": "A world direction as a heading and pitch in a chassis frame: with d = direction(heading, pitch), the heading of (d·forward, d·right) and the pitch atan2(d·up, √((d·forward)² + (d·right)²)).",
+      "subsystem": "angles",
+      "member": "to_chassis",
+      "path": [
+        "angles",
+        "to_chassis"
+      ],
+      "stateless": true,
+      "args": [
+        {
+          "name": "heading",
+          "type": {
+            "kind": "f64",
+            "description": "Heading, degrees."
+          },
+          "description": "Heading, degrees."
+        },
+        {
+          "name": "pitch",
+          "type": {
+            "kind": "f64",
+            "description": "Pitch, degrees."
+          },
+          "description": "Pitch, degrees."
+        },
+        {
+          "name": "attitude",
+          "type": {
+            "kind": "record",
+            "record": "attitude",
+            "description": "Chassis axes in world axes, as me.attitude gives them."
+          },
+          "description": "Chassis axes in world axes, as me.attitude gives them."
+        }
+      ],
+      "returns": {
+        "kind": "record",
+        "record": "direction",
+        "description": "Heading 0 to 360 from forward toward right, and pitch toward up."
+      },
+      "fields": [],
+      "of": null,
+      "dsl": null,
+      "rename": {},
+      "wasm": true,
+      "bindings": true,
+      "version": 1,
+      "vectors": "protocol/v2/vectors/api/angles.json#to_chassis",
+      "symbol": "cy_angles_to_chassis_v1",
+      "alias": "cy_angles_to_chassis",
+      "rust": {
+        "module": "angles",
+        "fn": "to_chassis"
+      }
+    },
+    {
+      "name": "angles.from_chassis",
+      "kind": "query",
+      "form": "call",
+      "since": "2.0",
+      "fact": "A chassis-frame heading h and pitch p in world axes: the direction of cos p cos h × forward + cos p sin h × right + sin p × up.",
+      "subsystem": "angles",
+      "member": "from_chassis",
+      "path": [
+        "angles",
+        "from_chassis"
+      ],
+      "stateless": true,
+      "args": [
+        {
+          "name": "heading",
+          "type": {
+            "kind": "f64",
+            "description": "Heading, degrees."
+          },
+          "description": "Heading, degrees."
+        },
+        {
+          "name": "pitch",
+          "type": {
+            "kind": "f64",
+            "description": "Pitch, degrees."
+          },
+          "description": "Pitch, degrees."
+        },
+        {
+          "name": "attitude",
+          "type": {
+            "kind": "record",
+            "record": "attitude",
+            "description": "Chassis axes in world axes, as me.attitude gives them."
+          },
+          "description": "Chassis axes in world axes, as me.attitude gives them."
+        }
+      ],
+      "returns": {
+        "kind": "record",
+        "record": "direction",
+        "description": "Heading 0 to 360 and pitch, in world axes."
+      },
+      "fields": [],
+      "of": null,
+      "dsl": null,
+      "rename": {},
+      "wasm": true,
+      "bindings": true,
+      "version": 1,
+      "vectors": "protocol/v2/vectors/api/angles.json#from_chassis",
+      "symbol": "cy_angles_from_chassis_v1",
+      "alias": "cy_angles_from_chassis",
+      "rust": {
+        "module": "angles",
+        "fn": "from_chassis"
+      }
+    },
+    {
       "name": "angles.clamp",
       "kind": "query",
       "form": "call",
@@ -6936,7 +7235,7 @@
         "query": "gun.aim_now",
         "select": "heading"
       },
-      "fact": "Where the turret points now; a shot leaves along it."
+      "fact": "Where the turret points now, in your mounts' frame (me.from_mount gives world axes); a shot leaves along it."
     },
     {
       "name": "aim-pitch",
@@ -6945,7 +7244,7 @@
         "query": "gun.aim_now",
         "select": "pitch"
       },
-      "fact": "Where the turret points now; a shot leaves along it."
+      "fact": "Where the turret points now, in your mounts' frame (me.from_mount gives world axes); a shot leaves along it."
     },
     {
       "name": "cooldown",
@@ -6963,7 +7262,7 @@
         "query": "scanner.last",
         "select": "heading"
       },
-      "fact": "The scan that produced this tick's contacts: where the scanner points now."
+      "fact": "The scan that produced this tick's contacts: where the scanner points now, in your mounts' frame."
     },
     {
       "name": "scan-pitch",
@@ -6972,7 +7271,7 @@
         "query": "scanner.last",
         "select": "pitch"
       },
-      "fact": "The scan that produced this tick's contacts: where the scanner points now."
+      "fact": "The scan that produced this tick's contacts: where the scanner points now, in your mounts' frame."
     },
     {
       "name": "scan-arc",
@@ -6981,7 +7280,7 @@
         "query": "scanner.last",
         "select": "arc"
       },
-      "fact": "The scan that produced this tick's contacts: where the scanner points now."
+      "fact": "The scan that produced this tick's contacts: where the scanner points now, in your mounts' frame."
     },
     {
       "name": "scan-range",
@@ -6990,7 +7289,7 @@
         "query": "scanner.last",
         "select": "range"
       },
-      "fact": "The scan that produced this tick's contacts: where the scanner points now."
+      "fact": "The scan that produced this tick's contacts: where the scanner points now, in your mounts' frame."
     },
     {
       "name": "contact",
@@ -7175,7 +7474,7 @@
       "source": {
         "derive": "aim_error"
       },
-      "fact": "The nearest contact's bearing less gun.aim_now's heading, -180 to 180; 0 with no contact."
+      "fact": "The nearest contact's bearing less the turret's world heading (gun.aim_now through me.from_mount), -180 to 180; 0 with no contact."
     },
     {
       "name": "power-min",

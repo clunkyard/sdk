@@ -401,6 +401,42 @@ pub extern "C" fn cy_me_applied_v1(robot: *mut Robot, out: *mut AppliedV1) -> i3
     })
 }
 
+/// Your turret and scanner are mounted on the hull: gun.aim, scanner.set, gun.aim_now and scanner.last are in your chassis frame, not world axes.
+#[unsafe(no_mangle)]
+pub extern "C" fn cy_me_hull_mounts(robot: *mut Robot, out: *mut i32) -> i32 {
+    guard(robot, "cy_me_hull_mounts", |r| {
+        let value = crate::me::hull_mounts(&*r)?;
+        write(out, i32::from(value))
+    })
+}
+
+/// A world direction in the frame your mounts take: in your chassis frame (angles.to_chassis with me.attitude) when me.hull_mounts, unchanged otherwise.
+#[unsafe(no_mangle)]
+pub extern "C" fn cy_me_to_mount(robot: *mut Robot, heading: f64, pitch: f64, out: *mut Direction) -> i32 {
+    guard(robot, "cy_me_to_mount", |r| {
+        let value = crate::me::to_mount(&*r, finite(heading, "heading")?, finite(pitch, "pitch")?)?;
+        write(out, value)
+    })
+}
+
+/// A direction in your mounts' frame, such as gun.aim_now, in world axes: angles.from_chassis with me.attitude when me.hull_mounts, unchanged otherwise.
+#[unsafe(no_mangle)]
+pub extern "C" fn cy_me_from_mount(robot: *mut Robot, heading: f64, pitch: f64, out: *mut Direction) -> i32 {
+    guard(robot, "cy_me_from_mount", |r| {
+        let value = crate::me::from_mount(&*r, finite(heading, "heading")?, finite(pitch, "pitch")?)?;
+        write(out, value)
+    })
+}
+
+/// The direction from you to a point, in the frame your mounts take: me.to_mount of its bearing and elevation from you.
+#[unsafe(no_mangle)]
+pub extern "C" fn cy_me_mount_toward(robot: *mut Robot, point: *const Vec3, out: *mut Direction) -> i32 {
+    guard(robot, "cy_me_mount_toward", |r| {
+        let value = crate::me::mount_toward(&*r, record_in(point, "point")?)?;
+        write(out, value)
+    })
+}
+
 /// Charge now, before this tick's regeneration and driving.
 #[unsafe(no_mangle)]
 pub extern "C" fn cy_battery_charge(robot: *mut Robot, out: *mut f64) -> i32 {
@@ -666,7 +702,7 @@ pub extern "C" fn cy_drive_get_brake(robot: *mut Robot, out: *mut f64) -> i32 {
     })
 }
 
-/// Where the turret points now; a shot leaves along it.
+/// Where the turret points now, in your mounts' frame (me.from_mount gives world axes); a shot leaves along it.
 #[unsafe(no_mangle)]
 pub extern "C" fn cy_gun_aim_now(robot: *mut Robot, out: *mut Direction) -> i32 {
     guard(robot, "cy_gun_aim_now", |r| {
@@ -876,7 +912,7 @@ pub extern "C" fn cy_gun_get_power(robot: *mut Robot, out: *mut f64) -> i32 {
     })
 }
 
-/// The scan that produced this tick's contacts: where the scanner points now.
+/// The scan that produced this tick's contacts: where the scanner points now, in your mounts' frame.
 #[unsafe(no_mangle)]
 pub extern "C" fn cy_scanner_last_v1(robot: *mut Robot, out: *mut ScanV1) -> i32 {
     guard(robot, "cy_scanner_last_v1", |r| {
@@ -1363,6 +1399,24 @@ pub extern "C" fn cy_angles_direction(heading: f64, pitch: f64, out: *mut Vec3) 
 pub extern "C" fn cy_angles_distance(a: *const Vec3, b: *const Vec3, out: *mut f64) -> i32 {
     guard_static(|| {
         let value = crate::angles::distance(record_in(a, "a")?, record_in(b, "b")?)?;
+        write(out, value)
+    })
+}
+
+/// A world direction as a heading and pitch in a chassis frame: with d = direction(heading, pitch), the heading of (d·forward, d·right) and the pitch atan2(d·up, √((d·forward)² + (d·right)²)).
+#[unsafe(no_mangle)]
+pub extern "C" fn cy_angles_to_chassis_v1(heading: f64, pitch: f64, attitude: *const AttitudeV1, out: *mut Direction) -> i32 {
+    guard_static(|| {
+        let value = crate::angles::to_chassis(finite(heading, "heading")?, finite(pitch, "pitch")?, record_in(attitude, "attitude")?)?;
+        write(out, value)
+    })
+}
+
+/// A chassis-frame heading h and pitch p in world axes: the direction of cos p cos h × forward + cos p sin h × right + sin p × up.
+#[unsafe(no_mangle)]
+pub extern "C" fn cy_angles_from_chassis_v1(heading: f64, pitch: f64, attitude: *const AttitudeV1, out: *mut Direction) -> i32 {
+    guard_static(|| {
+        let value = crate::angles::from_chassis(finite(heading, "heading")?, finite(pitch, "pitch")?, record_in(attitude, "attitude")?)?;
         write(out, value)
     })
 }

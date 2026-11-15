@@ -141,6 +141,10 @@ pub fn cy_me_attitude_v1(robot:*mut std::ffi::c_void,out:*mut RawAttitude)->i32;
 pub fn cy_me_grounded(robot:*mut std::ffi::c_void,out:*mut i32)->i32;
 pub fn cy_me_altitude(robot:*mut std::ffi::c_void,out:*mut f64)->i32;
 pub fn cy_me_applied_v1(robot:*mut std::ffi::c_void,out:*mut RawApplied)->i32;
+pub fn cy_me_hull_mounts(robot:*mut std::ffi::c_void,out:*mut i32)->i32;
+pub fn cy_me_to_mount(robot:*mut std::ffi::c_void,heading:f64,pitch:f64,out:*mut RawDirection)->i32;
+pub fn cy_me_from_mount(robot:*mut std::ffi::c_void,heading:f64,pitch:f64,out:*mut RawDirection)->i32;
+pub fn cy_me_mount_toward(robot:*mut std::ffi::c_void,point:*const RawVec3,out:*mut RawDirection)->i32;
 pub fn cy_battery_charge(robot:*mut std::ffi::c_void,out:*mut f64)->i32;
 pub fn cy_battery_capacity(robot:*mut std::ffi::c_void,out:*mut f64)->i32;
 pub fn cy_battery_regen(robot:*mut std::ffi::c_void,out:*mut f64)->i32;
@@ -239,6 +243,8 @@ pub fn cy_angles_bearing_to(from:*const RawVec3,to:*const RawVec3,out:*mut f64)-
 pub fn cy_angles_elevation_to(from:*const RawVec3,to:*const RawVec3,out:*mut f64)->i32;
 pub fn cy_angles_direction(heading:f64,pitch:f64,out:*mut RawVec3)->i32;
 pub fn cy_angles_distance(a:*const RawVec3,b:*const RawVec3,out:*mut f64)->i32;
+pub fn cy_angles_to_chassis_v1(heading:f64,pitch:f64,attitude:*const RawAttitude,out:*mut RawDirection)->i32;
+pub fn cy_angles_from_chassis_v1(heading:f64,pitch:f64,attitude:*const RawAttitude,out:*mut RawDirection)->i32;
 pub fn cy_angles_clamp(value:f64,low:f64,high:f64,out:*mut f64)->i32;
 pub fn cy_status_text(robot:*mut std::ffi::c_void,text:*const u8,text_length:u32)->i32;
 pub fn cy_status_value(robot:*mut std::ffi::c_void,value:f64)->i32;
@@ -298,6 +304,10 @@ pub fn attitude(&self) -> Result<Attitude,Error> {let mut out=RawAttitude::defau
 pub fn grounded(&self) -> Result<bool,Error> {let mut out=i32::default();let mut status=unsafe{ffi::cy_me_grounded(self.handle,&mut out)};check(self.handle,status)?;Ok(out!=0)}
 pub fn altitude(&self) -> Result<f64,Error> {let mut out=f64::default();let mut status=unsafe{ffi::cy_me_altitude(self.handle,&mut out)};check(self.handle,status)?;Ok(out)}
 pub fn applied(&self) -> Result<Applied,Error> {let mut out=RawApplied::default();let mut status=unsafe{ffi::cy_me_applied_v1(self.handle,&mut out)};check(self.handle,status)?;Ok(out)}
+pub fn hull_mounts(&self) -> Result<bool,Error> {let mut out=i32::default();let mut status=unsafe{ffi::cy_me_hull_mounts(self.handle,&mut out)};check(self.handle,status)?;Ok(out!=0)}
+pub fn to_mount(&self,heading: f64,pitch: f64) -> Result<Direction,Error> {let mut out=RawDirection::default();let mut status=unsafe{ffi::cy_me_to_mount(self.handle,heading,pitch,&mut out)};check(self.handle,status)?;Ok(out)}
+pub fn from_mount(&self,heading: f64,pitch: f64) -> Result<Direction,Error> {let mut out=RawDirection::default();let mut status=unsafe{ffi::cy_me_from_mount(self.handle,heading,pitch,&mut out)};check(self.handle,status)?;Ok(out)}
+pub fn mount_toward(&self,point: &Vec3) -> Result<Direction,Error> {let mut out=RawDirection::default();let mut status=unsafe{ffi::cy_me_mount_toward(self.handle,point,&mut out)};check(self.handle,status)?;Ok(out)}
 }
 #[derive(Clone,Copy)] pub struct Battery {handle:*mut c_void} impl Battery {
 pub fn charge(&self) -> Result<f64,Error> {let mut out=f64::default();let mut status=unsafe{ffi::cy_battery_charge(self.handle,&mut out)};check(self.handle,status)?;Ok(out)}
@@ -402,6 +412,8 @@ pub fn bearing_to(&self,from: &Vec3,to: &Vec3) -> Result<f64,Error> {let mut out
 pub fn elevation_to(&self,from: &Vec3,to: &Vec3) -> Result<f64,Error> {let mut out=f64::default();let mut status=unsafe{ffi::cy_angles_elevation_to(from,to,&mut out)};check(self.handle,status)?;Ok(out)}
 pub fn direction(&self,heading: f64,pitch: f64) -> Result<Vec3,Error> {let mut out=RawVec3::default();let mut status=unsafe{ffi::cy_angles_direction(heading,pitch,&mut out)};check(self.handle,status)?;Ok(out)}
 pub fn distance(&self,a: &Vec3,b: &Vec3) -> Result<f64,Error> {let mut out=f64::default();let mut status=unsafe{ffi::cy_angles_distance(a,b,&mut out)};check(self.handle,status)?;Ok(out)}
+pub fn to_chassis(&self,heading: f64,pitch: f64,attitude: &Attitude) -> Result<Direction,Error> {let mut out=RawDirection::default();let mut status=unsafe{ffi::cy_angles_to_chassis_v1(heading,pitch,attitude,&mut out)};check(self.handle,status)?;Ok(out)}
+pub fn from_chassis(&self,heading: f64,pitch: f64,attitude: &Attitude) -> Result<Direction,Error> {let mut out=RawDirection::default();let mut status=unsafe{ffi::cy_angles_from_chassis_v1(heading,pitch,attitude,&mut out)};check(self.handle,status)?;Ok(out)}
 pub fn clamp(&self,value: f64,low: f64,high: f64) -> Result<f64,Error> {let mut out=f64::default();let mut status=unsafe{ffi::cy_angles_clamp(value,low,high,&mut out)};check(self.handle,status)?;Ok(out)}
 }
 #[derive(Clone,Copy)] pub struct Status {handle:*mut c_void} impl Status {

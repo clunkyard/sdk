@@ -134,6 +134,10 @@ export interface Me {
   readonly grounded: boolean;
   readonly altitude: number;
   readonly applied: Applied;
+  readonly hullMounts: boolean;
+  toMount(heading: number, pitch: number): Direction;
+  fromMount(heading: number, pitch: number): Direction;
+  mountToward(point: Vec3): Direction;
 }
 export interface Battery {
   readonly charge: number;
@@ -214,6 +218,8 @@ export interface Angles {
   elevationTo(from: Vec3, to: Vec3): number;
   direction(heading: number, pitch: number): Vec3;
   distance(a: Vec3, b: Vec3): number;
+  toChassis(heading: number, pitch: number, attitude: Attitude): Direction;
+  fromChassis(heading: number, pitch: number, attitude: Attitude): Direction;
   clamp(value: number, low?: number, high?: number): number;
 }
 export interface Status {

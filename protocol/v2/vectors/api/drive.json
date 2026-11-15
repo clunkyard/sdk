@@ -178,6 +178,20 @@
      ],
      "states": [
 
+     ]},
+    {"input": "vectors/api/inputs/mounts-2d-classic.ndjson",
+     "hello": [
+      {"call":"drive.hover_lift","value":0}
+     ],
+     "states": [
+
+     ]},
+    {"input": "vectors/api/inputs/mounts-3d-zero-g.ndjson",
+     "hello": [
+      {"call":"drive.hover_lift","value":0}
+     ],
+     "states": [
+
      ]}
   ]
 }

@@ -136,6 +136,23 @@ if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');bits((dou
 if(!strcmp(op,"call")&&!strcmp(name,"me.applied")){cy_applied_v1 out={0};
 int32_t status=cy_me_applied_v1(robot,&out);
 if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');print_applied(&out);}putchar('\n');}return;}
+if(!strcmp(op,"call")&&!strcmp(name,"me.hull_mounts")){int32_t out=0;
+int32_t status=cy_me_hull_mounts(robot,&out);
+if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');fputs(out?"t":"f",stdout);}putchar('\n');}return;}
+if(!strcmp(op,"call")&&!strcmp(name,"me.to_mount")){double heading = number();
+double pitch = number();
+cy_direction out={0};
+int32_t status=cy_me_to_mount(robot,heading,pitch,&out);
+if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');print_direction(&out);}putchar('\n');}return;}
+if(!strcmp(op,"call")&&!strcmp(name,"me.from_mount")){double heading = number();
+double pitch = number();
+cy_direction out={0};
+int32_t status=cy_me_from_mount(robot,heading,pitch,&out);
+if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');print_direction(&out);}putchar('\n');}return;}
+if(!strcmp(op,"call")&&!strcmp(name,"me.mount_toward")){cy_vec3 point; read_vec3(&point);
+cy_direction out={0};
+int32_t status=cy_me_mount_toward(robot,&point,&out);
+if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');print_direction(&out);}putchar('\n');}return;}
 if(!strcmp(op,"call")&&!strcmp(name,"battery.charge")){double out=0;
 int32_t status=cy_battery_charge(robot,&out);
 if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');bits((double)out);}putchar('\n');}return;}
@@ -481,6 +498,18 @@ cy_vec3 b; read_vec3(&b);
 double out=0;
 int32_t status=cy_angles_distance(&a,&b,&out);
 if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');bits((double)out);}putchar('\n');}return;}
+if(!strcmp(op,"call")&&!strcmp(name,"angles.to_chassis")){double heading = number();
+double pitch = number();
+cy_attitude_v1 attitude; read_attitude(&attitude);
+cy_direction out={0};
+int32_t status=cy_angles_to_chassis_v1(heading,pitch,&attitude,&out);
+if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');print_direction(&out);}putchar('\n');}return;}
+if(!strcmp(op,"call")&&!strcmp(name,"angles.from_chassis")){double heading = number();
+double pitch = number();
+cy_attitude_v1 attitude; read_attitude(&attitude);
+cy_direction out={0};
+int32_t status=cy_angles_from_chassis_v1(heading,pitch,&attitude,&out);
+if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');print_direction(&out);}putchar('\n');}return;}
 if(!strcmp(op,"call")&&!strcmp(name,"angles.clamp")){double value = number();
 double low = number();
 double high = number();

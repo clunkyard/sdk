@@ -1,6 +1,6 @@
 {
   "v": 1,
-  "sourceCommit": "6c5e6f569ef15aa72b1e992e479e9c432c8d3217",
+  "sourceCommit": "c47e63bf5795b74b166086f2904b7ef1321f0e20",
   "sourceDirty": false,
   "playerDerivation": {
     "packages": [
@@ -13,14 +13,14 @@
       {
         "name": "@clunkyard/sdk",
         "canonicalVersion": "2.0.1",
-        "version": "2.0.4",
-        "contentSHA256": "8efb162bd0e101c28f61c3456fd0710a0c70431897b67d1c19ceab9bf7fa6109"
+        "version": "2.0.5",
+        "contentSHA256": "280a88b9d7721d73c9dd3cb24da08dbd5df0bccc5e9f8bdc25986ca85f18148d"
       },
       {
         "name": "@clunkyard/cli",
         "canonicalVersion": "2.2.2",
-        "version": "2.2.11",
-        "contentSHA256": "b69a820fbfa5b0237d2f9bd3c284a8864f13a701916c968f8fb9927abd0afc06"
+        "version": "2.2.12",
+        "contentSHA256": "d2d60a75d9db7c18f3803f242e6e3082c53de58df7547841ab54dd836835bb65"
       }
     ],
     "catalogueSHA256": "fe9648a106f2a33eba84ce21e1c8b6e5104a613a2671b07a88d10db5ced4268c"
@@ -104,7 +104,7 @@
     {
       "path": "packages/cli/package.json",
       "bytes": 754,
-      "sha256": "d096b852d6fe1e33c8f05f49aebfc31d8f0e89a841300f92b7987c4671571a0c"
+      "sha256": "e52f87ab6d586c6fadd37866e4ad1112ac29447ffc313bd9b014923b48c01c31"
     },
     {
       "path": "packages/cli/project.cjs",
@@ -158,13 +158,13 @@
     },
     {
       "path": "packages/sdk/api.js",
-      "bytes": 109425,
-      "sha256": "8772e75cbaf3f61c6750c37ac7439236cc697608f747c11eaf345568397cbb65"
+      "bytes": 115512,
+      "sha256": "705537e53a0ddf35e5a614920b42ab11df9d5b709fba31d3d91985a8044fe61c"
     },
     {
       "path": "packages/sdk/clunkyard-core.wasm",
-      "bytes": 223957,
-      "sha256": "860440663232f7ed2a5857087ff7fd274381158cf0a980e12730858b0d4bf8a5"
+      "bytes": 228609,
+      "sha256": "374c7287ddc1cc91e9292774652ad9e18f3cff9970466ca833c9733c723cf83f"
     },
     {
       "path": "packages/sdk/core.js",
@@ -173,8 +173,8 @@
     },
     {
       "path": "packages/sdk/index.d.ts",
-      "bytes": 7694,
-      "sha256": "feabe2786df95da91c33fa40bb4e4b0b33ba7421ad9a474ac30c9c4bcd608986"
+      "bytes": 8029,
+      "sha256": "604863cfc4d71a108a5884dbd2f15dad13db7cc56bfe4d2e70dec9ef9e4aacab"
     },
     {
       "path": "packages/sdk/index.js",
@@ -259,7 +259,7 @@
     {
       "path": "packages/sdk/package.json",
       "bytes": 1116,
-      "sha256": "815814c3d6a792ac16ff5f53d6fbfe75079748cdf581b322cdf67ec30681f460"
+      "sha256": "7be1fcac6b60631f71880eaf817d6beae5da2a5d6dbbb4a11efc68d0779c44e1"
     },
     {
       "path": "packages/sdk/README.md",
@@ -278,8 +278,8 @@
     },
     {
       "path": "protocol/v2/api.json",
-      "bytes": 186363,
-      "sha256": "c4c5a0962da9aa3642259af68a0122f6dd51a69e02f60280e75e0f5d3344cbc8"
+      "bytes": 195441,
+      "sha256": "ab494691cc5b49d19352ca92ae7d649397b481bef0c3e47ad2e8d614830776af"
     },
     {
       "path": "protocol/v2/fixtures/2d-classic.ndjson",
@@ -368,23 +368,23 @@
     },
     {
       "path": "protocol/v2/vectors/api/angles.json",
-      "bytes": 7712,
-      "sha256": "4ec2ea589f41440d6ef7cdf49d26bf372b2333a249b1de1faa5e59117fd2fd5a"
+      "bytes": 25738,
+      "sha256": "0e2d3f4c5495d647bda174bac8f2a5978318f19228683725c48f7796e61890fd"
     },
     {
       "path": "protocol/v2/vectors/api/arena.json",
-      "bytes": 20190,
-      "sha256": "df0bcac11b0f0f78e0df36ff046eab01727d553c5e3267f5aceab7eda154736d"
+      "bytes": 21737,
+      "sha256": "d150c9c435a9d677333c6c035f7f2c62f0b23866038644ba1d91af55393ebc4f"
     },
     {
       "path": "protocol/v2/vectors/api/battery.json",
-      "bytes": 50642,
-      "sha256": "3085fdcfff059d1a13a7dfefdfd0e320e30adf45e23af22203e65071aca7c7e7"
+      "bytes": 59355,
+      "sha256": "a5c5bdb4fcc86c1eeca6c889cce57b6c703af49bd4a20cac6212478bd571641e"
     },
     {
       "path": "protocol/v2/vectors/api/clock.json",
-      "bytes": 61161,
-      "sha256": "d114f9744c6b9660814422977bcbb15283a9c64bb892a3622ee5fb3dd22bf8cf"
+      "bytes": 74708,
+      "sha256": "7e2a55bd5121b883f23cfadddd3766130a72e66151518b8bd5bb5b7620163997"
     },
     {
       "path": "protocol/v2/vectors/api/controls.json",
@@ -393,18 +393,18 @@
     },
     {
       "path": "protocol/v2/vectors/api/drive.json",
-      "bytes": 4592,
-      "sha256": "9252e6d930cd705ebd1f23030cb1ddaa9cc1509d82a7912b880accbbcbdf557a"
+      "bytes": 4903,
+      "sha256": "1036e7f2fb1b53a3a7f872025c0872fd315d126ca6c9963ae1220e12861b238e"
     },
     {
       "path": "protocol/v2/vectors/api/dsl.json",
-      "bytes": 940365,
-      "sha256": "ed0fa61bf70a1e0d875bd747cb42d414d5c0288cd8d652e0d63969661074db6f"
+      "bytes": 1087395,
+      "sha256": "d326ad1514f37f3367aa79d60b8503b44bcf490af10c0953615bc0c3a13fa234"
     },
     {
       "path": "protocol/v2/vectors/api/gun.json",
-      "bytes": 529003,
-      "sha256": "379b572427fd136d51f7f0ef2103aac9e4ecb72c068f9d0d64ee659ddfc0dc60"
+      "bytes": 661216,
+      "sha256": "84339076a5880098a6b39315c293077fb9f5cf716575d92ab83250fbf249c7c1"
     },
     {
       "path": "protocol/v2/vectors/api/inputs/cue-window.ndjson",
@@ -425,6 +425,16 @@
       "path": "protocol/v2/vectors/api/inputs/mechanics-3d-zero-g.ndjson",
       "bytes": 102565,
       "sha256": "9c3097479050f1d0d2bc18180c540f65022759ffce8c59c26225c3a706cf16ce"
+    },
+    {
+      "path": "protocol/v2/vectors/api/inputs/mounts-2d-classic.ndjson",
+      "bytes": 35912,
+      "sha256": "7d2f748f18a1fb5d36d86ed46c25295e5c7074dab9146395d2a461305ce29a35"
+    },
+    {
+      "path": "protocol/v2/vectors/api/inputs/mounts-3d-zero-g.ndjson",
+      "bytes": 39599,
+      "sha256": "41afbf8ba2408d71df471b403edcd04bb7bb8bd6a7fdaf62b99cb1f67fd73730"
     },
     {
       "path": "protocol/v2/vectors/api/inputs/tape-2d-classic.ndjson",
@@ -458,38 +468,38 @@
     },
     {
       "path": "protocol/v2/vectors/api/match.json",
-      "bytes": 113175,
-      "sha256": "1b9f1991a38792334399e3b189e6f54c1dece6e380cd692576c71f4672bd0822"
+      "bytes": 135477,
+      "sha256": "c58b4855e5c3b4df624428d279632447491aab497573906570266b637800bcbb"
     },
     {
       "path": "protocol/v2/vectors/api/me.json",
-      "bytes": 239697,
-      "sha256": "f64db1357d0432d4bbbd4b2f5f95f14301590e9bce65519f3a5f86afffb00482"
+      "bytes": 485019,
+      "sha256": "714e842ea0db7322b71041a5e4207c24dc5a20235c884e5fcb4f47f2f76442e1"
     },
     {
       "path": "protocol/v2/vectors/api/nav.json",
-      "bytes": 681909,
-      "sha256": "f8ab12a943479d2bfabcece34a807746f81eba183686d1e8bc9cee87a3abd0fd"
+      "bytes": 819820,
+      "sha256": "de080fe95dba9a013bb89d59a090c7d5a0f36663fbd1aad48dc75f7c2ae6f0cb"
     },
     {
       "path": "protocol/v2/vectors/api/raw.json",
-      "bytes": 392069,
-      "sha256": "f4c9b40c00962c26a31a3396df145c9c4f548057595451e3b2b7c374f8b4c4b5"
+      "bytes": 459611,
+      "sha256": "7952ba02788bdfcf47b5bfddb943162d4ce07276fce9e0718a7a17b54480f198"
     },
     {
       "path": "protocol/v2/vectors/api/scanner.json",
-      "bytes": 78538,
-      "sha256": "337fe7f138bb39ada5764aea9b13055cc45d0fb0a896cec128187c2e86739f06"
+      "bytes": 93919,
+      "sha256": "6f312f923b5bc72dd8bf4ed9ac36babea89dc653868dc934f8c6d7d5fb50d75c"
     },
     {
       "path": "protocol/v2/vectors/api/score.json",
-      "bytes": 54508,
-      "sha256": "ced0eae8140b8bcb95ad1755b06f69c4c2fdefcecb57e1d5deb585b9c767a6c6"
+      "bytes": 66913,
+      "sha256": "bd88fccfff5a9a7ea3507d79695be91ac77393e7a274e28624ed2bab1a951350"
     },
     {
       "path": "protocol/v2/vectors/api/sensors.json",
-      "bytes": 306639,
-      "sha256": "55cc6940fae42c34cd609651772f0f866e379fcb1c0267af771536624001d4e0"
+      "bytes": 396396,
+      "sha256": "5ff9d83e5e2b81d78b842e80c490b0582de42b1819a6813145687d2a43d20339"
     },
     {
       "path": "protocol/v2/vectors/api/session.json",
@@ -498,8 +508,8 @@
     },
     {
       "path": "protocol/v2/vectors/api/tracker.json",
-      "bytes": 1142013,
-      "sha256": "2cd67b1f1feb14077221313c5b4973cecb8447d4284d096fb0b141fe0bd114e4"
+      "bytes": 1365738,
+      "sha256": "ec2c3e34b630d6be86a3cf30a67033097eebfaf11080b029b40fa1fc1758b937"
     },
     {
       "path": "protocol/v2/vectors/formulas.json",
@@ -633,13 +643,13 @@
     },
     {
       "path": "sdk/bindings/c/test_conformance.c",
-      "bytes": 46902,
-      "sha256": "2049d6a774bba89961f1cb036e1a22107c12732b6fe937a6efd3397002868576"
+      "bytes": 48776,
+      "sha256": "8dd903b9acc6ccf9d3cb73f474f622e2ac5115220bb80b0fc9964d4a628b094a"
     },
     {
       "path": "sdk/bindings/cpp/clunkyard.hpp",
-      "bytes": 31309,
-      "sha256": "42e4095a96e0a0a9aa44471edad7adf5f952cc6432ba3f02976f51026efec53f"
+      "bytes": 32414,
+      "sha256": "96115bc8ff2fe0a8138d7cb169286b85feb717798469a78c46d7094c07bf0c31"
     },
     {
       "path": "sdk/bindings/cpp/install.cjs",
@@ -658,8 +668,8 @@
     },
     {
       "path": "sdk/bindings/cpp/test_conformance.cpp",
-      "bytes": 82858,
-      "sha256": "f4c54f7c77c21fb3692da54196d8780eb4724bdd40f71f5d4c487d7c70f7a87a"
+      "bytes": 86405,
+      "sha256": "06d6bacbe45f344cba6fe0732b537554cd0b2d45cde0d34aa1d192bd20683081"
     },
     {
       "path": "sdk/bindings/python/clunkyard/__init__.py",
@@ -668,8 +678,8 @@
     },
     {
       "path": "sdk/bindings/python/clunkyard/_api.py",
-      "bytes": 33026,
-      "sha256": "b8625f81684bd173d1c4ef1f5a5205fc316d146dc899504f59a57ca587765693"
+      "bytes": 34221,
+      "sha256": "f70e5512d90fcdae83926e1301da6441b455ee6cfcbffe46aa2d5fa114364958"
     },
     {
       "path": "sdk/bindings/python/clunkyard/_core.py",
@@ -693,8 +703,8 @@
     },
     {
       "path": "sdk/bindings/python/test_conformance.py",
-      "bytes": 10097,
-      "sha256": "31f5753673289ddbf30a1caf4058471190b47356535d27703f1d8612a63aa8b1"
+      "bytes": 10477,
+      "sha256": "cd55df5414f85fed3c5ee7e6b75aaf863c00aaf9ad766001266419b0eba1fbbd"
     },
     {
       "path": "sdk/bindings/python/test_loop.py",
@@ -703,8 +713,8 @@
     },
     {
       "path": "sdk/bindings/rust/clunkyard.rs",
-      "bytes": 54845,
-      "sha256": "6ac7de3504dbe8b29c608473361926396a57e5e14798aa1f89dfde391a3942e1"
+      "bytes": 56814,
+      "sha256": "dc8617a49b69f83816e4552109a3337c918091c9389ed9440c649338e037757c"
     },
     {
       "path": "sdk/bindings/rust/install.cjs",
@@ -723,13 +733,13 @@
     },
     {
       "path": "sdk/bindings/rust/test_conformance.c",
-      "bytes": 59250,
-      "sha256": "8c56a8be8f97b6b32e812865969053190ef5c90b879a4fbab241feafa6fa870b"
+      "bytes": 61803,
+      "sha256": "4e12def528e0048899ba76755a34df1cab5ca2e7b8c86de88c25b7a158ef7961"
     },
     {
       "path": "sdk/bindings/rust/test_conformance.rs",
-      "bytes": 44814,
-      "sha256": "df3d6ebafa5b4ed6243ab436618994bac7cfff9921a80a72f6ed5145f5ab3fda"
+      "bytes": 46786,
+      "sha256": "15c64dc7764bb77c4438892888e8d6bddabf82eb20acdea0938c64c8612c9ad0"
     },
     {
       "path": "sdk/core/.cargo/config.toml",
@@ -768,13 +778,13 @@
     },
     {
       "path": "sdk/core/dist/clunkyard-core.wasm",
-      "bytes": 223957,
-      "sha256": "860440663232f7ed2a5857087ff7fd274381158cf0a980e12730858b0d4bf8a5"
+      "bytes": 228609,
+      "sha256": "374c7287ddc1cc91e9292774652ad9e18f3cff9970466ca833c9733c723cf83f"
     },
     {
       "path": "sdk/core/include/clunkyard.h",
-      "bytes": 43130,
-      "sha256": "d9837f5c014364acd6b51c44575b9b81e113746d5ac8299677839e272a7882f2"
+      "bytes": 45252,
+      "sha256": "87aa1c373d3d27789989d04217c9168623844688eea7d199fc4081367410cf4b"
     },
     {
       "path": "sdk/core/notices/rust-Apache-2.0.txt",
@@ -798,8 +808,8 @@
     },
     {
       "path": "sdk/core/src/angles.rs",
-      "bytes": 1661,
-      "sha256": "bfa041231dffabb353bb3c7bf9bdbfa0df858cbdaa259a6a28d51ad0ea34cf02"
+      "bytes": 2964,
+      "sha256": "325f75745bfcd24e542572d6305ccf630f10fb0db3c2e9fe3cdf3c08e62a4368"
     },
     {
       "path": "sdk/core/src/arena.rs",
@@ -823,8 +833,8 @@
     },
     {
       "path": "sdk/core/src/dsl.rs",
-      "bytes": 7236,
-      "sha256": "d0123186052bc96efc1944ecc349bac3ffc0e322931ef37ca79ae43ee1670921"
+      "bytes": 7333,
+      "sha256": "e4c448dbd028bea730d202837f9f624a3475f6abef3d6e10303bf0e977032ee8"
     },
     {
       "path": "sdk/core/src/formula.rs",
@@ -833,18 +843,18 @@
     },
     {
       "path": "sdk/core/src/generated/ffi.rs",
-      "bytes": 56985,
-      "sha256": "c17906c2beaeb78eac3e34d07ac756d9a67342bf6af11834a13d196afbdb18af"
+      "bytes": 59814,
+      "sha256": "49facc23dbf1514c0f2f7390743c57f30e88e4b349bebaf41650e0f24892050f"
     },
     {
       "path": "sdk/core/src/generated/mod.rs",
-      "bytes": 12607,
-      "sha256": "58fb7f2b7c3a8ee2579ed462f3a739fbab4fbcdf9587c0eb34a437af749391b8"
+      "bytes": 13169,
+      "sha256": "29e8b1882419685f3075739b730153423de58d8c376a332a27e867a9670afec7"
     },
     {
       "path": "sdk/core/src/generated/records.rs",
-      "bytes": 36417,
-      "sha256": "7ef57fff77fda6735d9d3d650d735125e829b160ffec5b9a808adea49d07d1f3"
+      "bytes": 36909,
+      "sha256": "adb6049e2a0d6c14e55f88b081de7208ffe637d46704bf9b80fb46982b75d500"
     },
     {
       "path": "sdk/core/src/generated/words.rs",
@@ -883,13 +893,13 @@
     },
     {
       "path": "sdk/core/src/me.rs",
-      "bytes": 1058,
-      "sha256": "aca4180bda63483dbb77fcda42fb9505ad4df675c8642a9e5d98c337866c7a4e"
+      "bytes": 1945,
+      "sha256": "03cd4fbef601c4df406346b3eb6aef62eec9d4e7b047b0ec5422fdc03b657ac2"
     },
     {
       "path": "sdk/core/src/message.rs",
-      "bytes": 12705,
-      "sha256": "74ddcb7c2f10ab8d5209a08d0c05ed1bf78e3e4c70db0ea37e50080e0d90f453"
+      "bytes": 12898,
+      "sha256": "bf15d293d0baf4da9f287fca9c4452862bbdf214138e4089ffe6c55905f335c8"
     },
     {
       "path": "sdk/core/src/nav.rs",
@@ -923,8 +933,8 @@
     },
     {
       "path": "sdk/core/src/sensors.rs",
-      "bytes": 2762,
-      "sha256": "a0af8638dd0bb1ef80b756cde54fa56995e07e867646eb9d4e33de617df11394"
+      "bytes": 2686,
+      "sha256": "179c6fdb0e06f428e88e322952bfbb247370f5cba93920edcc04b974c274a921"
     },
     {
       "path": "sdk/core/src/session.rs",
@@ -943,13 +953,13 @@
     },
     {
       "path": "sdk/core/tests/abi_layout.c",
-      "bytes": 11455,
-      "sha256": "ea11f508a3f014c54926a4266236225b780449ee8b5a74b372cbca3b4e04ba49"
+      "bytes": 11658,
+      "sha256": "2c37db614359722e918f75007c41d2344e51b59981832c94676098c435441e3c"
     },
     {
       "path": "sdk/core/tests/harness/dispatch.rs",
-      "bytes": 10240,
-      "sha256": "1c461c468e42f76e6becdfe1e28a6e58c174e34bbfc5ac803a3f1d208ba1feb4"
+      "bytes": 10716,
+      "sha256": "da52274e8017e298a51e6cba4ae12b2badf6d1197f5d000d396d37251e3d36d3"
     },
     {
       "path": "sdk/core/tests/harness/mod.rs",
@@ -969,7 +979,7 @@
     {
       "path": "sdk/core/tests/vectors.digest",
       "bytes": 43,
-      "sha256": "dbb146f3ce11a5a2d8e9fd1605ff78e63362f1545710ba5d574275d69fac7847"
+      "sha256": "9fe42923f8e732798657675b12ee5d9ab984e4be9fa19cdb8b68e48ac219aa2d"
     },
     {
       "path": "sdk/core/tests/vectors.rs",

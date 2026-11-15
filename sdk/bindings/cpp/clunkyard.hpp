@@ -71,6 +71,10 @@ struct Me {cy_robot *&handle; explicit Me(cy_robot *&robot):handle(robot){}
   bool grounded() const { int32_t out{}; int32_t status = cy_me_grounded(handle, &out); check(handle,status); return out != 0; }
   double altitude() const { double out{}; int32_t status = cy_me_altitude(handle, &out); check(handle,status); return out; }
   Applied applied() const { cy_applied_v1 out{}; int32_t status = cy_me_applied_v1(handle, &out); check(handle,status); return out; }
+  bool hull_mounts() const { int32_t out{}; int32_t status = cy_me_hull_mounts(handle, &out); check(handle,status); return out != 0; }
+  Direction to_mount(double heading, double pitch) const { cy_direction out{}; int32_t status = cy_me_to_mount(handle, heading, pitch, &out); check(handle,status); return out; }
+  Direction from_mount(double heading, double pitch) const { cy_direction out{}; int32_t status = cy_me_from_mount(handle, heading, pitch, &out); check(handle,status); return out; }
+  Direction mount_toward(const Vec3 & point) const { cy_direction out{}; int32_t status = cy_me_mount_toward(handle, &point, &out); check(handle,status); return out; }
 };
 struct Battery {cy_robot *&handle; explicit Battery(cy_robot *&robot):handle(robot){}
   double charge() const { double out{}; int32_t status = cy_battery_charge(handle, &out); check(handle,status); return out; }
@@ -175,6 +179,8 @@ struct Angles {cy_robot *&handle; explicit Angles(cy_robot *&robot):handle(robot
   double elevation_to(const Vec3 & from, const Vec3 & to) const { double out{}; int32_t status = cy_angles_elevation_to(&from, &to, &out); check(handle,status); return out; }
   Vec3 direction(double heading, double pitch) const { cy_vec3 out{}; int32_t status = cy_angles_direction(heading, pitch, &out); check(handle,status); return out; }
   double distance(const Vec3 & a, const Vec3 & b) const { double out{}; int32_t status = cy_angles_distance(&a, &b, &out); check(handle,status); return out; }
+  Direction to_chassis(double heading, double pitch, const Attitude & attitude) const { cy_direction out{}; int32_t status = cy_angles_to_chassis_v1(heading, pitch, &attitude, &out); check(handle,status); return out; }
+  Direction from_chassis(double heading, double pitch, const Attitude & attitude) const { cy_direction out{}; int32_t status = cy_angles_from_chassis_v1(heading, pitch, &attitude, &out); check(handle,status); return out; }
   double clamp(double value, double low = -1, double high = 1) const { double out{}; int32_t status = cy_angles_clamp(value, low, high, &out); check(handle,status); return out; }
 };
 struct Status {cy_robot *&handle; explicit Status(cy_robot *&robot):handle(robot){}

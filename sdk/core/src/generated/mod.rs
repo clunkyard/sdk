@@ -66,6 +66,10 @@
 //!     crate::me::grounded(r: &Robot) -> Result<bool, Error>
 //!     crate::me::altitude(r: &Robot) -> Result<f64, Error>
 //!     crate::me::applied(r: &Robot) -> Result<AppliedV1, Error>
+//!     crate::me::hull_mounts(r: &Robot) -> Result<bool, Error>
+//!     crate::me::to_mount(r: &Robot, heading: f64, pitch: f64) -> Result<Direction, Error>
+//!     crate::me::from_mount(r: &Robot, heading: f64, pitch: f64) -> Result<Direction, Error>
+//!     crate::me::mount_toward(r: &Robot, point: &Vec3) -> Result<Direction, Error>
 //!     crate::battery::charge(r: &Robot) -> Result<f64, Error>
 //!     crate::battery::capacity(r: &Robot) -> Result<f64, Error>
 //!     crate::battery::regen(r: &Robot) -> Result<f64, Error>
@@ -128,6 +132,8 @@
 //!     crate::angles::elevation_to(from: &Vec3, to: &Vec3) -> Result<f64, Error>
 //!     crate::angles::direction(heading: f64, pitch: f64) -> Result<Vec3, Error>
 //!     crate::angles::distance(a: &Vec3, b: &Vec3) -> Result<f64, Error>
+//!     crate::angles::to_chassis(heading: f64, pitch: f64, attitude: &AttitudeV1) -> Result<Direction, Error>
+//!     crate::angles::from_chassis(heading: f64, pitch: f64, attitude: &AttitudeV1) -> Result<Direction, Error>
 //!     crate::angles::clamp(value: f64, low: f64, high: f64) -> Result<f64, Error>
 //!     crate::raw::number(r: &Robot, path: &str) -> Result<Option<f64>, Error>
 //!     crate::raw::text(r: &Robot, path: &str) -> Result<Option<String>, Error>

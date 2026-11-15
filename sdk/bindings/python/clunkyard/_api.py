@@ -257,6 +257,10 @@ _fn("cy_me_attitude", 1, c_void_p, POINTER(Attitude))
 _fn("cy_me_grounded", 0, c_void_p, _PI)
 _fn("cy_me_altitude", 0, c_void_p, _PD)
 _fn("cy_me_applied", 1, c_void_p, POINTER(Applied))
+_fn("cy_me_hull_mounts", 0, c_void_p, _PI)
+_fn("cy_me_to_mount", 0, c_void_p, c_double, c_double, POINTER(Direction))
+_fn("cy_me_from_mount", 0, c_void_p, c_double, c_double, POINTER(Direction))
+_fn("cy_me_mount_toward", 0, c_void_p, POINTER(Vec3), POINTER(Direction))
 _fn("cy_battery_charge", 0, c_void_p, _PD)
 _fn("cy_battery_capacity", 0, c_void_p, _PD)
 _fn("cy_battery_regen", 0, c_void_p, _PD)
@@ -355,6 +359,8 @@ _fn("cy_angles_bearing_to", 0, POINTER(Vec3), POINTER(Vec3), _PD)
 _fn("cy_angles_elevation_to", 0, POINTER(Vec3), POINTER(Vec3), _PD)
 _fn("cy_angles_direction", 0, c_double, c_double, POINTER(Vec3))
 _fn("cy_angles_distance", 0, POINTER(Vec3), POINTER(Vec3), _PD)
+_fn("cy_angles_to_chassis", 1, c_double, c_double, POINTER(Attitude), POINTER(Direction))
+_fn("cy_angles_from_chassis", 1, c_double, c_double, POINTER(Attitude), POINTER(Direction))
 _fn("cy_angles_clamp", 0, c_double, c_double, c_double, _PD)
 _fn("cy_status_text", 0, c_void_p, c_char_p, c_uint32)
 _fn("cy_status_value", 0, c_void_p, c_double)
@@ -504,6 +510,19 @@ class _Me:
     @property
     def applied(self):
         return _rec(_c.cy_me_applied, (self._h,), Applied)
+
+    @property
+    def hull_mounts(self):
+        return _bool(_c.cy_me_hull_mounts, (self._h,))
+
+    def to_mount(self, heading, pitch):
+        return _rec(_c.cy_me_to_mount, (self._h, heading, pitch), Direction)
+
+    def from_mount(self, heading, pitch):
+        return _rec(_c.cy_me_from_mount, (self._h, heading, pitch), Direction)
+
+    def mount_toward(self, point):
+        return _rec(_c.cy_me_mount_toward, (self._h, byref(point)), Direction)
 
 class _Battery:
     """The battery that driving and shooting share."""
@@ -817,6 +836,12 @@ class _Angles:
 
     def distance(self, a, b):
         return _num(_c.cy_angles_distance, (byref(a), byref(b)), c_double)
+
+    def to_chassis(self, heading, pitch, attitude):
+        return _rec(_c.cy_angles_to_chassis, (heading, pitch, byref(attitude)), Direction)
+
+    def from_chassis(self, heading, pitch, attitude):
+        return _rec(_c.cy_angles_from_chassis, (heading, pitch, byref(attitude)), Direction)
 
     def clamp(self, value, low=-1, high=1):
         return _num(_c.cy_angles_clamp, (value, low, high), c_double)

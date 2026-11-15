@@ -450,15 +450,15 @@ pub struct ContactV1 {
     pub slot: i32,
     /// What detected it: scan, inside the scan cone and its reach; proximity, within scanner.proximityRange in any direction. A robot both inside the cone and near reports scan. With hello.sensing, passive sources give a noisy direction and no id: faint, inside the scan cone beyond its reach; beam, a robot whose scan swept over you; muzzle, a robot that fired; motion, a robot moving fast; ping, the periodic ping of every robot. Later sensors add sources; ignore ones you do not know. A Source as i32.
     pub source: i32,
-    /// Straight-line distance between centres. For a passive source, noisy and rounded to sensing.rangeBin.
+    /// Straight-line distance between centres. For a passive source, noisy and rounded to sensing.rangeBin; for a scan source with hello.scanner.bearing, noisy.
     pub range: f64,
-    /// Heading from you to it. For a passive source, noisy.
+    /// Heading from you to it, in world axes whatever the mounts. For a passive source, noisy; for a scan source with hello.scanner.bearing, noisy by the scan arc.
     pub bearing: f64,
-    /// Elevation from you to it; 0 in 2D. For a passive source, noisy.
+    /// Elevation from you to it; 0 in 2D. Noisy as bearing is.
     pub elevation: f64,
-    /// Passive sources only: the standard deviation of bearing and elevation, degrees; 0 for scan and proximity.
+    /// The standard deviation of bearing and elevation, degrees, as the sensor reports it: for passive sources, and for scan sources when the match earns bearing (hello.scanner.bearing); 0 otherwise.
     pub bearing_error: f64,
-    /// Passive sources only: the standard deviation of the natural log of range; 0 for scan and proximity.
+    /// The standard deviation of the natural log of range, as the sensor reports it; 0 when it reports none.
     pub range_error: f64,
     /// Where it is, in world axes: your position plus its range along its bearing and elevation.
     pub position: Vec3,
@@ -504,9 +504,9 @@ pub struct SightingV1 {
     pub tick: i32,
     /// What detected it: scan or proximity. A Source as i32.
     pub source: i32,
-    /// The standard deviation of its bearing and elevation as the sensor reported it, degrees; 0 when the sensor reports none, as scan and proximity do today.
+    /// The standard deviation of its bearing and elevation as the sensor reported it, degrees; 0 when the sensor reports none, as proximity never does and scan does only when the match earns bearing.
     pub bearing_error: f64,
-    /// The standard deviation of the natural log of its range as the sensor reported it; 0 when the sensor reports none, as scan and proximity do today.
+    /// The standard deviation of the natural log of its range as the sensor reported it; 0 when the sensor reports none.
     pub range_error: f64,
     /// Where the sighting placed the robot, in world axes: your position then plus its range along its bearing and elevation. Not smoothed.
     pub position: Vec3,
@@ -750,19 +750,19 @@ pub struct DslWordsV1 {
     pub battery: f64,
     /// Charge when full.
     pub battery_capacity: f64,
-    /// Where the turret points now; a shot leaves along it.
+    /// Where the turret points now, in your mounts' frame (me.from_mount gives world axes); a shot leaves along it.
     pub aim: f64,
-    /// Where the turret points now; a shot leaves along it.
+    /// Where the turret points now, in your mounts' frame (me.from_mount gives world axes); a shot leaves along it.
     pub aim_pitch: f64,
     /// Ticks until the gun can fire; 0 means it can fire this tick.
     pub cooldown: f64,
-    /// The scan that produced this tick's contacts: where the scanner points now.
+    /// The scan that produced this tick's contacts: where the scanner points now, in your mounts' frame.
     pub scan_heading: f64,
-    /// The scan that produced this tick's contacts: where the scanner points now.
+    /// The scan that produced this tick's contacts: where the scanner points now, in your mounts' frame.
     pub scan_pitch: f64,
-    /// The scan that produced this tick's contacts: where the scanner points now.
+    /// The scan that produced this tick's contacts: where the scanner points now, in your mounts' frame.
     pub scan_arc: f64,
-    /// The scan that produced this tick's contacts: where the scanner points now.
+    /// The scan that produced this tick's contacts: where the scanner points now, in your mounts' frame.
     pub scan_range: f64,
     /// The nearest precise contact this tick. Passive contacts are never returned.
     pub contact: f64,
@@ -802,7 +802,7 @@ pub struct DslWordsV1 {
     pub terrain_height: f64,
     /// battery.charge over battery.capacity; 0 with no capacity.
     pub battery_fraction: f64,
-    /// The nearest contact's bearing less gun.aim_now's heading, -180 to 180; 0 with no contact.
+    /// The nearest contact's bearing less the turret's world heading (gun.aim_now through me.from_mount), -180 to 180; 0 with no contact.
     pub aim_error: f64,
     /// The lowest shot power.
     pub power_min: f64,

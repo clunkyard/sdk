@@ -81,6 +81,10 @@ static int32_t binding_cy_me_attitude_v1(cy_robot *robot,cy_attitude_v1 *out){tr
 static int32_t binding_cy_me_grounded(cy_robot *robot,int32_t *out){try{clunkyard::Robot binding(robot);auto got=binding.me.grounded();*out=got;return CY_OK;}catch(const clunkyard::Error &error){return error.status;}}
 static int32_t binding_cy_me_altitude(cy_robot *robot,double *out){try{clunkyard::Robot binding(robot);auto got=binding.me.altitude();*out=got;return CY_OK;}catch(const clunkyard::Error &error){return error.status;}}
 static int32_t binding_cy_me_applied_v1(cy_robot *robot,cy_applied_v1 *out){try{clunkyard::Robot binding(robot);auto got=binding.me.applied();*out=got;return CY_OK;}catch(const clunkyard::Error &error){return error.status;}}
+static int32_t binding_cy_me_hull_mounts(cy_robot *robot,int32_t *out){try{clunkyard::Robot binding(robot);auto got=binding.me.hull_mounts();*out=got;return CY_OK;}catch(const clunkyard::Error &error){return error.status;}}
+static int32_t binding_cy_me_to_mount(cy_robot *robot,double heading,double pitch,cy_direction *out){try{clunkyard::Robot binding(robot);auto got=binding.me.to_mount(heading,pitch);*out=got;return CY_OK;}catch(const clunkyard::Error &error){return error.status;}}
+static int32_t binding_cy_me_from_mount(cy_robot *robot,double heading,double pitch,cy_direction *out){try{clunkyard::Robot binding(robot);auto got=binding.me.from_mount(heading,pitch);*out=got;return CY_OK;}catch(const clunkyard::Error &error){return error.status;}}
+static int32_t binding_cy_me_mount_toward(cy_robot *robot,const cy_vec3 *point,cy_direction *out){try{clunkyard::Robot binding(robot);auto got=binding.me.mount_toward(*point);*out=got;return CY_OK;}catch(const clunkyard::Error &error){return error.status;}}
 static int32_t binding_cy_battery_charge(cy_robot *robot,double *out){try{clunkyard::Robot binding(robot);auto got=binding.battery.charge();*out=got;return CY_OK;}catch(const clunkyard::Error &error){return error.status;}}
 static int32_t binding_cy_battery_capacity(cy_robot *robot,double *out){try{clunkyard::Robot binding(robot);auto got=binding.battery.capacity();*out=got;return CY_OK;}catch(const clunkyard::Error &error){return error.status;}}
 static int32_t binding_cy_battery_regen(cy_robot *robot,double *out){try{clunkyard::Robot binding(robot);auto got=binding.battery.regen();*out=got;return CY_OK;}catch(const clunkyard::Error &error){return error.status;}}
@@ -179,6 +183,8 @@ static int32_t binding_cy_angles_bearing_to(const cy_vec3 *from,const cy_vec3 *t
 static int32_t binding_cy_angles_elevation_to(const cy_vec3 *from,const cy_vec3 *to,double *out){try{clunkyard::Robot binding(nullptr);auto got=binding.angles.elevation_to(*from,*to);*out=got;return CY_OK;}catch(const clunkyard::Error &error){return error.status;}}
 static int32_t binding_cy_angles_direction(double heading,double pitch,cy_vec3 *out){try{clunkyard::Robot binding(nullptr);auto got=binding.angles.direction(heading,pitch);*out=got;return CY_OK;}catch(const clunkyard::Error &error){return error.status;}}
 static int32_t binding_cy_angles_distance(const cy_vec3 *a,const cy_vec3 *b,double *out){try{clunkyard::Robot binding(nullptr);auto got=binding.angles.distance(*a,*b);*out=got;return CY_OK;}catch(const clunkyard::Error &error){return error.status;}}
+static int32_t binding_cy_angles_to_chassis_v1(double heading,double pitch,const cy_attitude_v1 *attitude,cy_direction *out){try{clunkyard::Robot binding(nullptr);auto got=binding.angles.to_chassis(heading,pitch,*attitude);*out=got;return CY_OK;}catch(const clunkyard::Error &error){return error.status;}}
+static int32_t binding_cy_angles_from_chassis_v1(double heading,double pitch,const cy_attitude_v1 *attitude,cy_direction *out){try{clunkyard::Robot binding(nullptr);auto got=binding.angles.from_chassis(heading,pitch,*attitude);*out=got;return CY_OK;}catch(const clunkyard::Error &error){return error.status;}}
 static int32_t binding_cy_angles_clamp(double value,double low,double high,double *out){try{clunkyard::Robot binding(nullptr);auto got=binding.angles.clamp(value,low,high);*out=got;return CY_OK;}catch(const clunkyard::Error &error){return error.status;}}
 static int32_t binding_cy_status_text(cy_robot *robot,const char *text,uint32_t text_length){try{clunkyard::Robot binding(robot);binding.status.set(std::string_view(text,text_length),std::nullopt);return CY_OK;}catch(const clunkyard::Error &error){return error.status;}}
 static int32_t binding_cy_status_value(cy_robot *robot,double value){try{clunkyard::Robot binding(robot);binding.status.set(std::nullopt,value);return CY_OK;}catch(const clunkyard::Error &error){return error.status;}}
@@ -272,6 +278,23 @@ if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');bits((dou
 if(!strcmp(op,"call")&&!strcmp(name,"me.applied")){cy_applied_v1 out={};
 int32_t status=binding_cy_me_applied_v1(robot,&out);
 if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');print_applied(&out);}putchar('\n');}return;}
+if(!strcmp(op,"call")&&!strcmp(name,"me.hull_mounts")){int32_t out=0;
+int32_t status=binding_cy_me_hull_mounts(robot,&out);
+if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');fputs(out?"t":"f",stdout);}putchar('\n');}return;}
+if(!strcmp(op,"call")&&!strcmp(name,"me.to_mount")){double heading = number();
+double pitch = number();
+cy_direction out={};
+int32_t status=binding_cy_me_to_mount(robot,heading,pitch,&out);
+if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');print_direction(&out);}putchar('\n');}return;}
+if(!strcmp(op,"call")&&!strcmp(name,"me.from_mount")){double heading = number();
+double pitch = number();
+cy_direction out={};
+int32_t status=binding_cy_me_from_mount(robot,heading,pitch,&out);
+if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');print_direction(&out);}putchar('\n');}return;}
+if(!strcmp(op,"call")&&!strcmp(name,"me.mount_toward")){cy_vec3 point; read_vec3(&point);
+cy_direction out={};
+int32_t status=binding_cy_me_mount_toward(robot,&point,&out);
+if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');print_direction(&out);}putchar('\n');}return;}
 if(!strcmp(op,"call")&&!strcmp(name,"battery.charge")){double out=0;
 int32_t status=binding_cy_battery_charge(robot,&out);
 if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');bits((double)out);}putchar('\n');}return;}
@@ -617,6 +640,18 @@ cy_vec3 b; read_vec3(&b);
 double out=0;
 int32_t status=binding_cy_angles_distance(&a,&b,&out);
 if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');bits((double)out);}putchar('\n');}return;}
+if(!strcmp(op,"call")&&!strcmp(name,"angles.to_chassis")){double heading = number();
+double pitch = number();
+cy_attitude_v1 attitude; read_attitude(&attitude);
+cy_direction out={};
+int32_t status=binding_cy_angles_to_chassis_v1(heading,pitch,&attitude,&out);
+if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');print_direction(&out);}putchar('\n');}return;}
+if(!strcmp(op,"call")&&!strcmp(name,"angles.from_chassis")){double heading = number();
+double pitch = number();
+cy_attitude_v1 attitude; read_attitude(&attitude);
+cy_direction out={};
+int32_t status=binding_cy_angles_from_chassis_v1(heading,pitch,&attitude,&out);
+if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');print_direction(&out);}putchar('\n');}return;}
 if(!strcmp(op,"call")&&!strcmp(name,"angles.clamp")){double value = number();
 double low = number();
 double high = number();

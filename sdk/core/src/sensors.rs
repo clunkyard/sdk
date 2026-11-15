@@ -26,8 +26,8 @@ pub fn record(r: &Robot, state: &State, contact: &SeenContact) -> ContactV1 {
         range: contact.range,
         bearing: contact.bearing,
         elevation: contact.elevation,
-        bearing_error: if precise.is_some() { 0.0 } else { contact.bearing_error.unwrap_or(0.0) },
-        range_error: if precise.is_some() { 0.0 } else { contact.range_error.unwrap_or(0.0) },
+        bearing_error: contact.bearing_error.unwrap_or(0.0),
+        range_error: contact.range_error.unwrap_or(0.0),
         position: contact_position(state.me.position, contact.range, contact.bearing, contact.elevation),
     }
 }

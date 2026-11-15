@@ -60,6 +60,8 @@ pub struct Hello {
     pub terrain_kind: TerrainKind,
     pub terrain: Terrain,
     pub max_pitch: f64,
+    /// hello.robot.mounts is "hull": aim and scan are chassis-frame angles.
+    pub hull_mounts: bool,
     pub capacity: f64,
     pub regen: f64,
     pub compute: Option<ComputeV1>,
@@ -127,6 +129,7 @@ impl Hello {
             terrain_kind,
             terrain,
             max_pitch: number(&raw, "robot.maxPitch"),
+            hull_mounts: raw.at("robot.mounts").and_then(Value::as_str) == Some("hull"),
             capacity: number(&raw, "battery.capacity"),
             regen: number(&raw, "battery.regen"),
             compute,

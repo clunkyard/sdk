@@ -164,11 +164,11 @@ typedef struct cy_scan_v1 {
 typedef struct cy_contact_v1 {
   int32_t slot; /* The robot: you are 1, and the others are numbered from 2 by first sighting (contacts first, then the hill holder), stable all match; 0 for a passive contact, which does not say which robot it heard. */
   int32_t source; /* CY_SOURCE_*. What detected it: scan, inside the scan cone and its reach; proximity, within scanner.proximityRange in any direction. A robot both inside the cone and near reports scan. With hello.sensing, passive sources give a noisy direction and no id: faint, inside the scan cone beyond its reach; beam, a robot whose scan swept over you; muzzle, a robot that fired; motion, a robot moving fast; ping, the periodic ping of every robot. Later sensors add sources; ignore ones you do not know. */
-  double range; /* Straight-line distance between centres. For a passive source, noisy and rounded to sensing.rangeBin. */
-  double bearing; /* Heading from you to it. For a passive source, noisy. */
-  double elevation; /* Elevation from you to it; 0 in 2D. For a passive source, noisy. */
-  double bearing_error; /* Passive sources only: the standard deviation of bearing and elevation, degrees; 0 for scan and proximity. */
-  double range_error; /* Passive sources only: the standard deviation of the natural log of range; 0 for scan and proximity. */
+  double range; /* Straight-line distance between centres. For a passive source, noisy and rounded to sensing.rangeBin; for a scan source with hello.scanner.bearing, noisy. */
+  double bearing; /* Heading from you to it, in world axes whatever the mounts. For a passive source, noisy; for a scan source with hello.scanner.bearing, noisy by the scan arc. */
+  double elevation; /* Elevation from you to it; 0 in 2D. Noisy as bearing is. */
+  double bearing_error; /* The standard deviation of bearing and elevation, degrees, as the sensor reports it: for passive sources, and for scan sources when the match earns bearing (hello.scanner.bearing); 0 otherwise. */
+  double range_error; /* The standard deviation of the natural log of range, as the sensor reports it; 0 when it reports none. */
   cy_vec3 position; /* Where it is, in world axes: your position plus its range along its bearing and elevation. */
 } cy_contact_v1;
 
@@ -190,8 +190,8 @@ typedef struct cy_cue_v1 {
 typedef struct cy_sighting_v1 {
   int32_t tick; /* The tick it was seen. */
   int32_t source; /* CY_SOURCE_*. What detected it: scan or proximity. */
-  double bearing_error; /* The standard deviation of its bearing and elevation as the sensor reported it, degrees; 0 when the sensor reports none, as scan and proximity do today. */
-  double range_error; /* The standard deviation of the natural log of its range as the sensor reported it; 0 when the sensor reports none, as scan and proximity do today. */
+  double bearing_error; /* The standard deviation of its bearing and elevation as the sensor reported it, degrees; 0 when the sensor reports none, as proximity never does and scan does only when the match earns bearing. */
+  double range_error; /* The standard deviation of the natural log of its range as the sensor reported it; 0 when the sensor reports none. */
   cy_vec3 position; /* Where the sighting placed the robot, in world axes: your position then plus its range along its bearing and elevation. Not smoothed. */
 } cy_sighting_v1;
 
@@ -330,6 +330,29 @@ CY_API int32_t cy_me_grounded(cy_robot *robot, int32_t *out);
 CY_API int32_t cy_me_altitude(cy_robot *robot, double *out);
 /* me.applied: What the previous tick applied to you. */
 CY_API int32_t cy_me_applied_v1(cy_robot *robot, cy_applied_v1 *out);
+/*
+ * me.hull_mounts: Your turret and scanner are mounted on the hull: gun.aim,
+ * scanner.set, gun.aim_now and scanner.last are in your chassis frame, not
+ * world axes.
+ */
+CY_API int32_t cy_me_hull_mounts(cy_robot *robot, int32_t *out);
+/*
+ * me.to_mount: A world direction in the frame your mounts take: in your
+ * chassis frame (angles.to_chassis with me.attitude) when me.hull_mounts,
+ * unchanged otherwise.
+ */
+CY_API int32_t cy_me_to_mount(cy_robot *robot, double heading, double pitch, cy_direction *out);
+/*
+ * me.from_mount: A direction in your mounts' frame, such as gun.aim_now, in
+ * world axes: angles.from_chassis with me.attitude when me.hull_mounts,
+ * unchanged otherwise.
+ */
+CY_API int32_t cy_me_from_mount(cy_robot *robot, double heading, double pitch, cy_direction *out);
+/*
+ * me.mount_toward: The direction from you to a point, in the frame your mounts
+ * take: me.to_mount of its bearing and elevation from you.
+ */
+CY_API int32_t cy_me_mount_toward(cy_robot *robot, const cy_vec3 *point, cy_direction *out);
 
 /* ---- battery: The battery that driving and shooting share ---- */
 /* battery.charge: Charge now, before this tick's regeneration and driving. */
@@ -459,7 +482,10 @@ CY_API int32_t cy_drive_get_roll_torque(cy_robot *robot, double *out);
 CY_API int32_t cy_drive_get_brake(cy_robot *robot, double *out);
 
 /* ---- gun: The turret and its shots ---- */
-/* gun.aim_now: Where the turret points now; a shot leaves along it. */
+/*
+ * gun.aim_now: Where the turret points now, in your mounts' frame
+ * (me.from_mount gives world axes); a shot leaves along it.
+ */
 CY_API int32_t cy_gun_aim_now(cy_robot *robot, cy_direction *out);
 /*
  * gun.cooldown_ticks: Ticks until the gun can fire; 0 means it can fire this
@@ -555,7 +581,7 @@ CY_API int32_t cy_gun_get_power(cy_robot *robot, double *out);
 /* ---- scanner: The scanner ---- */
 /*
  * scanner.last: The scan that produced this tick's contacts: where the scanner
- * points now.
+ * points now, in your mounts' frame.
  */
 CY_API int32_t cy_scanner_last_v1(cy_robot *robot, cy_scan_v1 *out);
 /* scanner.proximity_range: Robots this close are detected in any direction. */
@@ -771,6 +797,17 @@ CY_API int32_t cy_angles_elevation_to(const cy_vec3 *from, const cy_vec3 *to, do
 CY_API int32_t cy_angles_direction(double heading, double pitch, cy_vec3 *out);
 /* angles.distance: The straight-line distance between two points. */
 CY_API int32_t cy_angles_distance(const cy_vec3 *a, const cy_vec3 *b, double *out);
+/*
+ * angles.to_chassis: A world direction as a heading and pitch in a chassis
+ * frame: with d = direction(heading, pitch), the heading of (d·forward,
+ * d·right) and the pitch atan2(d·up, √((d·forward)² + (d·right)²)).
+ */
+CY_API int32_t cy_angles_to_chassis_v1(double heading, double pitch, const cy_attitude_v1 *attitude, cy_direction *out);
+/*
+ * angles.from_chassis: A chassis-frame heading h and pitch p in world axes:
+ * the direction of cos p cos h × forward + cos p sin h × right + sin p × up.
+ */
+CY_API int32_t cy_angles_from_chassis_v1(double heading, double pitch, const cy_attitude_v1 *attitude, cy_direction *out);
 /* angles.clamp: A value held within low and high. */
 CY_API int32_t cy_angles_clamp(double value, double low, double high, double *out);
 
@@ -972,6 +1009,8 @@ typedef cy_compute_v1 cy_compute;
 #define cy_nav_hill cy_nav_hill_v1
 #define cy_nav_pickups cy_nav_pickups_v1
 #define cy_nav_nearest_pickup cy_nav_nearest_pickup_v1
+#define cy_angles_to_chassis cy_angles_to_chassis_v1
+#define cy_angles_from_chassis cy_angles_from_chassis_v1
 
 #ifdef __cplusplus
 }
