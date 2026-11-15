@@ -1,6 +1,6 @@
 {
   "v": 1,
-  "sourceCommit": "c8852da1f51f9d387977d08985cbcf19e1132ca1",
+  "sourceCommit": "42d8fae839eb990aaa1d666e63285f6dc36572de",
   "sourceDirty": false,
   "playerDerivation": {
     "packages": [
@@ -19,8 +19,8 @@
       {
         "name": "@clunkyard/cli",
         "canonicalVersion": "2.2.2",
-        "version": "2.2.13",
-        "contentSHA256": "1c45ab3da44815aaeecd3d57ae8f0ae7e484f7c041270299cfb6df404064b3d0"
+        "version": "2.2.14",
+        "contentSHA256": "b263c518e35159c2545ef4699244f1eb20d9d870db179a4609a8ac3e1268cfe0"
       }
     ],
     "catalogueSHA256": "7e6f317f0b090e306b3238f992ba45feb754a807216ef00c6f377978ea5a325f"
@@ -104,7 +104,7 @@
     {
       "path": "packages/cli/package.json",
       "bytes": 754,
-      "sha256": "ef7143e4563e37f3d211f757e3a7a2dc4ca038b0d8da3523c00eaaa77acd5bf0"
+      "sha256": "56e9c020a914494dfb1cac5801eb69cfd61b9ace0dc255d2d8ff1b80474537b1"
     },
     {
       "path": "packages/cli/project.cjs",
@@ -113,8 +113,8 @@
     },
     {
       "path": "packages/cli/README.md",
-      "bytes": 4204,
-      "sha256": "e3c553d3ac8455f9d38ca89e3f8ca7f9c5e0aa10eb00c48789241a1a31b68e62"
+      "bytes": 4554,
+      "sha256": "79bd9c2d00ff22edd3a9c7c3c012cfb0d93bf19868804e15c4b3651e891d3c87"
     },
     {
       "path": "packages/cli/remote-bridge.mjs",
@@ -123,8 +123,8 @@
     },
     {
       "path": "packages/cli/runtime.cjs",
-      "bytes": 42798,
-      "sha256": "542648e304ad334832f53f5ac752e2a350832506556817a48af73c349ea685f9"
+      "bytes": 46984,
+      "sha256": "a9018b0eb432b89dd1d1a749f86146b0b905a52bbf22c7346284e864ee663a89"
     },
     {
       "path": "packages/git/client.cjs",

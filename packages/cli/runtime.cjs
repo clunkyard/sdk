@@ -5,7 +5,31 @@ const {spawn,spawnSync}=require('node:child_process');
 const {extract,readAsset}=require('./archive.cjs');
 const catalogue=require('./catalogue.json');
 const {readManifest}=require('./project.cjs');
+const {version:cliVersion}=require('./package.json');
 
+// A plain account of how a match ended, from its replay's result, in one or
+// two lines. The player's robot is "You"; a void has no winner.
+function describeResult(result,bots,playerId='bot') {
+  const name=id=>id===playerId?'You':bots.find(bot=>bot.id===id)?.name||String(id);
+  const scores=result?.scores&&Object.keys(result.scores).length?`Scores: ${Object.entries(result.scores).map(([id,value])=>`${name(id)} ${Number(value).toFixed(2)}`).join(', ')}.`:null;
+  const winners=Array.isArray(result?.winners)?result.winners:[];
+  if(result?.reason==='void')return [`No result: a platform fault voided the match${result.void?.code?` (${result.void.code})`:''}.`];
+  if(result?.reason==='stalemate')return ['No winner: nobody engaged before the time limit.',...(scores?[scores]:[])];
+  if(winners.length!==1||result?.reason==='draw'){
+    const who=winners.length>1&&result?.reason!=='draw'?` between ${winners.map(name).join(' and ')}`:'';
+    return [`Draw${who}${result?.reason==='draw'?' at the time limit':''}.`,...(scores?[scores]:[])];
+  }
+  const who=winners[0]===playerId?'You won':`${name(winners[0])} won`;
+  const how={'last-standing':'as the last robot standing','time-score':'on score at the time limit'}[result?.reason]||`(${result?.reason||'unknown'})`;
+  return [`${who} ${how}.`,...(scores&&result?.reason==='time-score'?[scores]:[])];
+}
+
+// How one robot enters a mixed local match. An Open robot without a DSL has
+// no execution agent to meter it on this computer, and the engine's Open mode
+// requires that meter; "remote" is the unmetered Open entry for exactly that.
+function localEntryPolicy(value) {
+  return value.fuel?.entry||{mode:value.resourceMode==='open'?(value.dsl?'dsl':'remote'):value.resourceMode};
+}
 function selectPlatformSdk(lock,platform=process.platform,arch=process.arch) {
   if(lock.portable)return lock.sdk;
   const key=`${platform}-${arch}`,asset=lock.sdkPlatforms?.[key];
@@ -62,6 +86,7 @@ const library=suppliedMetadata?.library||sdkAsset?.library||({darwin:'libclunkya
 if(path.basename(library)!==library||library.includes('\\'))throw new Error('SDK library must be a file name.');
 const manifest=()=>readManifest(root);
 const sha=data=>crypto.createHash('sha256').update(data).digest('hex');
+let jsonOutput=false;
 const skip=new Set(['.git','.clunkyard','build','replays','node_modules','__pycache__','obj','bin']);
 
 // A language with a WebAssembly route builds to it, as the hosted builder
@@ -98,7 +123,7 @@ function run(command, args, options={}) {
   const invocation=recipeInvocation(command,args,{cwd:options.cwd||root,env:options.env||environment()});
   command=invocation.command;
   if(process.platform==='win32'&&command==='python3')command=process.env.PYTHON||'python';
-  const result=spawnSync(command,invocation.args,{stdio:'inherit',...options,cwd:invocation.cwd,env:invocation.env});
+  const result=spawnSync(command,invocation.args,{stdio:jsonOutput?['inherit',2,'inherit']:'inherit',...options,cwd:invocation.cwd,env:invocation.env});
   if(result.error)throw new Error(`${command}: ${result.error.message}. See README.md for this language's toolchain.`);
   if(result.status!==0)throw new Error(`${command} exited with status ${result.status}`);
   return result;
@@ -280,6 +305,7 @@ async function prepare(buildOptions) {
   await build(buildOptions);
   const {supportedResourceModes}=require(path.join(engine,'src','resources.js'));
   const m=manifest(),fuel=wasmPolicy(m),supported=supportedResourceModes(m);
+  if(fuel&&!['wasm-host','wasm-host.exe'].some(name=>fs.existsSync(path.join(sdk,'bin',name))))throw new Error(`${m.name} runs on the WebAssembly host, and this platform's SDK (${process.platform}/${process.arch}) does not carry one. Play it on Linux x86-64, Linux AArch64, macOS or Windows x86-64, or use a hosted match.`);
   return {file:path.join(cache,'local-bot.json'),manifest:m,fuel,resourceMode:fuel?'wasm':selectLocalResourceMode(m,supported),dsl:supported.includes('dsl')};
 }
 
@@ -358,7 +384,7 @@ function chooseOpponents(names,roster) {
   return chosen;
 }
 function matchOptions(args) {
-  const names=[],rest=[];let refresh=false;
+  const names=[],rest=[];let refresh=false,json=false;
   for(let i=0;i<args.length;i++){
     const value=args[i];
     if(value==='--opponent'){
@@ -366,10 +392,11 @@ function matchOptions(args) {
       names.push(...args[++i].split(','));
     }else if(value.startsWith('--opponent='))names.push(...value.slice(11).split(','));
     else if(value==='--refresh')refresh=true;
-    else if(value.startsWith('--'))throw new Error(`Unknown option ${value}. Use match [seed] [2d|3d] [ruleset] [--opponent NAME]... [--refresh]`);
+    else if(value==='--json')json=true;
+    else if(value.startsWith('--'))throw new Error(`Unknown option ${value}. Use match [seed] [2d|3d] [ruleset] [--opponent NAME]... [--refresh] [--json]`);
     else rest.push(value);
   }
-  return {names:names.map(name=>name.trim()).filter(Boolean),rest,refresh};
+  return {names:names.map(name=>name.trim()).filter(Boolean),rest,refresh,json};
 }
 async function opponents(args=[]) {
   const unknown=args.filter(value=>value!=='--refresh');
@@ -388,7 +415,13 @@ async function opponents(args=[]) {
   }
   if(!roster.robots.length)console.log('The service lists no house robots right now.');
 }
+// --json keeps stdout for one JSON document; progress goes to stderr.
 async function match(args) {
+  if(!args.includes('--json'))return playMatch(args,false);
+  const log=console.log;jsonOutput=true;console.log=(...values)=>console.error(...values);
+  try{return await playMatch(args,true);}finally{console.log=log;jsonOutput=false;}
+}
+async function playMatch(args,json) {
   const {names,rest,refresh}=matchOptions(args),seed=rest[0]||'42',mode=rest[1]||'2d',ruleset=rest[2]||(mode==='3d'?'zero-g':'classic');
   if(!/^\d{1,10}$/.test(seed)||Number(seed)>0xffffffff)throw new Error('Match seed must be an integer from 0 to 4294967295.');
   // Name and seat the opponents before the slower builds. A house robot only
@@ -403,6 +436,9 @@ async function match(args) {
       const rulesets=Array.isArray(m.supportedRulesets)?m.supportedRulesets:['classic'];
       if(!(m.supportedModes||[]).includes(mode))throw new Error(`${m.name} does not play ${mode} (supports: ${(m.supportedModes||[]).join(', ')||'none'}). Run clunkyard opponents to see what each plays.`);
       if(!rulesets.includes(ruleset))throw new Error(`${m.name} does not play ${ruleset} (supports: ${rulesets.join(', ')}). Run clunkyard opponents to see what each plays.`);
+      // The same toolchain check `opponents` makes, before any build output.
+      const {problems}=runtime.diagnose();
+      if(problems.length)throw new Error(`${m.name} (${row.language}) needs setup on this computer:\n${problems.map(problem=>`  ${problem}`).join('\n')}\nRun clunkyard opponents to see what each needs.`);
       chosen.push({row,runtime});
     }
   }
@@ -419,30 +455,46 @@ async function match(args) {
   // robots launched below work out theirs again from their own projects.
   if(chosen.length){for(const key of Object.keys(process.env))if(!Object.hasOwn(baseEnvironment,key))delete process.env[key];Object.assign(process.env,baseEnvironment);console.log(`Playing ${self.manifest.name} against ${chosen.map(({row})=>row.name).join(', ')}.`);}
   const entries=[self,...rivals],fuel=self.fuel;
+  const details=[];
   if(entries.every(value=>value.resourceMode==='open')){
-    run(process.execPath,[path.join(engine,'src','cli.js'),'match',...entries.flatMap(value=>['--bot','@'+value.file]),'--mode',mode,'--ruleset',ruleset,'--resource-mode','open','--seed',seed,'--ticks','360','--turn-ms','2000','--startup-ms','60000','--replay',replay]);
+    // The engine's own Result and Replay lines are replaced by the ones below.
+    const output=run(process.execPath,[path.join(engine,'src','cli.js'),'match',...entries.flatMap(value=>['--bot','@'+value.file]),'--mode',mode,'--ruleset',ruleset,'--resource-mode','open','--seed',seed,'--ticks','360','--turn-ms','2000','--startup-ms','60000','--replay',replay],{encoding:'utf8',stdio:['inherit','pipe','inherit']}).stdout;
+    details.push(...output.split('\n').filter(line=>line.trim()&&!/^(Result|Replay): /.test(line)));
   }else{
     // The pinned engine already supports mixed entries: each robot keeps its
     // own meter (the player's Wasm or DSL fuel, a DSL rival's operations, an
     // Open robot's none). An Open robot makes the match class Open.
     const {resolveBot,validateSelection}=require(path.join(engine,'src','roster.js'));
     const {runMatch,saveReplay}=require(path.join(engine,'src','match.js'));
-    const policies=entries.map(value=>value.fuel?.entry||{mode:value.resourceMode==='open'&&value.dsl?'dsl':value.resourceMode});
+    const policies=entries.map(localEntryPolicy);
     const bots=entries.map((value,index)=>{const bot=resolveBot('@'+value.file,[],engine,mode,ruleset);bot.resourcePolicy=policies[index];return bot;});
     validateSelection(bots,mode,ruleset);
-    const matchClass=entries.some(value=>value.fuel?.matchClass==='open')||policies.some(policy=>policy.mode==='open')?'open':'reflex';
+    const matchClass=entries.some(value=>value.fuel?.matchClass==='open')||policies.some(policy=>['open','remote'].includes(policy.mode))?'open':'reflex';
     const result=await runMatch(bots,{mode,ruleset,seed:Number(seed),maxTicks:360,turnMs:2000,startupMs:60000,resourcePolicy:{v:3,class:matchClass,policy:'fair-compute-v1'}});
     saveReplay(result.replay,replay);
-    console.log(`Result: ${result.result?.winners?.join(', ')||'draw'} (${result.result?.reason||'unknown'})`);
     if(fuel){
       const turns=result.replay.frames.flatMap(frame=>frame.telemetry?.decisions||[]).filter(decision=>decision.botId===bots[0].id).map(decision=>decision.resources?.usage?.wasmFuel).filter(Number.isFinite).sort((a,b)=>a-b);
       const limit=fuel.entry.limits.wasmFuelPerTurn,format=value=>Math.round(value).toLocaleString('en-CA');
-      if(turns.length)console.log(`Fuel: ${format(turns[Math.floor(turns.length/2)])} a turn at the median, ${format(turns.at(-1))} at most, of ${format(limit)} (${fuel.label}).`);
+      if(turns.length)details.push(`Fuel: ${format(turns[Math.floor(turns.length/2)])} a turn at the median, ${format(turns.at(-1))} at most, of ${format(limit)} (${fuel.label}).`);
     }
-    console.log(`Replay: ${replay}`);
   }
-  const failures=JSON.parse(fs.readFileSync(replay,'utf8')).failures||[];
-  if(failures.length)throw new Error(`Match recorded ${failures.map(value=>`${value.botId}: ${value.code}`).join(', ')}. Inspect ${replay}.`);
+  const saved=JSON.parse(fs.readFileSync(replay,'utf8')),shown=path.relative(root,replay),failures=saved.failures||[];
+  const summary=describeResult(saved.result,saved.bots);
+  for(const line of [...summary,...details,`Replay: ${shown}`])console.log(line);
+  if(json)process.stdout.write(JSON.stringify({summary,result:saved.result,bots:saved.bots.map(({id,name})=>({id,name})),failures,replay:shown})+'\n');
+  if(failures.length)throw new Error(`Match recorded ${failures.map(value=>`${value.botId}: ${value.code}`).join(', ')}. Inspect ${shown}.`);
+}
+
+// The engine's viewer reports the replay's path from its own directory;
+// say it from the project's.
+function viewReplay(file,port) {
+  const fromEngine=path.relative(engine,file),fromProject=path.relative(root,file);
+  return new Promise((resolve,reject)=>{
+    const child=spawn(process.execPath,[path.join(engine,'src','cli.js'),'replay',file,'--port',port],{cwd:root,env:environment(),stdio:['inherit','pipe','inherit']});
+    child.stdout.on('data',chunk=>process.stdout.write(String(chunk).replace(`Loaded ${fromEngine} `,`Loaded ${fromProject} `)));
+    child.once('error',reject);
+    child.once('exit',(code,signal)=>code===0||signal?resolve():reject(new Error(`The replay viewer exited with status ${code}`)));
+  });
 }
 
 function clojureClasspath(){
@@ -488,7 +540,7 @@ function wasmChecks(target){
 }
 function diagnose(){
   const lines=[],problems=[],log=text=>lines.push(text),fail=text=>{problems.push(text);lines.push(text);};
-  log(`Clunkyard SDK ${lock.sdkVersion}; ${lock.language}; ${process.platform}/${process.arch}; Node ${process.versions.node}`);
+  log(`Clunkyard CLI ${cliVersion}; engine ${/-(v[^/]*?)\.tar\.gz$/.exec(lock.engine.file)?.[1]||lock.engine.file}; SDK API ${lock.sdkVersion} (the robot-facing API version, which moves less often than the CLI); ${lock.language}; ${process.platform}/${process.arch}; Node ${process.versions.node}`);
   let missing=0,m=null;try{m=manifest();}catch{}
   const target=m?buildTarget(m):lock.language,wasm=m&&target!==m.language;
   if(m&&target!==hostedTarget(m))log(`Hosted builds compile this robot to WebAssembly (${hostedTarget(m)}); this platform's SDK has no WebAssembly host, so local builds are native.`);
@@ -533,7 +585,7 @@ async function main(action='build',args=[]){
   if(action==='stdio')return stdio();
   if(action==='match')return match(args);
   if(action==='opponents')return opponents(args);
-  if(action==='replay'){await setup();return run(process.execPath,[path.join(engine,'src','cli.js'),'replay',path.resolve(root,args[0]||'replays/trial-42.json'),'--port',args[1]||'8787']);}
+  if(action==='replay'){await setup();return viewReplay(path.resolve(root,args[0]||'replays/trial-42.json'),args[1]||'8787');}
   if(action==='clean'){fs.rmSync(path.join(cache,'build'),{recursive:true,force:true});fs.rmSync(path.join(cache,'bindings-ready'),{force:true});return;}
   throw new Error('Use doctor, setup, build, match [seed] [2d|3d] [ruleset] [--opponent NAME], opponents, replay [file] [port], or clean.');
 }
@@ -541,4 +593,4 @@ async function main(action='build',args=[]){
 return {main,manifest,diagnose,prepare};
 }
 
-module.exports={createRuntime,selectLocalResourceMode,selectPlatformSdk,recipeInvocation,bindingCompilerIdentity};
+module.exports={describeResult,localEntryPolicy,createRuntime,selectLocalResourceMode,selectPlatformSdk,recipeInvocation,bindingCompilerIdentity};

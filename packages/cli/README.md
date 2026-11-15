@@ -39,7 +39,12 @@ offline; `opponents --refresh` updates them) and builds through the same
 per-language path as your robot, so you need that language's toolchain. DSL
 robots need only Node. `match` takes up to three `--opponent` names (repeat the
 flag or use commas) and defaults to the bundled practice rival. Each house
-robot plays only the modes and rulesets its `bot.json` declares. Hosted house
+robot plays only the modes and rulesets its `bot.json` declares. `match` ends
+with who won and how ("Harrier won on score at the time limit", with the
+scores) and the replay's path from the project; add `--json` for one JSON
+document on stdout instead, with progress on stderr. `doctor` reports the CLI,
+engine and SDK API versions: the SDK API version is the robot-facing API, so
+it moves less often than the CLI. Hosted house
 robots keep being tuned; the cached copy is the version of its last fetch.
 
 JavaScript and TypeScript projects install the SDK with npm. TypeScript uses
