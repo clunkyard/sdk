@@ -860,8 +860,20 @@ pub struct DslWordsV1 {
     pub hill_time: f64,
     /// Seconds of holding still needed to win; 0 when holding never wins.
     pub hill_to_win: f64,
+    /// The nearest contact's bearing error, degrees (sensors.nearest bearing_error): one standard deviation of its bearing and elevation; 0 with no contact or an exact one.
+    pub bearing_error: f64,
+    /// The nearest contact's range error (sensors.nearest range_error): one standard deviation of the natural log of its range; 0 with no contact or an exact one.
+    pub range_error: f64,
+    /// The nearest contact's tracked velocity along x (tracker.velocity of its slot), units/s, as the tracker smooths it from raw sightings; 0 with no contact or no track.
+    pub target_vx: f64,
+    /// The nearest contact's tracked velocity along y, as target-vx.
+    pub target_vy: f64,
+    /// The nearest contact's tracked velocity along z, as target-vx; 0 in 2D.
+    pub target_vz: f64,
+    /// A shot was heard this tick: a passive muzzle contact is among this tick's sensors.cues, whatever cue the tracker keeps.
+    pub muzzle_heard: f64,
 }
-const _: () = assert!(size_of::<DslWordsV1>() == 776);
+const _: () = assert!(size_of::<DslWordsV1>() == 824);
 
 /// What an act field holds.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]

@@ -810,7 +810,7 @@ pub extern "C" fn cy_gun_power_for_flight_time(robot: *mut Robot, range: f64, se
     })
 }
 
-/// The intercept if the contact holds its tracked velocity: the aim at which a shot fired now meets it then; absent when no shot reaches it. It is a starting point, and a target that turns, reverses or weaves beats it; for your own prediction, use lead_point.
+/// The intercept if the contact holds its tracked velocity (tracker.velocity, smoothed as tracker.configure sets; zero for a passive contact or an untracked robot): the aim at which a shot fired now meets it then; absent when no shot reaches it. It is a starting point, and a target that turns, reverses or weaves beats it; for your own prediction, use lead_point.
 #[unsafe(no_mangle)]
 pub extern "C" fn cy_gun_lead_v1(robot: *mut Robot, contact: *const ContactV1, power: f64, out: *mut SolutionV1) -> i32 {
     guard(robot, "cy_gun_lead_v1", |r| {
@@ -1106,7 +1106,7 @@ pub extern "C" fn cy_tracker_nearest_bearing_rate(robot: *mut Robot, out: *mut f
     })
 }
 
-/// The robot's tracked velocity; zero when it has no track.
+/// The robot's tracked velocity, the one gun.lead uses: the difference of its first two sightings, then smoothing × the old velocity + (1 − smoothing) × each newer difference; zero when it has no track.
 #[unsafe(no_mangle)]
 pub extern "C" fn cy_tracker_velocity(robot: *mut Robot, slot: i32, out: *mut Vec3) -> i32 {
     guard(robot, "cy_tracker_velocity", |r| {

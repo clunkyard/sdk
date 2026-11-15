@@ -9,7 +9,7 @@ const catalogue=require('./catalogue.json');
 const {version}=require('./package.json');
 
 function parse(args) {
-  let project=process.cwd();const positional=[];
+  let project=process.cwd(),sharedCache=null;const positional=[];
   for(let i=0;i<args.length;i++){
     if(args[i]==='--project'){
       if(!args[i+1]||args[i+1].startsWith('--'))throw new Error('--project needs a directory.');
@@ -17,15 +17,18 @@ function parse(args) {
     }else if(args[i].startsWith('--project=')){
       if(!args[i].slice(10))throw new Error('--project needs a directory.');
       project=path.resolve(args[i].slice(10));
+    }else if(args[i]==='--shared-cache'&&args[i+1]){
+      // Internal: a house opponent's runner shares the player's engine and SDK downloads.
+      sharedCache=path.resolve(args[++i]);
     }else{positional.push(args[i]);if(positional[0]==='connect'){positional.push(...args.slice(i+1));break;}}
   }
-  return {project,action:positional.shift()||'help',args:positional};
+  return {project,...(sharedCache?{sharedCache}:{}),action:positional.shift()||'help',args:positional};
 }
 async function main(argv=process.argv.slice(2)) {
-  const {project,action,args}=parse(argv);
+  const {project,sharedCache,action,args}=parse(argv);
   if(action==='--version'||action==='version'){console.log(version);return;}
   if(['help','--help','-h'].includes(action)){
-    console.log('Clunkyard local robot CLI\n\nclunkyard [--project DIRECTORY] doctor|setup|build|match|replay|clean|migrate\nclunkyard new LANGUAGE DIRECTORY\nclunkyard connect [COMMAND [ARGS...]]\nclunkyard connect --strategist COMMAND [ARGS...]\nclunkyard list\n\nmatch [seed] [2d|3d] [ruleset]; replay [file] [port]');return;
+    console.log('Clunkyard local robot CLI\n\nclunkyard [--project DIRECTORY] doctor|setup|build|match|opponents|replay|clean|migrate\nclunkyard new LANGUAGE DIRECTORY\nclunkyard connect [COMMAND [ARGS...]]\nclunkyard connect --strategist COMMAND [ARGS...]\nclunkyard list\n\nmatch [seed] [2d|3d] [ruleset] [--opponent NAME]...; opponents [--refresh]; replay [file] [port]');return;
   }
   if(action==='list'){
     for(const [language,row] of Object.entries(catalogue.languages))console.log(`${language.padEnd(22)} ${platformLabel(language,row)}  https://github.com/clunkyard/starter-${language}`);
@@ -56,7 +59,7 @@ async function main(argv=process.argv.slice(2)) {
   if(action==='migrate'){
     migrate(project);console.log('Updated generated tooling. Robot source files are unchanged.');return;
   }
-  await createRuntime(project,__filename).main(action,args);
+  await createRuntime(project,__filename,sharedCache?{sharedCache}:{}).main(action,args);
 }
 
 function platformLabel(language,row){

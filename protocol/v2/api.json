@@ -3617,7 +3617,7 @@
       "kind": "query",
       "form": "call",
       "since": "2.0",
-      "fact": "The intercept if the contact holds its tracked velocity: the aim at which a shot fired now meets it then; absent when no shot reaches it. It is a starting point, and a target that turns, reverses or weaves beats it; for your own prediction, use lead_point.",
+      "fact": "The intercept if the contact holds its tracked velocity (tracker.velocity, smoothed as tracker.configure sets; zero for a passive contact or an untracked robot): the aim at which a shot fired now meets it then; absent when no shot reaches it. It is a starting point, and a target that turns, reverses or weaves beats it; for your own prediction, use lead_point.",
       "subsystem": "gun",
       "member": "lead",
       "path": [
@@ -4662,7 +4662,7 @@
       "kind": "query",
       "form": "call",
       "since": "2.0",
-      "fact": "The robot's tracked velocity; zero when it has no track.",
+      "fact": "The robot's tracked velocity, the one gun.lead uses: the difference of its first two sightings, then smoothing × the old velocity + (1 − smoothing) × each newer difference; zero when it has no track.",
       "subsystem": "tracker",
       "member": "velocity",
       "path": [
@@ -4849,9 +4849,9 @@
           "name": "smoothing",
           "type": {
             "kind": "f64",
-            "description": "Weight of the old velocity, 0 to 1 (0.5)."
+            "description": "Weight of the old velocity, 0 to 1 (0.5); 0 keeps only the newest difference."
           },
-          "description": "Weight of the old velocity, 0 to 1 (0.5).",
+          "description": "Weight of the old velocity, 0 to 1 (0.5); 0 keeps only the newest difference.",
           "default": 0.5
         },
         {
@@ -7705,6 +7705,54 @@
         "derive": "hill_to_win"
       },
       "fact": "Seconds of holding still needed to win; 0 when holding never wins."
+    },
+    {
+      "name": "bearing-error",
+      "type": "number",
+      "source": {
+        "derive": "bearing_error"
+      },
+      "fact": "The nearest contact's bearing error, degrees (sensors.nearest bearing_error): one standard deviation of its bearing and elevation; 0 with no contact or an exact one."
+    },
+    {
+      "name": "range-error",
+      "type": "number",
+      "source": {
+        "derive": "range_error"
+      },
+      "fact": "The nearest contact's range error (sensors.nearest range_error): one standard deviation of the natural log of its range; 0 with no contact or an exact one."
+    },
+    {
+      "name": "target-vx",
+      "type": "number",
+      "source": {
+        "derive": "target_vx"
+      },
+      "fact": "The nearest contact's tracked velocity along x (tracker.velocity of its slot), units/s, as the tracker smooths it from raw sightings; 0 with no contact or no track."
+    },
+    {
+      "name": "target-vy",
+      "type": "number",
+      "source": {
+        "derive": "target_vy"
+      },
+      "fact": "The nearest contact's tracked velocity along y, as target-vx."
+    },
+    {
+      "name": "target-vz",
+      "type": "number",
+      "source": {
+        "derive": "target_vz"
+      },
+      "fact": "The nearest contact's tracked velocity along z, as target-vx; 0 in 2D."
+    },
+    {
+      "name": "muzzle-heard",
+      "type": "boolean",
+      "source": {
+        "derive": "muzzle_heard"
+      },
+      "fact": "A shot was heard this tick: a passive muzzle contact is among this tick's sensors.cues, whatever cue the tracker keeps."
     },
     {
       "name": "energy",

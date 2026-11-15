@@ -44,16 +44,20 @@ function selectLocalResourceMode(bot,supported) {
   throw new Error(`${bot.name} supports resource modes [${supported.join(', ')}]. Local trials need open, dsl or wasm; use a hosted trial for trusted budgets.`);
 }
 
-function createRuntime(project,entry=path.join(__dirname,'cli.cjs')) {
+function createRuntime(project,entry=path.join(__dirname,'cli.cjs'),options={}) {
 const root=path.resolve(project),initial=readManifest(root),lock=catalogue.languages[initial.language];
 const cache=path.join(root,'.clunkyard');
-const engine=path.join(cache,'engine-'+lock.engine.sha256.slice(0,16));
+// A house opponent keeps its own build state under its staged directory but
+// shares the player's engine and SDK downloads (options.sharedCache).
+const store=options.sharedCache?path.resolve(options.sharedCache):cache;
+const engine=path.join(store,'engine-'+lock.engine.sha256.slice(0,16));
 const npmSDK=['javascript','typescript'].includes(initial.language)?catalogue.npmSDK:null;
-const suppliedSdk=process.env.CLUNKYARD_SDK?path.resolve(process.env.CLUNKYARD_SDK):null;
+// CLUNKYARD_SDK is the player's robot's SDK; a house opponent in another language never uses it.
+const suppliedSdk=process.env.CLUNKYARD_SDK&&!options.sharedCache?path.resolve(process.env.CLUNKYARD_SDK):null;
 let sdkAsset,platformError,suppliedMetadata;
 try{sdkAsset=npmSDK?lock.sdk:selectPlatformSdk(lock);}catch(error){platformError=error;}
 if(suppliedSdk&&fs.existsSync(path.join(suppliedSdk,'platform.json')))suppliedMetadata=JSON.parse(fs.readFileSync(path.join(suppliedSdk,'platform.json'),'utf8'));
-const sdk=suppliedSdk||path.join(cache,'sdk-'+(sdkAsset?.sha256.slice(0,16)||'unavailable'));
+const sdk=suppliedSdk||path.join(store,'sdk-'+(sdkAsset?.sha256.slice(0,16)||'unavailable'));
 const library=suppliedMetadata?.library||sdkAsset?.library||({darwin:'libclunkyard.2.dylib',win32:'clunkyard.dll'}[process.platform]||'libclunkyard.so.2');
 if(path.basename(library)!==library||library.includes('\\'))throw new Error('SDK library must be a file name.');
 const manifest=()=>readManifest(root);
@@ -132,6 +136,7 @@ function cCompiler(cpp){return process.env[cpp?'CXX':'CC']||(process.platform===
 function safeCache() {
   if(fs.existsSync(cache)&&(!fs.lstatSync(cache).isDirectory()||fs.lstatSync(cache).isSymbolicLink()))throw new Error('.clunkyard must be an ordinary directory');
   fs.mkdirSync(cache,{recursive:true});fs.mkdirSync(path.join(cache,'tmp'),{recursive:true});
+  if(store!==cache)fs.mkdirSync(store,{recursive:true});
 }
 async function download(asset, destination) {
   if(fs.existsSync(destination)) {
@@ -139,7 +144,7 @@ async function download(asset, destination) {
     throw new Error(`${destination} belongs to another release. Remove it explicitly before changing SDK versions.`);
   }
   const bytes=await readAsset(asset);
-  const temporary=fs.mkdtempSync(path.join(cache,'install-'));
+  const temporary=fs.mkdtempSync(path.join(store,'install-'));
   try{extract(bytes,temporary,asset.expandedBytes);fs.writeFileSync(path.join(temporary,'.release'),asset.sha256);fs.renameSync(temporary,destination);}finally{fs.rmSync(temporary,{recursive:true,force:true});}
 }
 async function setup() {
@@ -231,7 +236,7 @@ function typescriptCompiler() {
   }
   throw new Error('Install TypeScript 6+ (tsc on PATH), then run clunkyard doctor.');
 }
-async function build() {
+async function build({opponent=false}={}) {
   await setup();const m=manifest(),out=path.join(cache,'build');fs.mkdirSync(out,{recursive:true});
   const bindingStamp=path.join(cache,'bindings-ready'),bindingIdentity=npmSDK?.integrity||sha(Buffer.from(JSON.stringify({asset:suppliedSdk?{sdk,metadata:suppliedMetadata||{},version:lock.sdkVersion}:sdkAsset.sha256,compilers:lock.rebuildBindings?.length?bindingCompilerIdentity(lock,environment()):[]})));
   if(!fs.existsSync(bindingStamp)||fs.readFileSync(bindingStamp,'utf8')!==bindingIdentity){rebuildBinding();fs.writeFileSync(bindingStamp,bindingIdentity);}
@@ -242,8 +247,8 @@ async function build() {
   if(action){const steps=Array.isArray(action[0])?action:[action];for(const step of steps){const args=step.map(rewrite);if(target==='c')args[0]=cCompiler(false);if(target==='cpp')args[0]=cCompiler(true);run(args[0],args.slice(1),{cwd:copied});}}
   const runtimeSource=path.join(out,'source');fs.rmSync(runtimeSource,{recursive:true,force:true});sources(copied,runtimeSource);
   if(m.language==='typescript')fs.writeFileSync(path.join(out,'package.json'),'{"type":"commonjs"}\n');
-  fs.writeFileSync(path.join(cache,'local-bot.json'),JSON.stringify({...m,command:[process.execPath,entry,'--project',root,'stdio']},null,2)+'\n');
-  console.log(`Built ${m.name}${target===m.language?'':` for WebAssembly (${target})`}. Run make match or npx @clunkyard/cli match.`);
+  fs.writeFileSync(path.join(cache,'local-bot.json'),JSON.stringify({...m,command:[process.execPath,entry,'--project',root,...(options.sharedCache?['--shared-cache',store]:[]),'stdio']},null,2)+'\n');
+  console.log(`Built ${m.name}${target===m.language?'':` for WebAssembly (${target})`}.${opponent?'':' Run make match or npx @clunkyard/cli match.'}`);
 }
 function stdio() {
   const m=manifest(),out=path.join(cache,'build'),entry=path.join(out,'source',m.entry);
@@ -270,30 +275,167 @@ function wasmPolicy(m){
   if(budget){const {rate,...limits}=budget;return {matchClass:'open',entry:{mode:'wasm',limits,rate},label:`Season ${table.season} Standard, ${runtime} fuel tier ${rate.tier}`};}
   return {matchClass:'reflex',entry:{mode:'wasm',limits:{wasmFuelPerTurn:table.reflex.wasmFuelPerTurn,wasmFuelPerMatch:table.reflex.wasmFuelPerMatch}},label:`Season ${table.season} Reflex`};
 }
+// Builds this robot and describes how it takes part in a local match.
+async function prepare(buildOptions) {
+  await build(buildOptions);
+  const {supportedResourceModes}=require(path.join(engine,'src','resources.js'));
+  const m=manifest(),fuel=wasmPolicy(m),supported=supportedResourceModes(m);
+  return {file:path.join(cache,'local-bot.json'),manifest:m,fuel,resourceMode:fuel?'wasm':selectLocalResourceMode(m,supported),dsl:supported.includes('dsl')};
+}
+
+// House opponents. The house robots' hosted projects are the authority: their
+// published source is public, and the CLI reads the list and each robot's
+// active revision from the service, then builds it by this CLI's own
+// per-language path. The list and sources are cached in .clunkyard/house, so
+// a robot that has been fetched once also plays offline.
+const HOUSE_ORIGIN=()=>String(process.env.CLUNKYARD_ORIGIN||'https://clunkyard.com').replace(/\/+$/,'');
+const HOUSE_ID=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
+const HOUSE_KEY=/^[a-z0-9][a-z0-9-]{0,47}$/;
+const keyFor=name=>String(name).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,48);
+const houseDirectory=()=>path.join(cache,'house');
+async function fetchLimited(url,limit){
+  const response=await fetch(url,{signal:AbortSignal.timeout(30000),headers:{accept:'application/json, application/gzip'}});
+  if(!response.ok)throw new Error(`${url} answered ${response.status}`);
+  const bytes=Buffer.from(await response.arrayBuffer());
+  if(bytes.length>limit)throw new Error(`${url} sent more than ${limit} bytes`);
+  return bytes;
+}
+// The cached list, unless refresh asks for the service's. A service that
+// cannot be reached leaves the cache in use; with none, there is nothing to play.
+async function houseRoster({refresh=false}={}) {
+  const file=path.join(houseDirectory(),'index.json');
+  let cached=null;try{cached=JSON.parse(fs.readFileSync(file,'utf8'));}catch{}
+  if(cached&&!refresh&&cached.origin===HOUSE_ORIGIN())return {...cached,fresh:false};
+  try{
+    const value=JSON.parse((await fetchLimited(`${HOUSE_ORIGIN()}/api/arena/house-robots`,1024*1024)).toString('utf8'));
+    const robots=(Array.isArray(value.robots)?value.robots:[]).filter(row=>HOUSE_ID.test(String(row.id))&&typeof row.name==='string'&&typeof row.language==='string'&&HOUSE_KEY.test(keyFor(row.name))&&keyFor(row.name)!=='practice').map(row=>({id:row.id,key:keyFor(row.name),name:row.name,language:row.language,stable:row.stable||null,manifestHash:typeof row.manifestHash==='string'?row.manifestHash:null,supportedModes:Array.isArray(row.supportedModes)?row.supportedModes:[],supportedRulesets:Array.isArray(row.supportedRulesets)?row.supportedRulesets:['classic'],strategist:Boolean(row.strategist)}));
+    const result={origin:HOUSE_ORIGIN(),fetchedAt:new Date().toISOString(),robots};
+    fs.mkdirSync(houseDirectory(),{recursive:true});fs.writeFileSync(file,JSON.stringify(result,null,2)+'\n');
+    return {...result,fresh:true};
+  }catch(error){
+    if(cached&&cached.origin===HOUSE_ORIGIN())return {...cached,fresh:false,offline:error.message};
+    throw new Error(`The house robots come from ${HOUSE_ORIGIN()} and it cannot be reached (${error.message}), with nothing cached in .clunkyard/house. Connect once to fetch them; they then play offline.`);
+  }
+}
+// Unpacks a published-source bundle: gzip JSON of files with sizes and digests.
+function unpackHouseSource(bytes,to){
+  const bundle=JSON.parse(require('node:zlib').gunzipSync(bytes,{maxOutputLength:48*1024*1024}).toString('utf8'));
+  if(bundle?.v!==1||!Array.isArray(bundle.files)||!bundle.files.length||bundle.files.length>512)throw new Error('The published source is not a version 1 bundle.');
+  let total=0;const files=bundle.files.map(file=>{
+    const name=String(file?.path);
+    if(!name||name.includes('\\')||name.includes('\0')||path.posix.isAbsolute(name)||name.split('/').some(part=>!part||part==='.'||part==='..'||part==='.git'||part==='.clunkyard'))throw new Error(`The published source holds an unsafe path: ${JSON.stringify(name)}`);
+    const data=Buffer.from(String(file.data),'base64');total+=data.length;
+    if(total>16*1024*1024||data.length!==file.size||sha(data)!==file.sha256)throw new Error(`The published source file ${name} does not match its digest.`);
+    return {name,data,executable:Number(file.mode)&0o111};
+  });
+  for(const name of fs.existsSync(to)?fs.readdirSync(to):[])if(name!=='.clunkyard')fs.rmSync(path.join(to,name),{recursive:true,force:true});
+  fs.mkdirSync(to,{recursive:true});
+  for(const {name,data,executable} of files){const target=path.join(to,...name.split('/'));fs.mkdirSync(path.dirname(target),{recursive:true});fs.writeFileSync(target,data,{mode:executable?0o755:0o644});}
+}
+// The robot's staged project: its published source as of the last fetch.
+async function stageHouseRobot(row) {
+  const to=path.join(houseDirectory(),row.key),stamp=path.join(to,'.revision');
+  const current=()=>{try{return fs.readFileSync(stamp,'utf8')===(row.manifestHash||row.id)&&fs.existsSync(path.join(to,'bot.json'));}catch{return false;}};
+  if(!current()){
+    try{
+      unpackHouseSource(await fetchLimited(`${HOUSE_ORIGIN()}/api/arena/v2/bots/${row.id}/source`,16*1024*1024),to);
+      fs.writeFileSync(stamp,row.manifestHash||row.id);
+    }catch(error){
+      if(!fs.existsSync(path.join(to,'bot.json')))throw new Error(`Could not fetch ${row.name}'s source from ${HOUSE_ORIGIN()}: ${error.message}. Connect once to fetch it; it then plays offline.`);
+      console.log(`Using the cached ${row.name}; its source could not be refreshed (${error.message}).`);
+    }
+  }
+  return createRuntime(to,entry,{sharedCache:store});
+}
+function chooseOpponents(names,roster) {
+  const chosen=[],practice={key:'practice',name:'Practice rival',practice:true};
+  for(const name of names){
+    const wanted=name.toLowerCase(),row=wanted==='practice'||wanted==='practice rival'?practice:roster?.robots.find(row=>row.key===wanted||row.name.toLowerCase()===wanted);
+    if(!row)throw new Error(`No local opponent named ${name}. Run clunkyard opponents to list them.`);
+    if(chosen.includes(row))throw new Error(`${row.name} is listed twice; each opponent seats once.`);
+    chosen.push(row);
+  }
+  return chosen;
+}
+function matchOptions(args) {
+  const names=[],rest=[];let refresh=false;
+  for(let i=0;i<args.length;i++){
+    const value=args[i];
+    if(value==='--opponent'){
+      if(!args[i+1]||args[i+1].startsWith('--'))throw new Error('--opponent needs a robot name. Run clunkyard opponents to list them.');
+      names.push(...args[++i].split(','));
+    }else if(value.startsWith('--opponent='))names.push(...value.slice(11).split(','));
+    else if(value==='--refresh')refresh=true;
+    else if(value.startsWith('--'))throw new Error(`Unknown option ${value}. Use match [seed] [2d|3d] [ruleset] [--opponent NAME]... [--refresh]`);
+    else rest.push(value);
+  }
+  return {names:names.map(name=>name.trim()).filter(Boolean),rest,refresh};
+}
+async function opponents(args=[]) {
+  const unknown=args.filter(value=>value!=='--refresh');
+  if(unknown.length)throw new Error('Use clunkyard opponents [--refresh].');
+  safeCache();
+  const roster=await houseRoster({refresh:args.includes('--refresh')});
+  console.log(`Local opponents for match --opponent NAME. The house robots are the published source of their hosted projects at ${roster.origin}, as of ${roster.fetchedAt}${roster.fresh?'':' (cached; opponents --refresh updates it)'}.`);
+  if(roster.offline)console.log(`${roster.origin} could not be reached (${roster.offline}); showing the cache.`);
+  console.log('');
+  console.log(`${'practice'.padEnd(10)} ${'Practice rival'.padEnd(15)} ready       vane; 2d and 3d; all rulesets (default)`);
+  for(const row of roster.robots){
+    let detail=`${row.language}; ${row.supportedModes.join(' and ')||'no modes'}; ${row.supportedRulesets.length>=5?'all rulesets':row.supportedRulesets.join(', ')}${row.strategist?'; plays its reflex without its hosted strategist':''}`,problems=[];
+    try{problems=(await stageHouseRobot(row)).diagnose().problems;}catch(error){problems=[error.message];}
+    console.log(`${row.key.padEnd(10)} ${row.name.padEnd(15)} ${problems.length?'needs setup':'ready      '} ${detail}`);
+    for(const problem of problems)console.log(`           ${problem}`);
+  }
+  if(!roster.robots.length)console.log('The service lists no house robots right now.');
+}
 async function match(args) {
-  const seed=args[0]||'42',mode=args[1]||'2d',ruleset=args[2]||(mode==='3d'?'zero-g':'classic');
+  const {names,rest,refresh}=matchOptions(args),seed=rest[0]||'42',mode=rest[1]||'2d',ruleset=rest[2]||(mode==='3d'?'zero-g':'classic');
   if(!/^\d{1,10}$/.test(seed)||Number(seed)>0xffffffff)throw new Error('Match seed must be an integer from 0 to 4294967295.');
-  await build();
+  // Name and seat the opponents before the slower builds. A house robot only
+  // plays what its own bot.json declares.
+  const chosen=[];
+  if(names.length){
+    if(names.length>3)throw new Error('A local match seats four robots: yours and up to three opponents.');
+    const roster=names.some(name=>!['practice','practice rival'].includes(name.toLowerCase()))?await houseRoster({refresh}):null;
+    for(const row of chooseOpponents(names,roster)){
+      if(row.practice){chosen.push({row});continue;}
+      const runtime=await stageHouseRobot(row),m=runtime.manifest();
+      const rulesets=Array.isArray(m.supportedRulesets)?m.supportedRulesets:['classic'];
+      if(!(m.supportedModes||[]).includes(mode))throw new Error(`${m.name} does not play ${mode} (supports: ${(m.supportedModes||[]).join(', ')||'none'}). Run clunkyard opponents to see what each plays.`);
+      if(!rulesets.includes(ruleset))throw new Error(`${m.name} does not play ${ruleset} (supports: ${rulesets.join(', ')}). Run clunkyard opponents to see what each plays.`);
+      chosen.push({row,runtime});
+    }
+  }
+  const baseEnvironment={...process.env};
+  const self=await prepare();
   fs.mkdirSync(path.join(root,'replays'),{recursive:true});
   const replay=path.join(root,'replays',`trial-${seed}.json`);
-  const {supportedResourceModes}=require(path.join(engine,'src','resources.js'));
-  const m=manifest(),fuel=wasmPolicy(m),resourceMode=fuel?'wasm':selectLocalResourceMode(m,supportedResourceModes(m));
-  if(resourceMode==='open'){
-    run(process.execPath,[path.join(engine,'src','cli.js'),'match','--bot','@'+path.join(cache,'local-bot.json'),'--bot','@'+path.join(engine,'bots','practice','bot.json'),'--mode',mode,'--ruleset',ruleset,'--resource-mode',resourceMode,'--seed',seed,'--ticks','360','--turn-ms','2000','--startup-ms','60000','--replay',replay]);
+  const rivals=[];
+  for(const {row,runtime} of chosen.length?chosen:[{row:{practice:true}}]){
+    if(row.practice)rivals.push({file:path.join(engine,'bots','practice','bot.json'),manifest:null,fuel:null,resourceMode:'open',dsl:true});
+    else{console.log(`Preparing opponent ${row.name} (${row.language}).`);rivals.push(await runtime.prepare({opponent:true}));}
+  }
+  // Each robot's own builder set the process environment for its SDK; the
+  // robots launched below work out theirs again from their own projects.
+  if(chosen.length){for(const key of Object.keys(process.env))if(!Object.hasOwn(baseEnvironment,key))delete process.env[key];Object.assign(process.env,baseEnvironment);console.log(`Playing ${self.manifest.name} against ${chosen.map(({row})=>row.name).join(', ')}.`);}
+  const entries=[self,...rivals],fuel=self.fuel;
+  if(entries.every(value=>value.resourceMode==='open')){
+    run(process.execPath,[path.join(engine,'src','cli.js'),'match',...entries.flatMap(value=>['--bot','@'+value.file]),'--mode',mode,'--ruleset',ruleset,'--resource-mode','open','--seed',seed,'--ticks','360','--turn-ms','2000','--startup-ms','60000','--replay',replay]);
   }else{
-    // The pinned engine already supports mixed Reflex entries: the player's
-    // Wasm/DSL robot and the bundled Vane rival each keep their own meter.
+    // The pinned engine already supports mixed entries: each robot keeps its
+    // own meter (the player's Wasm or DSL fuel, a DSL rival's operations, an
+    // Open robot's none). An Open robot makes the match class Open.
     const {resolveBot,validateSelection}=require(path.join(engine,'src','roster.js'));
     const {runMatch,saveReplay}=require(path.join(engine,'src','match.js'));
-    const player=resolveBot('@'+path.join(cache,'local-bot.json'),[],engine,mode,ruleset);
-    const rival=resolveBot('@'+path.join(engine,'bots','practice','bot.json'),[],engine,mode,ruleset);
-    player.resourcePolicy=fuel?.entry||{mode:resourceMode};rival.resourcePolicy={mode:'dsl'};
-    const bots=[player,rival];validateSelection(bots,mode,ruleset);
-    const result=await runMatch(bots,{mode,ruleset,seed:Number(seed),maxTicks:360,turnMs:2000,startupMs:60000,resourcePolicy:{v:3,class:fuel?.matchClass||'reflex',policy:'fair-compute-v1'}});
+    const policies=entries.map(value=>value.fuel?.entry||{mode:value.resourceMode==='open'&&value.dsl?'dsl':value.resourceMode});
+    const bots=entries.map((value,index)=>{const bot=resolveBot('@'+value.file,[],engine,mode,ruleset);bot.resourcePolicy=policies[index];return bot;});
+    validateSelection(bots,mode,ruleset);
+    const matchClass=entries.some(value=>value.fuel?.matchClass==='open')||policies.some(policy=>policy.mode==='open')?'open':'reflex';
+    const result=await runMatch(bots,{mode,ruleset,seed:Number(seed),maxTicks:360,turnMs:2000,startupMs:60000,resourcePolicy:{v:3,class:matchClass,policy:'fair-compute-v1'}});
     saveReplay(result.replay,replay);
     console.log(`Result: ${result.result?.winners?.join(', ')||'draw'} (${result.result?.reason||'unknown'})`);
     if(fuel){
-      const turns=result.replay.frames.flatMap(frame=>frame.telemetry?.decisions||[]).filter(decision=>decision.botId===player.id).map(decision=>decision.resources?.usage?.wasmFuel).filter(Number.isFinite).sort((a,b)=>a-b);
+      const turns=result.replay.frames.flatMap(frame=>frame.telemetry?.decisions||[]).filter(decision=>decision.botId===bots[0].id).map(decision=>decision.resources?.usage?.wasmFuel).filter(Number.isFinite).sort((a,b)=>a-b);
       const limit=fuel.entry.limits.wasmFuelPerTurn,format=value=>Math.round(value).toLocaleString('en-CA');
       if(turns.length)console.log(`Fuel: ${format(turns[Math.floor(turns.length/2)])} a turn at the median, ${format(turns.at(-1))} at most, of ${format(limit)} (${fuel.label}).`);
     }
@@ -302,6 +444,7 @@ async function match(args) {
   const failures=JSON.parse(fs.readFileSync(replay,'utf8')).failures||[];
   if(failures.length)throw new Error(`Match recorded ${failures.map(value=>`${value.botId}: ${value.code}`).join(', ')}. Inspect ${replay}.`);
 }
+
 function clojureClasspath(){
   if(process.env.CLOJURE_CLASSPATH)return process.env.CLOJURE_CLASSPATH;
   if(process.env.CLOJURE_JAR){if(!fs.existsSync(process.env.CLOJURE_JAR))throw new Error('CLOJURE_JAR does not exist');return process.env.CLOJURE_JAR;}
@@ -343,19 +486,20 @@ function wasmChecks(target){
   }
   return checks;
 }
-function doctor(){
-  console.log(`Clunkyard SDK ${lock.sdkVersion}; ${lock.language}; ${process.platform}/${process.arch}; Node ${process.versions.node}`);
+function diagnose(){
+  const lines=[],problems=[],log=text=>lines.push(text),fail=text=>{problems.push(text);lines.push(text);};
+  log(`Clunkyard SDK ${lock.sdkVersion}; ${lock.language}; ${process.platform}/${process.arch}; Node ${process.versions.node}`);
   let missing=0,m=null;try{m=manifest();}catch{}
   const target=m?buildTarget(m):lock.language,wasm=m&&target!==m.language;
-  if(m&&target!==hostedTarget(m))console.log(`Hosted builds compile this robot to WebAssembly (${hostedTarget(m)}); this platform's SDK has no WebAssembly host, so local builds are native.`);
-  else if(wasm)console.log(`Builds to WebAssembly (${target}) and runs metered by fuel, as hosted. Set "target": "native" in bot.json for a native build.`);
-  else if(m?.target==='native'&&hostedTarget({...m,target:undefined})!==m.language)console.log('bot.json asks for a native build: it plays Open, and Standard refuses it.');
+  if(m&&target!==hostedTarget(m))log(`Hosted builds compile this robot to WebAssembly (${hostedTarget(m)}); this platform's SDK has no WebAssembly host, so local builds are native.`);
+  else if(wasm)log(`Builds to WebAssembly (${target}) and runs metered by fuel, as hosted. Set "target": "native" in bot.json for a native build.`);
+  else if(m?.target==='native'&&hostedTarget({...m,target:undefined})!==m.language)log('bot.json asks for a native build: it plays Open, and Standard refuses it.');
   // A WebAssembly build needs no native C or C++ compiler for these languages.
   const native=tool=>!(wasm&&['c','cpp','rust'].includes(lock.language)&&['cc','c++'].includes(tool));
   for(const tool of lock.tools.filter(native).filter(tool=>!(process.platform==='win32'&&lock.language==='rust'&&tool==='cc')).filter(tool=>tool!=='make'||(!npmSDK&&lock.rebuildBindings?.some(binding=>!sdkAsset?.portableBindingInstallers?.includes(binding)&&!fs.existsSync(path.join(sdk,'binding-src',binding,'install.cjs')))))){
     const command=process.platform==='win32'?({python3:process.env.PYTHON||'python',cc:cCompiler(false),'c++':cCompiler(true)}[tool]||tool):tool;
     const ok=toolAvailable(command);
-    console.log(`${ok?'found':'missing'} ${command}`);if(!ok)missing++;
+    (ok?log:fail)(`${ok?'found':'missing'} ${command}`);if(!ok)missing++;
   }
   for(const check of lock.requirements?.checks||[]){
     let command=[process.platform==='win32'&&check.command==='python3'?(process.env.PYTHON||'python'):check.command];
@@ -364,16 +508,21 @@ function doctor(){
     const output=String(result.stdout||'')+String(result.stderr||'');
     const version=check.versionPattern?Number(output.match(new RegExp(check.versionPattern))?.[1]):null;
     const ok=!result.error&&result.status===0&&(!check.minimum||version>=check.minimum)&&(!check.outputPattern||new RegExp(check.outputPattern).test(output));
-    console.log(`${ok?'ok':'missing'} ${check.label}${ok?'':': '+check.hint}`);if(!ok)missing++;
+    (ok?log:fail)(`${ok?'ok':'missing'} ${check.label}${ok?'':': '+check.hint}`);if(!ok)missing++;
   }
-  for(const check of wasmChecks(target)){console.log(`${check.ok?'ok':'missing'} ${check.label}${check.ok?'':': '+check.hint}`);if(!check.ok)missing++;}
-  if(lock.language==='clojure'){try{console.log('ok Clojure runtime: '+clojureClasspath())}catch(error){console.log('missing '+error.message);missing++}}
-  if(lock.language==='scala'&&process.env.SCALA_LIBRARY_JAR&&!fs.existsSync(process.env.SCALA_LIBRARY_JAR)){console.log('missing SCALA_LIBRARY_JAR file');missing++}
-  if(lock.language==='scala'&&!process.env.SCALA_LIBRARY_JAR&&!fs.existsSync('/usr/share/scala-2.11/lib/scala-library.jar')&&spawnSync('scala',['-version'],{timeout:10000}).error){console.log('missing Scala runtime; set SCALA_LIBRARY_JAR or install the scala launcher.');missing++}
-  try{checkNativePlatform()}catch(error){console.log(error.message);missing++}
-  for(const note of lock.requirements?.notes||[])console.log(note);
-  console.log(npmSDK||lock.portable?'Portable Node route.':`Native SDK: ${process.platform}-${process.arch}${suppliedSdk?' (user-provided)':sdkAsset?.minimumOS?'; minimum OS '+sdkAsset.minimumOS:''}.`);
-  console.log('No toolchains are downloaded automatically. See README.md for official installers.');
+  for(const check of wasmChecks(target)){(check.ok?log:fail)(`${check.ok?'ok':'missing'} ${check.label}${check.ok?'':': '+check.hint}`);if(!check.ok)missing++;}
+  if(lock.language==='clojure'){try{log('ok Clojure runtime: '+clojureClasspath())}catch(error){fail('missing '+error.message);missing++}}
+  if(lock.language==='scala'&&process.env.SCALA_LIBRARY_JAR&&!fs.existsSync(process.env.SCALA_LIBRARY_JAR)){fail('missing SCALA_LIBRARY_JAR file');missing++}
+  if(lock.language==='scala'&&!process.env.SCALA_LIBRARY_JAR&&!fs.existsSync('/usr/share/scala-2.11/lib/scala-library.jar')&&spawnSync('scala',['-version'],{timeout:10000}).error){fail('missing Scala runtime; set SCALA_LIBRARY_JAR or install the scala launcher.');missing++}
+  try{checkNativePlatform()}catch(error){fail(error.message);missing++}
+  for(const note of lock.requirements?.notes||[])log(note);
+  log(npmSDK||lock.portable?'Portable Node route.':`Native SDK: ${process.platform}-${process.arch}${suppliedSdk?' (user-provided)':sdkAsset?.minimumOS?'; minimum OS '+sdkAsset.minimumOS:''}.`);
+  log('No toolchains are downloaded automatically. See README.md for official installers.');
+  return {lines,problems,missing};
+}
+function doctor(){
+  const {lines,missing}=diagnose();
+  for(const line of lines)console.log(line);
   if(missing)process.exitCode=1;
 }
 async function main(action='build',args=[]){
@@ -383,12 +532,13 @@ async function main(action='build',args=[]){
   if(action==='build')return build();
   if(action==='stdio')return stdio();
   if(action==='match')return match(args);
+  if(action==='opponents')return opponents(args);
   if(action==='replay'){await setup();return run(process.execPath,[path.join(engine,'src','cli.js'),'replay',path.resolve(root,args[0]||'replays/trial-42.json'),'--port',args[1]||'8787']);}
   if(action==='clean'){fs.rmSync(path.join(cache,'build'),{recursive:true,force:true});fs.rmSync(path.join(cache,'bindings-ready'),{force:true});return;}
-  throw new Error('Use doctor, setup, build, match [seed] [2d|3d] [ruleset], replay [file] [port], or clean.');
+  throw new Error('Use doctor, setup, build, match [seed] [2d|3d] [ruleset] [--opponent NAME], opponents, replay [file] [port], or clean.');
 }
 
-return {main};
+return {main,manifest,diagnose,prepare};
 }
 
 module.exports={createRuntime,selectLocalResourceMode,selectPlatformSdk,recipeInvocation,bindingCompilerIdentity};

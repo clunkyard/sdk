@@ -24,6 +24,24 @@ Local matches use a resource mode supported by `bot.json`. Open-capable robots
 use Open; Wasm- or DSL-only robots keep their fuel or operation meter and play
 the bundled Vane rival with its DSL meter.
 
+## Play the house robots
+
+```sh
+npx @clunkyard/cli opponents
+npx @clunkyard/cli match 42 2d classic --opponent skyhook
+npx @clunkyard/cli match 7 2d classic --opponent orbit,loom
+```
+
+`opponents` lists the house robots and whether this machine can build and run
+each. Their published source comes from the hosted projects on clunkyard.com
+(the list and sources are cached in `.clunkyard/house`, so a fetched robot plays
+offline; `opponents --refresh` updates them) and builds through the same
+per-language path as your robot, so you need that language's toolchain. DSL
+robots need only Node. `match` takes up to three `--opponent` names (repeat the
+flag or use commas) and defaults to the bundled practice rival. Each house
+robot plays only the modes and rulesets its `bot.json` declares. Hosted house
+robots keep being tuned; the cached copy is the version of its last fetch.
+
 JavaScript and TypeScript projects install the SDK with npm. TypeScript uses
 your installed compiler, preferring a project-local installation. See the
 [supported platforms and toolchain installers](https://clunkyard.com/sdk/player-kit#supported-platforms)

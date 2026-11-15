@@ -86,7 +86,7 @@ _Static_assert(sizeof(cy_compute_v1) == 16, "cy_compute_v1 size");
 _Static_assert(offsetof(cy_compute_v1, k) == 0, "cy_compute_v1.k");
 _Static_assert(offsetof(cy_compute_v1, quanta) == 8, "cy_compute_v1.quanta");
 _Static_assert(offsetof(cy_compute_v1, unit) == 12, "cy_compute_v1.unit");
-_Static_assert(sizeof(cy_dsl_words_v1) == 776, "cy_dsl_words_v1 size");
+_Static_assert(sizeof(cy_dsl_words_v1) == 824, "cy_dsl_words_v1 size");
 
 typedef void (*cy_any_fn)(void);
 static const cy_any_fn SYMBOLS[] = {

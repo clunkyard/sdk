@@ -179,6 +179,12 @@
 //!     crate::dsl::hill_range(r: &Robot) -> Result<f64, Error>
 //!     crate::dsl::hill_time(r: &Robot) -> Result<f64, Error>
 //!     crate::dsl::hill_to_win(r: &Robot) -> Result<f64, Error>
+//!     crate::dsl::bearing_error(r: &Robot) -> Result<f64, Error>
+//!     crate::dsl::range_error(r: &Robot) -> Result<f64, Error>
+//!     crate::dsl::target_vx(r: &Robot) -> Result<f64, Error>
+//!     crate::dsl::target_vy(r: &Robot) -> Result<f64, Error>
+//!     crate::dsl::target_vz(r: &Robot) -> Result<f64, Error>
+//!     crate::dsl::muzzle_heard(r: &Robot) -> Result<bool, Error>
 
 pub mod ffi;
 pub mod records;

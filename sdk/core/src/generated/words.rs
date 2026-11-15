@@ -141,5 +141,11 @@ pub fn fill(r: &Robot) -> Result<DslWordsV1, Error> {
         hill_range: crate::dsl::hill_range(r)?,
         hill_time: crate::dsl::hill_time(r)?,
         hill_to_win: crate::dsl::hill_to_win(r)?,
+        bearing_error: crate::dsl::bearing_error(r)?,
+        range_error: crate::dsl::range_error(r)?,
+        target_vx: crate::dsl::target_vx(r)?,
+        target_vy: crate::dsl::target_vy(r)?,
+        target_vz: crate::dsl::target_vz(r)?,
+        muzzle_heard: flag(crate::dsl::muzzle_heard(r)?),
     })
 }

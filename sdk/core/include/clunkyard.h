@@ -537,10 +537,12 @@ CY_API int32_t cy_gun_power_for_speed(cy_robot *robot, double speed, double *out
  */
 CY_API int32_t cy_gun_power_for_flight_time(cy_robot *robot, double range, double seconds, double *out);
 /*
- * gun.lead: The intercept if the contact holds its tracked velocity: the aim
- * at which a shot fired now meets it then; absent when no shot reaches it. It
- * is a starting point, and a target that turns, reverses or weaves beats it;
- * for your own prediction, use lead_point. CY_NONE when absent.
+ * gun.lead: The intercept if the contact holds its tracked velocity
+ * (tracker.velocity, smoothed as tracker.configure sets; zero for a passive
+ * contact or an untracked robot): the aim at which a shot fired now meets it
+ * then; absent when no shot reaches it. It is a starting point, and a target
+ * that turns, reverses or weaves beats it; for your own prediction, use
+ * lead_point. CY_NONE when absent.
  */
 CY_API int32_t cy_gun_lead_v1(cy_robot *robot, const cy_contact_v1 *contact, double power, cy_solution_v1 *out);
 /*
@@ -668,7 +670,11 @@ CY_API int32_t cy_tracker_cue_v1(cy_robot *robot, cy_cue_v1 *out);
  * from two sightings.
  */
 CY_API int32_t cy_tracker_nearest_bearing_rate(cy_robot *robot, double *out);
-/* tracker.velocity: The robot's tracked velocity; zero when it has no track. */
+/*
+ * tracker.velocity: The robot's tracked velocity, the one gun.lead uses: the
+ * difference of its first two sightings, then smoothing × the old velocity +
+ * (1 − smoothing) × each newer difference; zero when it has no track.
+ */
 CY_API int32_t cy_tracker_velocity(cy_robot *robot, int32_t slot, cy_vec3 *out);
 /*
  * tracker.position: Where the robot was last seen, if it was. CY_NONE when
@@ -876,7 +882,7 @@ CY_API int32_t cy_session_feed(cy_robot *robot, const char *line, uint32_t line_
 CY_API int32_t cy_session_reply(cy_robot *robot, char *buf, uint32_t capacity, uint32_t *length);
 
 /* ---- the DSL words: outside the robot API, for the DSL interpreters and -wasm builds ---- */
-/* One double per word (booleans 1 or 0, enums their CY_ value), in protocol/v2/api.json's word order. 776 bytes. */
+/* One double per word (booleans 1 or 0, enums their CY_ value), in protocol/v2/api.json's word order. 824 bytes. */
 typedef struct cy_dsl_words_v1 {
   double ruleset; /* ruleset */
   double physics_mode; /* physics-mode */
@@ -975,6 +981,12 @@ typedef struct cy_dsl_words_v1 {
   double hill_range; /* hill-range */
   double hill_time; /* hill-time */
   double hill_to_win; /* hill-to-win */
+  double bearing_error; /* bearing-error */
+  double range_error; /* range-error */
+  double target_vx; /* target-vx */
+  double target_vy; /* target-vy */
+  double target_vz; /* target-vz */
+  double muzzle_heard; /* muzzle-heard */
 } cy_dsl_words_v1;
 CY_API int32_t cy_dsl_fill_v1(cy_robot *robot, cy_dsl_words_v1 *out);
 

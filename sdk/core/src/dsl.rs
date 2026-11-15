@@ -7,7 +7,7 @@
 
 use crate::generated::*;
 use crate::maths::{angle_diff, degrees_of, max, normalize, sqrt};
-use crate::message::State;
+use crate::message::{Id, State};
 use crate::runtime::Robot;
 
 /// Distance, bearing and elevation from you to a target, counting height
@@ -205,4 +205,38 @@ pub fn hill_time(r: &Robot) -> Result<f64, Error> {
 pub fn hill_to_win(r: &Robot) -> Result<f64, Error> {
     let hello = r.hello()?;
     Ok(r.current()?.hill.as_ref().map_or(0.0, |hill| max(0.0, hello.win_ticks / hello.tick_rate - hill.held_ticks / hello.tick_rate)))
+}
+
+/// The nearest contact's bearing error, degrees; 0 with none or an exact one.
+pub fn bearing_error(r: &Robot) -> Result<f64, Error> {
+    Ok(crate::sensors::nearest_seen(r.current()?).and_then(|nearest| nearest.bearing_error).unwrap_or(0.0))
+}
+
+/// The nearest contact's range error; 0 with none or an exact one.
+pub fn range_error(r: &Robot) -> Result<f64, Error> {
+    Ok(crate::sensors::nearest_seen(r.current()?).and_then(|nearest| nearest.range_error).unwrap_or(0.0))
+}
+
+/// A passive muzzle contact is among this tick's contacts.
+pub fn muzzle_heard(r: &Robot) -> Result<bool, Error> {
+    Ok(r.current()?.contacts.iter().any(|contact| contact.id == Id::Null && contact.source == Source::Muzzle as i32))
+}
+
+/// The nearest contact's tracked velocity (tracker.velocity of its slot),
+/// read by id; zero with none or no track.
+fn target_velocity(r: &Robot) -> Result<Vec3, Error> {
+    let id = crate::sensors::nearest_seen(r.current()?).and_then(|nearest| nearest.id.robot());
+    Ok(id.and_then(|id| r.tracker.tracks.get(id)).map_or(Vec3::default(), |track| track.velocity))
+}
+
+pub fn target_vx(r: &Robot) -> Result<f64, Error> {
+    Ok(target_velocity(r)?.x)
+}
+
+pub fn target_vy(r: &Robot) -> Result<f64, Error> {
+    Ok(target_velocity(r)?.y)
+}
+
+pub fn target_vz(r: &Robot) -> Result<f64, Error> {
+    Ok(target_velocity(r)?.z)
 }
