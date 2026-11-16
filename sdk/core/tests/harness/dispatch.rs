@@ -143,6 +143,7 @@ pub fn dispatch(symbol: &str, r: *mut Robot, a: &Args, o: &mut Out) -> Option<i3
         "cy_status_value" => cy_status_value(r, a.f(0)),
         "cy_status_get_text" => cy_status_get_text(r, o.ptr(), o.cap(), o.len()),
         "cy_status_get_value" => cy_status_get_value(r, o.ptr()),
+        "cy_debug_log" => cy_debug_log(r, a.p(0), a.n(0)),
         "cy_raw_number" => cy_raw_number(r, a.p(0), a.n(0), o.ptr()),
         "cy_raw_text" => cy_raw_text(r, a.p(0), a.n(0), o.ptr(), o.cap(), o.len()),
         "cy_raw_has" => cy_raw_has(r, a.p(0), a.n(0), o.ptr()),

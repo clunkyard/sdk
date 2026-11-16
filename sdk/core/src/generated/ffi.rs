@@ -1470,6 +1470,15 @@ pub extern "C" fn cy_status_get_value(robot: *mut Robot, out: *mut f64) -> i32 {
     })
 }
 
+/// Adds a line to this tick's act for your trace; the first four of a turn are kept and later ones dropped. Unlike session.log, the arena keeps it.
+#[unsafe(no_mangle)]
+pub extern "C" fn cy_debug_log(robot: *mut Robot, line: *const u8, line_length: u32) -> i32 {
+    guard(robot, "cy_debug_log", |r| {
+        crate::debug::log(r, text_in(line, line_length, "line")?)?;
+        Ok(CY_OK)
+    })
+}
+
 /// The number at a path, if there is one.
 #[unsafe(no_mangle)]
 pub extern "C" fn cy_raw_number(robot: *mut Robot, path: *const u8, path_length: u32, out: *mut f64) -> i32 {
@@ -1532,7 +1541,7 @@ pub extern "C" fn cy_raw_line(robot: *mut Robot, buf: *mut u8, capacity: u32, le
     })
 }
 
-/// Adds fields the API does not cover to this tick's act; a key the API writes (v, type, tick, drive, forces, aim, scan, fire, status) is refused with E_ARGUMENT.
+/// Adds fields the API does not cover to this tick's act; a key the API writes (v, type, tick, drive, forces, aim, scan, fire, status, log) is refused with E_ARGUMENT.
 #[unsafe(no_mangle)]
 pub extern "C" fn cy_raw_extra(robot: *mut Robot, json: *const u8, json_length: u32) -> i32 {
     guard(robot, "cy_raw_extra", |r| {

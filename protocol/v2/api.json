@@ -1204,6 +1204,12 @@
       "rename": {}
     },
     {
+      "name": "debug",
+      "fact": "Lines for your own trace, which other players never see.",
+      "stateless": false,
+      "rename": {}
+    },
+    {
       "name": "raw",
       "fact": "The messages as the arena sent them, for what the API does not cover.",
       "stateless": false,
@@ -6303,6 +6309,45 @@
       }
     },
     {
+      "name": "debug.log",
+      "kind": "command",
+      "form": "call",
+      "since": "2.0",
+      "fact": "Adds a line to this tick's act for your trace; the first four of a turn are kept and later ones dropped. Unlike session.log, the arena keeps it.",
+      "subsystem": "debug",
+      "member": "log",
+      "path": [
+        "debug",
+        "log"
+      ],
+      "stateless": false,
+      "args": [
+        {
+          "name": "line",
+          "type": {
+            "kind": "text",
+            "description": "Up to 120 bytes of UTF-8 are kept; a longer line is cut to end in …, and control characters become spaces."
+          },
+          "description": "Up to 120 bytes of UTF-8 are kept; a longer line is cut to end in …, and control characters become spaces."
+        }
+      ],
+      "returns": null,
+      "fields": [],
+      "of": null,
+      "dsl": null,
+      "rename": {},
+      "wasm": true,
+      "bindings": true,
+      "version": 1,
+      "vectors": "protocol/v2/vectors/api/debug.json#log",
+      "symbol": "cy_debug_log",
+      "alias": null,
+      "rust": {
+        "module": "debug",
+        "fn": "log"
+      }
+    },
+    {
       "name": "raw.number",
       "kind": "query",
       "form": "call",
@@ -6554,7 +6599,7 @@
       "kind": "command",
       "form": "call",
       "since": "2.0",
-      "fact": "Adds fields the API does not cover to this tick's act; a key the API writes (v, type, tick, drive, forces, aim, scan, fire, status) is refused with E_ARGUMENT.",
+      "fact": "Adds fields the API does not cover to this tick's act; a key the API writes (v, type, tick, drive, forces, aim, scan, fire, status, log) is refused with E_ARGUMENT.",
       "subsystem": "raw",
       "member": "extra",
       "path": [

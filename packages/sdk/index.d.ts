@@ -226,6 +226,9 @@ export interface Status {
   set(fields?: { text?: string; value?: number }): void;
   get(field: "text" | "value"): number | string | null;
 }
+export interface Debug {
+  log(line: string): void;
+}
 export interface Raw {
   number(path: string): number | null;
   text(path: string): string | null;
@@ -259,6 +262,7 @@ export class Robot {
   score: Score;
   angles: Angles;
   status: Status;
+  debug: Debug;
   raw: Raw;
   session: Session;
   onStart(): void;

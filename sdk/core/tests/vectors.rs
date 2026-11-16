@@ -315,6 +315,9 @@ fn controls(run: &mut Run, file: &Value) {
                 (status, value)
             } else if op.get("fire").is_some() {
                 (cy_gun_fire(robot.robot), None)
+            } else if op.get("log").is_some() {
+                let line = text(op, "log");
+                (cy_debug_log(robot.robot, line.as_ptr(), line.len() as u32), None)
             } else {
                 let json = text(op, "extra");
                 (cy_raw_extra(robot.robot, json.as_ptr(), json.len() as u32), None)

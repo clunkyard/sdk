@@ -17,6 +17,7 @@ pub mod angles;
 pub mod arena;
 pub mod battery;
 pub mod clock;
+pub mod debug;
 pub mod drive;
 pub mod dsl;
 pub mod formula;

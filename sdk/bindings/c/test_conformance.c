@@ -528,6 +528,9 @@ if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');text(buf,
 if(!strcmp(op,"get")&&!strcmp(name,"status.get")&&!strcmp(field,"value")){double out=0;
 int32_t status=cy_status_get_value(robot,&out);
 if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');bits((double)out);}putchar('\n');}return;}
+if(!strcmp(op,"call")&&!strcmp(name,"debug.log")){uint32_t line_length; char *line=string(&line_length);
+int32_t status=cy_debug_log(robot,line,line_length);
+if(answer){printf("%s %d",label,status);if(status==CY_OK && 0){putchar(' ');}putchar('\n');}return;}
 if(!strcmp(op,"call")&&!strcmp(name,"raw.number")){uint32_t path_length; char *path=string(&path_length);
 double out=0;
 int32_t status=cy_raw_number(robot,path,path_length,&out);

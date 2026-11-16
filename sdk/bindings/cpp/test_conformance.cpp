@@ -190,6 +190,7 @@ static int32_t binding_cy_status_text(cy_robot *robot,const char *text,uint32_t 
 static int32_t binding_cy_status_value(cy_robot *robot,double value){try{clunkyard::Robot binding(robot);binding.status.set(std::nullopt,value);return CY_OK;}catch(const clunkyard::Error &error){return error.status;}}
 static int32_t binding_cy_status_get_text(cy_robot *robot,char *buf,uint32_t capacity,uint32_t *length){try{clunkyard::Robot binding(robot);auto got=binding.status.get_text();if(!got)return CY_NONE;*length=(uint32_t)(*got).size();if(capacity<*length)return CY_SHORT;memcpy(buf,(*got).data(),*length);return CY_OK;}catch(const clunkyard::Error &error){return error.status;}}
 static int32_t binding_cy_status_get_value(cy_robot *robot,double *out){try{clunkyard::Robot binding(robot);auto got=binding.status.get_value();if(!got)return CY_NONE;*out=*got;return CY_OK;}catch(const clunkyard::Error &error){return error.status;}}
+static int32_t binding_cy_debug_log(cy_robot *robot,const char *line,uint32_t line_length){try{clunkyard::Robot binding(robot);binding.debug.log(std::string_view(line,line_length));return CY_OK;}catch(const clunkyard::Error &error){return error.status;}}
 static int32_t binding_cy_raw_number(cy_robot *robot,const char *path,uint32_t path_length,double *out){try{clunkyard::Robot binding(robot);auto got=binding.raw.number(std::string_view(path,path_length));if(!got)return CY_NONE;*out=*got;return CY_OK;}catch(const clunkyard::Error &error){return error.status;}}
 static int32_t binding_cy_raw_text(cy_robot *robot,const char *path,uint32_t path_length,char *buf,uint32_t capacity,uint32_t *length){try{clunkyard::Robot binding(robot);auto got=binding.raw.text(std::string_view(path,path_length));if(!got)return CY_NONE;*length=(uint32_t)(*got).size();if(capacity<*length)return CY_SHORT;memcpy(buf,(*got).data(),*length);return CY_OK;}catch(const clunkyard::Error &error){return error.status;}}
 static int32_t binding_cy_raw_has(cy_robot *robot,const char *path,uint32_t path_length,int32_t *out){try{clunkyard::Robot binding(robot);auto got=binding.raw.has(std::string_view(path,path_length));*out=got;return CY_OK;}catch(const clunkyard::Error &error){return error.status;}}
@@ -670,6 +671,9 @@ if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');text(buf,
 if(!strcmp(op,"get")&&!strcmp(name,"status.get")&&!strcmp(field,"value")){double out=0;
 int32_t status=binding_cy_status_get_value(robot,&out);
 if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');bits((double)out);}putchar('\n');}return;}
+if(!strcmp(op,"call")&&!strcmp(name,"debug.log")){uint32_t line_length; char *line=string(&line_length);
+int32_t status=binding_cy_debug_log(robot,line,line_length);
+if(answer){printf("%s %d",label,status);if(status==CY_OK && 0){putchar(' ');}putchar('\n');}return;}
 if(!strcmp(op,"call")&&!strcmp(name,"raw.number")){uint32_t path_length; char *path=string(&path_length);
 double out=0;
 int32_t status=binding_cy_raw_number(robot,path,path_length,&out);

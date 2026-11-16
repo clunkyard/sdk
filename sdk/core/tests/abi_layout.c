@@ -230,6 +230,7 @@ static const cy_any_fn SYMBOLS[] = {
   (cy_any_fn)cy_status_value,
   (cy_any_fn)cy_status_get_text,
   (cy_any_fn)cy_status_get_value,
+  (cy_any_fn)cy_debug_log,
   (cy_any_fn)cy_raw_number,
   (cy_any_fn)cy_raw_text,
   (cy_any_fn)cy_raw_has,

@@ -250,6 +250,7 @@ pub fn cy_status_text(robot:*mut std::ffi::c_void,text:*const u8,text_length:u32
 pub fn cy_status_value(robot:*mut std::ffi::c_void,value:f64)->i32;
 pub fn cy_status_get_text(robot:*mut std::ffi::c_void,buf:*mut u8,capacity:u32,length:*mut u32)->i32;
 pub fn cy_status_get_value(robot:*mut std::ffi::c_void,out:*mut f64)->i32;
+pub fn cy_debug_log(robot:*mut std::ffi::c_void,line:*const u8,line_length:u32)->i32;
 pub fn cy_raw_number(robot:*mut std::ffi::c_void,path:*const u8,path_length:u32,out:*mut f64)->i32;
 pub fn cy_raw_text(robot:*mut std::ffi::c_void,path:*const u8,path_length:u32,buf:*mut u8,capacity:u32,length:*mut u32)->i32;
 pub fn cy_raw_has(robot:*mut std::ffi::c_void,path:*const u8,path_length:u32,out:*mut i32)->i32;
@@ -421,6 +422,9 @@ pub fn set(&self,text:Option<&str>,value:Option<f64>)->Result<(),Error>{if let S
 pub fn get_text(&self) -> Result<Option<String>,Error> {let mut out=vec![0u8;256];let mut count=0;let mut status=unsafe{ffi::cy_status_get_text(self.handle,out.as_mut_ptr(),out.len() as u32,&mut count)};while status==SHORT {out.resize(count as usize,0);status=unsafe{ffi::cy_status_get_text(self.handle,out.as_mut_ptr(),out.len() as u32,&mut count)};}if status==NONE{return Ok(None);}check(self.handle,status)?;out.truncate(count as usize);Ok(Some(String::from_utf8(out).map_err(|_|Error::new(E_ARGUMENT,"core returned invalid UTF-8"))?))}
 pub fn get_value(&self) -> Result<Option<f64>,Error> {let mut out=f64::default();let mut status=unsafe{ffi::cy_status_get_value(self.handle,&mut out)};if status==NONE{return Ok(None);}check(self.handle,status)?;Ok(Some(out))}
 }
+#[derive(Clone,Copy)] pub struct Debug {handle:*mut c_void} impl Debug {
+pub fn log(&self,line: &str) -> Result<(),Error> {let mut status=unsafe{ffi::cy_debug_log(self.handle,line.as_ptr(),line.len() as u32)};check(self.handle,status)?;Ok(())}
+}
 #[derive(Clone,Copy)] pub struct Raw {handle:*mut c_void} impl Raw {
 pub fn number(&self,path: &str) -> Result<Option<f64>,Error> {let mut out=f64::default();let mut status=unsafe{ffi::cy_raw_number(self.handle,path.as_ptr(),path.len() as u32,&mut out)};if status==NONE{return Ok(None);}check(self.handle,status)?;Ok(Some(out))}
 pub fn text(&self,path: &str) -> Result<Option<String>,Error> {let mut out=vec![0u8;256];let mut count=0;let mut status=unsafe{ffi::cy_raw_text(self.handle,path.as_ptr(),path.len() as u32,out.as_mut_ptr(),out.len() as u32,&mut count)};while status==SHORT {out.resize(count as usize,0);status=unsafe{ffi::cy_raw_text(self.handle,path.as_ptr(),path.len() as u32,out.as_mut_ptr(),out.len() as u32,&mut count)};}if status==NONE{return Ok(None);}check(self.handle,status)?;out.truncate(count as usize);Ok(Some(String::from_utf8(out).map_err(|_|Error::new(E_ARGUMENT,"core returned invalid UTF-8"))?))}
@@ -439,8 +443,8 @@ pub fn log(&self,line: &str) -> Result<(),Error> {let mut status=unsafe{ffi::cy_
 pub fn feed(&self,line: &str) -> Result<(),Error> {let mut status=unsafe{ffi::cy_session_feed(self.handle,line.as_ptr(),line.len() as u32)};check(self.handle,status)?;Ok(())}
 pub fn reply(&self) -> Result<Option<String>,Error> {let mut out=vec![0u8;256];let mut count=0;let mut status=unsafe{ffi::cy_session_reply(self.handle,out.as_mut_ptr(),out.len() as u32,&mut count)};while status==SHORT {out.resize(count as usize,0);status=unsafe{ffi::cy_session_reply(self.handle,out.as_mut_ptr(),out.len() as u32,&mut count)};}if status==NONE{return Ok(None);}check(self.handle,status)?;out.truncate(count as usize);Ok(Some(String::from_utf8(out).map_err(|_|Error::new(E_ARGUMENT,"core returned invalid UTF-8"))?))}
 }
-pub struct Robot {handle:*mut c_void,owned:bool,pub r#match:Match,pub clock:Clock,pub arena:Arena,pub me:Me,pub battery:Battery,pub drive:Drive,pub gun:Gun,pub scanner:Scanner,pub sensors:Sensors,pub tracker:Tracker,pub nav:Nav,pub score:Score,pub angles:Angles,pub status:Status,pub raw:Raw,pub session:Session,}
-impl Robot {pub unsafe fn from_raw(handle:*mut c_void)->Self{Self{handle,owned:false,r#match:Match{handle},clock:Clock{handle},arena:Arena{handle},me:Me{handle},battery:Battery{handle},drive:Drive{handle},gun:Gun{handle},scanner:Scanner{handle},sensors:Sensors{handle},tracker:Tracker{handle},nav:Nav{handle},score:Score{handle},angles:Angles{handle},status:Status{handle},raw:Raw{handle},session:Session{handle},}}
+pub struct Robot {handle:*mut c_void,owned:bool,pub r#match:Match,pub clock:Clock,pub arena:Arena,pub me:Me,pub battery:Battery,pub drive:Drive,pub gun:Gun,pub scanner:Scanner,pub sensors:Sensors,pub tracker:Tracker,pub nav:Nav,pub score:Score,pub angles:Angles,pub status:Status,pub debug:Debug,pub raw:Raw,pub session:Session,}
+impl Robot {pub unsafe fn from_raw(handle:*mut c_void)->Self{Self{handle,owned:false,r#match:Match{handle},clock:Clock{handle},arena:Arena{handle},me:Me{handle},battery:Battery{handle},drive:Drive{handle},gun:Gun{handle},scanner:Scanner{handle},sensors:Sensors{handle},tracker:Tracker{handle},nav:Nav{handle},score:Score{handle},angles:Angles{handle},status:Status{handle},debug:Debug{handle},raw:Raw{handle},session:Session{handle},}}
 fn open(memory:bool)->Result<Self,Error>{let mut handle=std::ptr::null_mut();let name=b"clunkyard-rust";let status=unsafe{if memory{ffi::cy_open_memory(2,0,name.as_ptr(),name.len() as u32,VERSION.as_ptr(),VERSION.len() as u32,&mut handle)}else{ffi::cy_open(2,0,name.as_ptr(),name.len() as u32,VERSION.as_ptr(),VERSION.len() as u32,&mut handle)}};check(handle,status)?;let mut robot=unsafe{Self::from_raw(handle)};robot.owned=true;Ok(robot)}}
 impl Drop for Robot{fn drop(&mut self){if self.owned{unsafe{ffi::cy_close(self.handle)}}}}
 

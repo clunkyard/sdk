@@ -104,6 +104,7 @@ CALLS = {
     "angles.to_chassis": (["f64", "f64", "record:attitude"], "record:direction"),
     "angles.from_chassis": (["f64", "f64", "record:attitude"], "record:direction"),
     "angles.clamp": (["f64", "f64", "f64"], "f64"),
+    "debug.log": (["text"], None),
     "raw.number": (["text"], "f64"),
     "raw.text": (["text"], "text"),
     "raw.has": (["text"], "bool"),

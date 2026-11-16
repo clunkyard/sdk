@@ -833,6 +833,14 @@ CY_API int32_t cy_status_get_text(cy_robot *robot, char *buf, uint32_t capacity,
  */
 CY_API int32_t cy_status_get_value(cy_robot *robot, double *out);
 
+/* ---- debug: Lines for your own trace, which other players never see ---- */
+/*
+ * debug.log: Adds a line to this tick's act for your trace; the first four of
+ * a turn are kept and later ones dropped. Unlike session.log, the arena keeps
+ * it.
+ */
+CY_API int32_t cy_debug_log(cy_robot *robot, const char *line, uint32_t line_length);
+
 /* ---- raw: The messages as the arena sent them, for what the API does not cover ---- */
 /* raw.number: The number at a path, if there is one. CY_NONE when absent. */
 CY_API int32_t cy_raw_number(cy_robot *robot, const char *path, uint32_t path_length, double *out);
@@ -851,7 +859,7 @@ CY_API int32_t cy_raw_count(cy_robot *robot, const char *path, uint32_t path_len
 CY_API int32_t cy_raw_line(cy_robot *robot, char *buf, uint32_t capacity, uint32_t *length);
 /*
  * raw.extra: Adds fields the API does not cover to this tick's act; a key the
- * API writes (v, type, tick, drive, forces, aim, scan, fire, status) is
+ * API writes (v, type, tick, drive, forces, aim, scan, fire, status, log) is
  * refused with E_ARGUMENT.
  */
 CY_API int32_t cy_raw_extra(cy_robot *robot, const char *json, uint32_t json_length);

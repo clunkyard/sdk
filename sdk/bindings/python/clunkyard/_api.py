@@ -366,6 +366,7 @@ _fn("cy_status_text", 0, c_void_p, c_char_p, c_uint32)
 _fn("cy_status_value", 0, c_void_p, c_double)
 _fn("cy_status_get_text", 0, c_void_p, c_char_p, c_uint32, _PU)
 _fn("cy_status_get_value", 0, c_void_p, _PD)
+_fn("cy_debug_log", 0, c_void_p, c_char_p, c_uint32)
 _fn("cy_raw_number", 0, c_void_p, c_char_p, c_uint32, _PD)
 _fn("cy_raw_text", 0, c_void_p, c_char_p, c_uint32, c_char_p, c_uint32, _PU)
 _fn("cy_raw_has", 0, c_void_p, c_char_p, c_uint32, _PI)
@@ -865,6 +866,16 @@ class _Status:
         """The field's value as set this tick, or None."""
         return _get(self._h, self._fields, field)
 
+class _Debug:
+    """Lines for your own trace, which other players never see."""
+    __slots__ = ("_h",)
+
+    def __init__(self, robot):
+        self._h = robot
+
+    def log(self, line):
+        return _do(_c.cy_debug_log, (self._h, *_utf8(line)))
+
 class _Raw:
     """The messages as the arena sent them, for what the API does not cover."""
     __slots__ = ("_h",)
@@ -940,5 +951,6 @@ def attach(robot, handle):
     robot.score = _Score(handle)
     robot.angles = angles
     robot.status = _Status(handle)
+    robot.debug = _Debug(handle)
     robot.raw = _Raw(handle)
     robot.session = _Session(handle)

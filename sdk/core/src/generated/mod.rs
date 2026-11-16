@@ -20,7 +20,7 @@
 //! The act write clamps (Field::limits() for the schema's ranges; headings
 //! by normalize, pitches, the scan arc, the power and the status from the
 //! hello), writes -0 as 0, sends fire only after a fire op, and orders
-//! members v, type, tick, drive, forces, aim, scan, fire, status, extras
+//! members v, type, tick, drive, forces, aim, scan, fire, status, log, extras
 //! (protocol/v2/vectors/api/controls.json).
 //!
 //! The hand-written core provides:
@@ -135,6 +135,7 @@
 //!     crate::angles::to_chassis(heading: f64, pitch: f64, attitude: &AttitudeV1) -> Result<Direction, Error>
 //!     crate::angles::from_chassis(heading: f64, pitch: f64, attitude: &AttitudeV1) -> Result<Direction, Error>
 //!     crate::angles::clamp(value: f64, low: f64, high: f64) -> Result<f64, Error>
+//!     crate::debug::log(r: &mut Robot, line: &str) -> Result<(), Error>
 //!     crate::raw::number(r: &Robot, path: &str) -> Result<Option<f64>, Error>
 //!     crate::raw::text(r: &Robot, path: &str) -> Result<Option<String>, Error>
 //!     crate::raw::has(r: &Robot, path: &str) -> Result<bool, Error>

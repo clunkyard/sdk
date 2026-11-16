@@ -188,6 +188,9 @@ struct Status {cy_robot *&handle; explicit Status(cy_robot *&robot):handle(robot
   std::optional<std::string> get_text() const { std::string out(256,'\0');uint32_t count=0; int32_t status = cy_status_get_text(handle, out.data(), (uint32_t)out.size(), &count); while(status==CY_SHORT){out.resize(count);status=cy_status_get_text(handle, out.data(), (uint32_t)out.size(), &count);} if(status==CY_NONE)return std::nullopt; check(handle,status); out.resize(count);return out; }
   std::optional<double> get_value() const { double out{}; int32_t status = cy_status_get_value(handle, &out); if(status==CY_NONE)return std::nullopt; check(handle,status); return out; }
 };
+struct Debug {cy_robot *&handle; explicit Debug(cy_robot *&robot):handle(robot){}
+  void log(std::string_view line) { int32_t status = cy_debug_log(handle, line.data(), (uint32_t)line.size()); check(handle,status); }
+};
 struct Raw {cy_robot *&handle; explicit Raw(cy_robot *&robot):handle(robot){}
   std::optional<double> number(std::string_view path) const { double out{}; int32_t status = cy_raw_number(handle, path.data(), (uint32_t)path.size(), &out); if(status==CY_NONE)return std::nullopt; check(handle,status); return out; }
   std::optional<std::string> text(std::string_view path) const { std::string out(256,'\0');uint32_t count=0; int32_t status = cy_raw_text(handle, path.data(), (uint32_t)path.size(), out.data(), (uint32_t)out.size(), &count); while(status==CY_SHORT){out.resize(count);status=cy_raw_text(handle, path.data(), (uint32_t)path.size(), out.data(), (uint32_t)out.size(), &count);} if(status==CY_NONE)return std::nullopt; check(handle,status); out.resize(count);return out; }
@@ -224,10 +227,11 @@ public:
   Score score;
   Angles angles;
   Status status;
+  Debug debug;
   Raw raw;
   Session session;
-  Robot():match(handle),clock(handle),arena(handle),me(handle),battery(handle),drive(handle),gun(handle),scanner(handle),sensors(handle),tracker(handle),nav(handle),score(handle),angles(handle),status(handle),raw(handle),session(handle) {}
-  explicit Robot(cy_robot *h):handle(h),owned(false),match(handle),clock(handle),arena(handle),me(handle),battery(handle),drive(handle),gun(handle),scanner(handle),sensors(handle),tracker(handle),nav(handle),score(handle),angles(handle),status(handle),raw(handle),session(handle) {}
+  Robot():match(handle),clock(handle),arena(handle),me(handle),battery(handle),drive(handle),gun(handle),scanner(handle),sensors(handle),tracker(handle),nav(handle),score(handle),angles(handle),status(handle),debug(handle),raw(handle),session(handle) {}
+  explicit Robot(cy_robot *h):handle(h),owned(false),match(handle),clock(handle),arena(handle),me(handle),battery(handle),drive(handle),gun(handle),scanner(handle),sensors(handle),tracker(handle),nav(handle),score(handle),angles(handle),status(handle),debug(handle),raw(handle),session(handle) {}
   Robot(const Robot &)=delete;Robot &operator=(const Robot &)=delete;virtual ~Robot(){if(owned)cy_close(handle);}
   virtual void on_start(){} virtual void on_turn(){}
   void run(){open(false);loop();}

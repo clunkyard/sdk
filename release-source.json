@@ -1,6 +1,6 @@
 {
   "v": 1,
-  "sourceCommit": "42d8fae839eb990aaa1d666e63285f6dc36572de",
+  "sourceCommit": "6cb8898e3c512aac2905b2c27f4665f6ca322e3e",
   "sourceDirty": false,
   "playerDerivation": {
     "packages": [
@@ -13,14 +13,14 @@
       {
         "name": "@clunkyard/sdk",
         "canonicalVersion": "2.0.1",
-        "version": "2.0.6",
-        "contentSHA256": "5563313854fd08866ebf8b62e217731dfbf2301089115ebf0122aaa2c8023f2e"
+        "version": "2.0.7",
+        "contentSHA256": "64bd8e8e099eae1e343359c3131d5c60bae3926a888ce185f3f4a1172b325e59"
       },
       {
         "name": "@clunkyard/cli",
         "canonicalVersion": "2.2.2",
-        "version": "2.2.14",
-        "contentSHA256": "b263c518e35159c2545ef4699244f1eb20d9d870db179a4609a8ac3e1268cfe0"
+        "version": "2.2.15",
+        "contentSHA256": "41480a3f6789f4e79fb8436798d2005ce27df681f330de73b01bf64f8fb4c2dc"
       }
     ],
     "catalogueSHA256": "26b10d1d428ff2d4e0eea7be910f0830846665affb90607ea42717723d60864a"
@@ -104,7 +104,7 @@
     {
       "path": "packages/cli/package.json",
       "bytes": 754,
-      "sha256": "56e9c020a914494dfb1cac5801eb69cfd61b9ace0dc255d2d8ff1b80474537b1"
+      "sha256": "81b71a309f50ad87954b17b31c25a63893f760ac9a7690b5e749270530829705"
     },
     {
       "path": "packages/cli/project.cjs",
@@ -158,13 +158,13 @@
     },
     {
       "path": "packages/sdk/api.js",
-      "bytes": 115836,
-      "sha256": "0cac442dd1e37db6d85fcc72c312791fdb28859c1f32dd07b9c3549d5fa8ad15"
+      "bytes": 116773,
+      "sha256": "036c9e28b09a72585bfe97423c383eaf54e85f8ee66056dd73621714197b3a98"
     },
     {
       "path": "packages/sdk/clunkyard-core.wasm",
-      "bytes": 230239,
-      "sha256": "83ccbb1ebe64ae3d3a06cbb65926a8aba451de1cec9b42ea6c0182e15055921c"
+      "bytes": 231173,
+      "sha256": "ce09161b9854d53fb14e193968df271effa363f2b78ab38891e79f943b12f42e"
     },
     {
       "path": "packages/sdk/core.js",
@@ -173,8 +173,8 @@
     },
     {
       "path": "packages/sdk/index.d.ts",
-      "bytes": 8029,
-      "sha256": "604863cfc4d71a108a5884dbd2f15dad13db7cc56bfe4d2e70dec9ef9e4aacab"
+      "bytes": 8099,
+      "sha256": "f33923f219d662904a2268ac05bf0c5b0de0c2f9999fb7b5ad7d7a4537da777d"
     },
     {
       "path": "packages/sdk/index.js",
@@ -259,7 +259,7 @@
     {
       "path": "packages/sdk/package.json",
       "bytes": 1116,
-      "sha256": "ad31af01fccc8e0bdc176389c500a573849e087385d87cf632eaa0e7f4f3f482"
+      "sha256": "54b803ac29e58fb15b39107ee1c2780d695f332b6ece042bc320e5bed261a381"
     },
     {
       "path": "packages/sdk/README.md",
@@ -278,8 +278,8 @@
     },
     {
       "path": "protocol/v2/api.json",
-      "bytes": 197346,
-      "sha256": "cde74eebedbd4b7e31e28fbe8dcf85eebd39e85d05723214d332df56afb9119b"
+      "bytes": 198663,
+      "sha256": "4d624c6ace0ccc33512187efa285663d31b4bfb00f9af628a403f6ae6c7a073b"
     },
     {
       "path": "protocol/v2/fixtures/2d-classic.ndjson",
@@ -388,8 +388,8 @@
     },
     {
       "path": "protocol/v2/vectors/api/controls.json",
-      "bytes": 9025,
-      "sha256": "bcb375f934a351b170db96004dc1b4a1f3fc6dd6e7e0907cdebc75edeb4958b3"
+      "bytes": 9827,
+      "sha256": "0a9742bbc191fceecbc353afa8e14e03929ad31052e6ea3b36b820c932aa8997"
     },
     {
       "path": "protocol/v2/vectors/api/drive.json",
@@ -643,13 +643,13 @@
     },
     {
       "path": "sdk/bindings/c/test_conformance.c",
-      "bytes": 48776,
-      "sha256": "8dd903b9acc6ccf9d3cb73f474f622e2ac5115220bb80b0fc9964d4a628b094a"
+      "bytes": 49035,
+      "sha256": "ec2d30018a41ec86f183ca910da541ce0f796b00a1ec0f2216fd8286ddfdcf54"
     },
     {
       "path": "sdk/bindings/cpp/clunkyard.hpp",
-      "bytes": 32414,
-      "sha256": "96115bc8ff2fe0a8138d7cb169286b85feb717798469a78c46d7094c07bf0c31"
+      "bytes": 32677,
+      "sha256": "b2887552cf00442a209127f3ca6d21639e448ed68ae5f73d0e98f44619d297ec"
     },
     {
       "path": "sdk/bindings/cpp/install.cjs",
@@ -668,8 +668,8 @@
     },
     {
       "path": "sdk/bindings/cpp/test_conformance.cpp",
-      "bytes": 86405,
-      "sha256": "06d6bacbe45f344cba6fe0732b537554cd0b2d45cde0d34aa1d192bd20683081"
+      "bytes": 86927,
+      "sha256": "5b7b8b6449182ec25a40a8bd1ac6220639536382cd51187031cb1b692f5d5f63"
     },
     {
       "path": "sdk/bindings/python/clunkyard/__init__.py",
@@ -678,8 +678,8 @@
     },
     {
       "path": "sdk/bindings/python/clunkyard/_api.py",
-      "bytes": 34221,
-      "sha256": "f70e5512d90fcdae83926e1301da6441b455ee6cfcbffe46aa2d5fa114364958"
+      "bytes": 34556,
+      "sha256": "62eee4265ea77a0d7f54e3dfe63b7a22f2f4e61a77b4014e6ab503689c90d938"
     },
     {
       "path": "sdk/bindings/python/clunkyard/_core.py",
@@ -703,8 +703,8 @@
     },
     {
       "path": "sdk/bindings/python/test_conformance.py",
-      "bytes": 10477,
-      "sha256": "cd55df5414f85fed3c5ee7e6b75aaf863c00aaf9ad766001266419b0eba1fbbd"
+      "bytes": 10512,
+      "sha256": "f2c9b0f8988d2557999747ff813cd8d3708f04d7420be68fb129433e0b6e5ec6"
     },
     {
       "path": "sdk/bindings/python/test_loop.py",
@@ -713,8 +713,8 @@
     },
     {
       "path": "sdk/bindings/rust/clunkyard.rs",
-      "bytes": 56814,
-      "sha256": "dc8617a49b69f83816e4552109a3337c918091c9389ed9440c649338e037757c"
+      "bytes": 57182,
+      "sha256": "e724bfb283032c577ac5f3eda9d522168781fa64eb8ac5477214659ebcdb3ee8"
     },
     {
       "path": "sdk/bindings/rust/install.cjs",
@@ -733,13 +733,13 @@
     },
     {
       "path": "sdk/bindings/rust/test_conformance.c",
-      "bytes": 61803,
-      "sha256": "4e12def528e0048899ba76755a34df1cab5ca2e7b8c86de88c25b7a158ef7961"
+      "bytes": 62162,
+      "sha256": "9062bda3eceaf1803cdc4c50a766df86ee69d370f1ed671ae4b0c9ed015f4aff"
     },
     {
       "path": "sdk/bindings/rust/test_conformance.rs",
-      "bytes": 46786,
-      "sha256": "15c64dc7764bb77c4438892888e8d6bddabf82eb20acdea0938c64c8612c9ad0"
+      "bytes": 47182,
+      "sha256": "db12f2872454ea5577c29bbfaa6aee2b1652008bb47c853f28c3e5fac1344cf3"
     },
     {
       "path": "sdk/core/.cargo/config.toml",
@@ -778,13 +778,13 @@
     },
     {
       "path": "sdk/core/dist/clunkyard-core.wasm",
-      "bytes": 230239,
-      "sha256": "83ccbb1ebe64ae3d3a06cbb65926a8aba451de1cec9b42ea6c0182e15055921c"
+      "bytes": 231173,
+      "sha256": "ce09161b9854d53fb14e193968df271effa363f2b78ab38891e79f943b12f42e"
     },
     {
       "path": "sdk/core/include/clunkyard.h",
-      "bytes": 45754,
-      "sha256": "5a47f72bddd40b7d782128325d080246b8d9811403b172c321e93ad5e554dbbd"
+      "bytes": 46097,
+      "sha256": "2e4c8fa679243ab3ac805d8617d9798c729681cbd5abe46c8f149df46a6c3471"
     },
     {
       "path": "sdk/core/notices/rust-Apache-2.0.txt",
@@ -803,8 +803,8 @@
     },
     {
       "path": "sdk/core/src/act.rs",
-      "bytes": 6597,
-      "sha256": "f5acc0982a2bdc2548d24d1b418bbb7034bd789f8415dd39dcca5f6786c622d5"
+      "bytes": 8160,
+      "sha256": "87a7993aae46c927b68fe319155c3e54d90f43cdefb8df5b886e7773b813bab9"
     },
     {
       "path": "sdk/core/src/angles.rs",
@@ -827,6 +827,11 @@
       "sha256": "5fdf9cb6544cce3d693a8daedf8d9bf83f7eb352af4c6b78d993068f94ee20a2"
     },
     {
+      "path": "sdk/core/src/debug.rs",
+      "bytes": 221,
+      "sha256": "dedf4e9b1a09b12da52afc4ca09f808b27f5d9b743cf22936af43bf3536668a9"
+    },
+    {
       "path": "sdk/core/src/drive.rs",
       "bytes": 211,
       "sha256": "826e7e271e1a87e4e5e51808a06b69d76282771033b1e6983ccafa671cc1fc0e"
@@ -843,13 +848,13 @@
     },
     {
       "path": "sdk/core/src/generated/ffi.rs",
-      "bytes": 60066,
-      "sha256": "691ce215ab5c1cc0098b23faa3c766a0773c1ca6be83a637f688edd18ed92f52"
+      "bytes": 60470,
+      "sha256": "4b3c948220d83819f17ec40fec264c63682d98de3b23228be06c9af91b1233a5"
     },
     {
       "path": "sdk/core/src/generated/mod.rs",
-      "bytes": 13557,
-      "sha256": "3d53216f4662d52c75a9a805f2e39c449e6493bf05b6d3078708f8ae71bccaf4"
+      "bytes": 13636,
+      "sha256": "9a3fabc1124a06c11ec04450484b0f1623f9b523951d0f0a9c76cf8c4ca487e2"
     },
     {
       "path": "sdk/core/src/generated/records.rs",
@@ -878,8 +883,8 @@
     },
     {
       "path": "sdk/core/src/lib.rs",
-      "bytes": 1053,
-      "sha256": "439d6301ad50025d3232a6ef8dc5f91e18d9e052f6a4521faceddcfa7716145a"
+      "bytes": 1068,
+      "sha256": "ab308e59a039c2b6735c8d2efd273dbc6e7576c9d5da576f615ac11079419a92"
     },
     {
       "path": "sdk/core/src/match.rs",
@@ -953,13 +958,13 @@
     },
     {
       "path": "sdk/core/tests/abi_layout.c",
-      "bytes": 11658,
-      "sha256": "78ee32f75d7c68a7aba6d06475c03a8ec9c240476435d1b284d869bdb84a5ae5"
+      "bytes": 11685,
+      "sha256": "7c2dc3c2be67b3eca221b896cded617f7cea306bef81794c321f39719cfccb0f"
     },
     {
       "path": "sdk/core/tests/harness/dispatch.rs",
-      "bytes": 10716,
-      "sha256": "da52274e8017e298a51e6cba4ae12b2badf6d1197f5d000d396d37251e3d36d3"
+      "bytes": 10775,
+      "sha256": "ec727cfabd859e44b674f3358c9bc8e0e8380f6df2845c8437ba1e13a6448246"
     },
     {
       "path": "sdk/core/tests/harness/mod.rs",
@@ -979,12 +984,12 @@
     {
       "path": "sdk/core/tests/vectors.digest",
       "bytes": 43,
-      "sha256": "7387508eb21c6b8349f377bcd13a4923c3bfe39318ad497b2f3ef07008be39a3"
+      "sha256": "93878510a58a52c0226845b2fc4aace899cafe862e83a3b0d0f6faacb706b197"
     },
     {
       "path": "sdk/core/tests/vectors.rs",
-      "bytes": 25252,
-      "sha256": "521d0a8118ba1d32efe9ee142995866164022cde9ba724e2b661199b0b09356a"
+      "bytes": 25428,
+      "sha256": "e3ae7ec0e2f7a543272ec4620ed9a6f54086d847c5ca88ccff8dc0c85eccd6d9"
     },
     {
       "path": "sdk/core/tests/wasi-runner.sh",
