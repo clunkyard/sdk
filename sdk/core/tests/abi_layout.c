@@ -51,6 +51,12 @@ _Static_assert(offsetof(cy_sighting_v1, source) == 4, "cy_sighting_v1.source");
 _Static_assert(offsetof(cy_sighting_v1, bearing_error) == 8, "cy_sighting_v1.bearing_error");
 _Static_assert(offsetof(cy_sighting_v1, range_error) == 16, "cy_sighting_v1.range_error");
 _Static_assert(offsetof(cy_sighting_v1, position) == 24, "cy_sighting_v1.position");
+_Static_assert(sizeof(cy_wall_margin_v1) == 56, "cy_wall_margin_v1 size");
+_Static_assert(offsetof(cy_wall_margin_v1, x) == 0, "cy_wall_margin_v1.x");
+_Static_assert(offsetof(cy_wall_margin_v1, y) == 8, "cy_wall_margin_v1.y");
+_Static_assert(offsetof(cy_wall_margin_v1, z) == 16, "cy_wall_margin_v1.z");
+_Static_assert(offsetof(cy_wall_margin_v1, nearest) == 24, "cy_wall_margin_v1.nearest");
+_Static_assert(offsetof(cy_wall_margin_v1, normal) == 32, "cy_wall_margin_v1.normal");
 _Static_assert(sizeof(cy_solution_v1) == 24, "cy_solution_v1 size");
 _Static_assert(offsetof(cy_solution_v1, heading) == 0, "cy_solution_v1.heading");
 _Static_assert(offsetof(cy_solution_v1, pitch) == 8, "cy_solution_v1.pitch");
@@ -86,7 +92,7 @@ _Static_assert(sizeof(cy_compute_v1) == 16, "cy_compute_v1 size");
 _Static_assert(offsetof(cy_compute_v1, k) == 0, "cy_compute_v1.k");
 _Static_assert(offsetof(cy_compute_v1, quanta) == 8, "cy_compute_v1.quanta");
 _Static_assert(offsetof(cy_compute_v1, unit) == 12, "cy_compute_v1.unit");
-_Static_assert(sizeof(cy_dsl_words_v1) == 824, "cy_dsl_words_v1 size");
+_Static_assert(sizeof(cy_dsl_words_v1) == 856, "cy_dsl_words_v1 size");
 
 typedef void (*cy_any_fn)(void);
 static const cy_any_fn SYMBOLS[] = {
@@ -120,6 +126,7 @@ static const cy_any_fn SYMBOLS[] = {
   (cy_any_fn)cy_me_attitude_v1,
   (cy_any_fn)cy_me_grounded,
   (cy_any_fn)cy_me_altitude,
+  (cy_any_fn)cy_me_wall_contact,
   (cy_any_fn)cy_me_applied_v1,
   (cy_any_fn)cy_me_hull_mounts,
   (cy_any_fn)cy_me_to_mount,
@@ -211,6 +218,7 @@ static const cy_any_fn SYMBOLS[] = {
   (cy_any_fn)cy_nav_hill_margin,
   (cy_any_fn)cy_nav_hill_contains,
   (cy_any_fn)cy_nav_hill_distance_from,
+  (cy_any_fn)cy_nav_wall_margin_v1,
   (cy_any_fn)cy_nav_pickups_v1,
   (cy_any_fn)cy_nav_nearest_pickup_v1,
   (cy_any_fn)cy_nav_field_distance,

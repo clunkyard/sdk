@@ -147,5 +147,9 @@ pub fn fill(r: &Robot) -> Result<DslWordsV1, Error> {
         target_vy: crate::dsl::target_vy(r)?,
         target_vz: crate::dsl::target_vz(r)?,
         muzzle_heard: flag(crate::dsl::muzzle_heard(r)?),
+        wall_x: crate::dsl::wall_x(r)?,
+        wall_y: crate::dsl::wall_y(r)?,
+        wall_z: crate::dsl::wall_z(r)?,
+        wall_margin: crate::dsl::wall_margin(r)?,
     })
 }

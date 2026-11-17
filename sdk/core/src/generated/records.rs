@@ -520,6 +520,30 @@ const _: () = assert!(offset_of!(SightingV1, bearing_error) == 8);
 const _: () = assert!(offset_of!(SightingV1, range_error) == 16);
 const _: () = assert!(offset_of!(SightingV1, position) == 24);
 
+/// How far your edge is from the walls, from your position, your radius and the arena size. 56 bytes.
+#[repr(C)]
+#[derive(Clone, Copy, Debug, Default, PartialEq)]
+pub struct WallMarginV1 {
+    /// The gap along x from your edge to the nearer of the walls at x = 0 and x = width; 0 when touching.
+    pub x: f64,
+    /// The gap along y, as x.
+    pub y: f64,
+    /// The gap along z, as x, in 3D: to the ceiling, and to the floor where it is a wall. Under gravity the floor is the ground, so the gap is your altitude (me.altitude). 1000000000000 in 2D.
+    pub z: f64,
+    /// The smallest of the gaps that apply: x and y, and z in 3D.
+    pub nearest: f64,
+    /// The unit normal of the nearest wall, pointing into the arena, as me.wall_contact reports a wall: +1 on an axis for the wall at 0, -1 for the far wall. The first of x, y, z on a tie.
+    pub normal: Vec3,
+}
+/// The latest version of WallMarginV1.
+pub type WallMargin = WallMarginV1;
+const _: () = assert!(size_of::<WallMarginV1>() == 56);
+const _: () = assert!(offset_of!(WallMarginV1, x) == 0);
+const _: () = assert!(offset_of!(WallMarginV1, y) == 8);
+const _: () = assert!(offset_of!(WallMarginV1, z) == 16);
+const _: () = assert!(offset_of!(WallMarginV1, nearest) == 24);
+const _: () = assert!(offset_of!(WallMarginV1, normal) == 32);
+
 /// Where to aim for a shot fired now to meet a target, and when it meets it. 24 bytes.
 #[repr(C)]
 #[derive(Clone, Copy, Debug, Default, PartialEq)]
@@ -872,8 +896,16 @@ pub struct DslWordsV1 {
     pub target_vz: f64,
     /// A shot was heard this tick: a passive muzzle contact is among this tick's sensors.cues, whatever cue the tracker keeps.
     pub muzzle_heard: f64,
+    /// The x of me.wall_contact: 1 when the wall at x = 0 stopped or bounced you in the tick just simulated, -1 for the far wall, else 0.
+    pub wall_x: f64,
+    /// The y of me.wall_contact, as wall-x.
+    pub wall_y: f64,
+    /// The z of me.wall_contact, as wall-x: the floor where it is a wall, or the ceiling; 0 in 2D, and under gravity the ground is not a wall.
+    pub wall_z: f64,
+    /// The gap from your edge to the nearest wall (nav.wall_margin nearest); under gravity its floor is the ground, at your altitude.
+    pub wall_margin: f64,
 }
-const _: () = assert!(size_of::<DslWordsV1>() == 824);
+const _: () = assert!(size_of::<DslWordsV1>() == 856);
 
 /// What an act field holds.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]

@@ -60,6 +60,8 @@ pub struct Hello {
     pub terrain_kind: TerrainKind,
     pub terrain: Terrain,
     pub max_pitch: f64,
+    /// hello.robot.radius.
+    pub radius: f64,
     /// hello.robot.mounts is "hull": aim and scan are chassis-frame angles.
     pub hull_mounts: bool,
     pub capacity: f64,
@@ -129,6 +131,7 @@ impl Hello {
             terrain_kind,
             terrain,
             max_pitch: number(&raw, "robot.maxPitch"),
+            radius: number(&raw, "robot.radius"),
             hull_mounts: raw.at("robot.mounts").and_then(Value::as_str) == Some("hull"),
             capacity: number(&raw, "battery.capacity"),
             regen: number(&raw, "battery.regen"),
@@ -215,6 +218,8 @@ pub struct Me {
     pub grounded: bool,
     pub altitude: f64,
     pub applied: AppliedV1,
+    /// self.wall; zero when the state leaves it out.
+    pub wall: Vec3,
     pub battery: f64,
     pub aim: Direction,
     pub cooldown_ticks: f64,
@@ -261,6 +266,7 @@ impl State {
             grounded: me.get("grounded").and_then(Value::as_bool).unwrap_or(false),
             altitude: number(&me, "altitude"),
             applied: AppliedV1 { force: vec3(me.at("applied.force")), torque: rotation(me.at("applied.torque")), brake: number(&me, "applied.brake") },
+            wall: vec3(me.get("wall")),
             battery: number(&me, "battery"),
             aim: Direction { heading: number(&me, "aim.heading"), pitch: number(&me, "aim.pitch") },
             cooldown_ticks: number(&me, "cooldownTicks"),

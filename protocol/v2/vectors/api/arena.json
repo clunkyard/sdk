@@ -404,6 +404,70 @@
      "states": [
 
      ]},
+    {"input": "vectors/api/inputs/walls-2d-classic.ndjson",
+     "hello": [
+      {"call":"arena.size","value":{"x":1000,"y":700,"z":0}},
+      {"call":"arena.gravity","value":{"x":0,"y":0,"z":0}},
+      {"call":"arena.terrain_kind","value":"none"},
+      {"call":"arena.ground_height","args":[0,0],"value":0},
+      {"call":"arena.ground_height","args":[1000,700],"value":0},
+      {"call":"arena.ground_height","args":[500,350],"value":0},
+      {"call":"arena.ground_height","args":[370,567],"value":0},
+      {"call":"arena.ground_height","args":[875,116.66666666666667],"value":0},
+      {"call":"arena.ground_height","args":[-10,710],"value":0},
+      {"call":"arena.ground_height","args":[{"f64":"NaN"},0],"error":"E_NOT_FINITE"}
+     ],
+     "states": [
+
+     ]},
+    {"input": "vectors/api/inputs/walls-2d-inertial-2d.ndjson",
+     "hello": [
+      {"call":"arena.size","value":{"x":1000,"y":700,"z":0}},
+      {"call":"arena.gravity","value":{"x":0,"y":0,"z":0}},
+      {"call":"arena.terrain_kind","value":"flat"},
+      {"call":"arena.ground_height","args":[0,0],"value":0},
+      {"call":"arena.ground_height","args":[1000,700],"value":0},
+      {"call":"arena.ground_height","args":[500,350],"value":0},
+      {"call":"arena.ground_height","args":[370,567],"value":0},
+      {"call":"arena.ground_height","args":[875,116.66666666666667],"value":0},
+      {"call":"arena.ground_height","args":[-10,710],"value":0},
+      {"call":"arena.ground_height","args":[{"f64":"NaN"},0],"error":"E_NOT_FINITE"}
+     ],
+     "states": [
+
+     ]},
+    {"input": "vectors/api/inputs/walls-3d-zero-g.ndjson",
+     "hello": [
+      {"call":"arena.size","value":{"x":1000,"y":700,"z":600}},
+      {"call":"arena.gravity","value":{"x":0,"y":0,"z":0}},
+      {"call":"arena.terrain_kind","value":"none"},
+      {"call":"arena.ground_height","args":[0,0],"value":0},
+      {"call":"arena.ground_height","args":[1000,700],"value":0},
+      {"call":"arena.ground_height","args":[500,350],"value":0},
+      {"call":"arena.ground_height","args":[370,567],"value":0},
+      {"call":"arena.ground_height","args":[875,116.66666666666667],"value":0},
+      {"call":"arena.ground_height","args":[-10,710],"value":0},
+      {"call":"arena.ground_height","args":[{"f64":"NaN"},0],"error":"E_NOT_FINITE"}
+     ],
+     "states": [
+
+     ]},
+    {"input": "vectors/api/inputs/walls-3d-gravity-flat.ndjson",
+     "hello": [
+      {"call":"arena.size","value":{"x":1000,"y":700,"z":600}},
+      {"call":"arena.gravity","value":{"x":0,"y":0,"z":-85}},
+      {"call":"arena.terrain_kind","value":"flat"},
+      {"call":"arena.ground_height","args":[0,0],"value":0},
+      {"call":"arena.ground_height","args":[1000,700],"value":0},
+      {"call":"arena.ground_height","args":[500,350],"value":0},
+      {"call":"arena.ground_height","args":[370,567],"value":0},
+      {"call":"arena.ground_height","args":[875,116.66666666666667],"value":0},
+      {"call":"arena.ground_height","args":[-10,710],"value":0},
+      {"call":"arena.ground_height","args":[{"f64":"NaN"},0],"error":"E_NOT_FINITE"}
+     ],
+     "states": [
+
+     ]},
     {"input": "vectors/api/inputs/mounts-2d-classic.ndjson",
      "hello": [
       {"call":"arena.size","value":{"x":1000,"y":700,"z":0}},

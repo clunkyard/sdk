@@ -72,6 +72,9 @@ pub type Cue=RawCue;
 pub struct RawSighting {pub tick:i32,pub source:i32,pub bearing_error:f64,pub range_error:f64,pub position:RawVec3,}
 pub type Sighting=RawSighting;
 #[repr(C)] #[derive(Default,Clone,Copy,Debug,PartialEq)]
+pub struct RawWallMargin {pub x:f64,pub y:f64,pub z:f64,pub nearest:f64,pub normal:RawVec3,}
+pub type WallMargin=RawWallMargin;
+#[repr(C)] #[derive(Default,Clone,Copy,Debug,PartialEq)]
 pub struct RawSolution {pub heading:f64,pub pitch:f64,pub time:f64,}
 pub type Solution=RawSolution;
 #[repr(C)] #[derive(Default,Clone,Copy,Debug,PartialEq)]
@@ -140,6 +143,7 @@ pub fn cy_me_angular_velocity(robot:*mut std::ffi::c_void,out:*mut RawRotation)-
 pub fn cy_me_attitude_v1(robot:*mut std::ffi::c_void,out:*mut RawAttitude)->i32;
 pub fn cy_me_grounded(robot:*mut std::ffi::c_void,out:*mut i32)->i32;
 pub fn cy_me_altitude(robot:*mut std::ffi::c_void,out:*mut f64)->i32;
+pub fn cy_me_wall_contact(robot:*mut std::ffi::c_void,out:*mut RawVec3)->i32;
 pub fn cy_me_applied_v1(robot:*mut std::ffi::c_void,out:*mut RawApplied)->i32;
 pub fn cy_me_hull_mounts(robot:*mut std::ffi::c_void,out:*mut i32)->i32;
 pub fn cy_me_to_mount(robot:*mut std::ffi::c_void,heading:f64,pitch:f64,out:*mut RawDirection)->i32;
@@ -231,6 +235,7 @@ pub fn cy_nav_hill_v1(robot:*mut std::ffi::c_void,out:*mut RawHill)->i32;
 pub fn cy_nav_hill_margin(robot:*mut std::ffi::c_void,point:*const RawVec3,out:*mut f64)->i32;
 pub fn cy_nav_hill_contains(robot:*mut std::ffi::c_void,point:*const RawVec3,margin:f64,out:*mut i32)->i32;
 pub fn cy_nav_hill_distance_from(robot:*mut std::ffi::c_void,point:*const RawVec3,out:*mut f64)->i32;
+pub fn cy_nav_wall_margin_v1(robot:*mut std::ffi::c_void,out:*mut RawWallMargin)->i32;
 pub fn cy_nav_pickups_v1(robot:*mut std::ffi::c_void,out:*mut RawPickup,capacity:u32,count:*mut u32)->i32;
 pub fn cy_nav_nearest_pickup_v1(robot:*mut std::ffi::c_void,kind:i32,out:*mut RawPickup)->i32;
 pub fn cy_nav_field_distance(robot:*mut std::ffi::c_void,a:*const RawVec3,b:*const RawVec3,out:*mut f64)->i32;
@@ -304,6 +309,7 @@ pub fn angular_velocity(&self) -> Result<Rotation,Error> {let mut out=RawRotatio
 pub fn attitude(&self) -> Result<Attitude,Error> {let mut out=RawAttitude::default();let mut status=unsafe{ffi::cy_me_attitude_v1(self.handle,&mut out)};check(self.handle,status)?;Ok(out)}
 pub fn grounded(&self) -> Result<bool,Error> {let mut out=i32::default();let mut status=unsafe{ffi::cy_me_grounded(self.handle,&mut out)};check(self.handle,status)?;Ok(out!=0)}
 pub fn altitude(&self) -> Result<f64,Error> {let mut out=f64::default();let mut status=unsafe{ffi::cy_me_altitude(self.handle,&mut out)};check(self.handle,status)?;Ok(out)}
+pub fn wall_contact(&self) -> Result<Vec3,Error> {let mut out=RawVec3::default();let mut status=unsafe{ffi::cy_me_wall_contact(self.handle,&mut out)};check(self.handle,status)?;Ok(out)}
 pub fn applied(&self) -> Result<Applied,Error> {let mut out=RawApplied::default();let mut status=unsafe{ffi::cy_me_applied_v1(self.handle,&mut out)};check(self.handle,status)?;Ok(out)}
 pub fn hull_mounts(&self) -> Result<bool,Error> {let mut out=i32::default();let mut status=unsafe{ffi::cy_me_hull_mounts(self.handle,&mut out)};check(self.handle,status)?;Ok(out!=0)}
 pub fn to_mount(&self,heading: f64,pitch: f64) -> Result<Direction,Error> {let mut out=RawDirection::default();let mut status=unsafe{ffi::cy_me_to_mount(self.handle,heading,pitch,&mut out)};check(self.handle,status)?;Ok(out)}
@@ -388,6 +394,7 @@ pub fn configure(&self,smoothing: f64,forget_ticks: i32,cue_ticks: i32) -> Resul
 pub fn zone(&self) -> Result<Option<Zone>,Error> {let mut out=RawZone::default();let mut status=unsafe{ffi::cy_nav_zone_v1(self.handle,&mut out)};if status==NONE{return Ok(None);}check(self.handle,status)?;Ok(Some(Zone{raw:out,handle:self.handle}))}
 pub fn storm(&self) -> Result<Option<Storm>,Error> {let mut out=RawStorm::default();let mut status=unsafe{ffi::cy_nav_storm_v1(self.handle,&mut out)};if status==NONE{return Ok(None);}check(self.handle,status)?;Ok(Some(Storm{raw:out,handle:self.handle}))}
 pub fn hill(&self) -> Result<Option<Hill>,Error> {let mut out=RawHill::default();let mut status=unsafe{ffi::cy_nav_hill_v1(self.handle,&mut out)};if status==NONE{return Ok(None);}check(self.handle,status)?;Ok(Some(Hill{raw:out,handle:self.handle}))}
+pub fn wall_margin(&self) -> Result<WallMargin,Error> {let mut out=RawWallMargin::default();let mut status=unsafe{ffi::cy_nav_wall_margin_v1(self.handle,&mut out)};check(self.handle,status)?;Ok(out)}
 pub fn pickups(&self) -> Result<Vec<Pickup>,Error> {let mut out=vec![RawPickup::default();16];let mut count=0;let mut status=unsafe{ffi::cy_nav_pickups_v1(self.handle,out.as_mut_ptr(),out.len() as u32,&mut count)};while status==SHORT {out.resize(count as usize,RawPickup::default());status=unsafe{ffi::cy_nav_pickups_v1(self.handle,out.as_mut_ptr(),out.len() as u32,&mut count)};}check(self.handle,status)?;out.truncate(count as usize);Ok(out)}
 pub fn nearest_pickup(&self,kind: i32) -> Result<Option<Pickup>,Error> {let mut out=RawPickup::default();let mut status=unsafe{ffi::cy_nav_nearest_pickup_v1(self.handle,kind,&mut out)};if status==NONE{return Ok(None);}check(self.handle,status)?;Ok(Some(out))}
 pub fn field_distance(&self,a: &Vec3,b: &Vec3) -> Result<f64,Error> {let mut out=f64::default();let mut status=unsafe{ffi::cy_nav_field_distance(self.handle,a,b,&mut out)};check(self.handle,status)?;Ok(out)}

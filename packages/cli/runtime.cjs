@@ -319,22 +319,26 @@ const HOUSE_ID=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 const HOUSE_KEY=/^[a-z0-9][a-z0-9-]{0,47}$/;
 const keyFor=name=>String(name).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,48);
 const houseDirectory=()=>path.join(cache,'house');
-async function fetchLimited(url,limit){
-  const response=await fetch(url,{signal:AbortSignal.timeout(30000),headers:{accept:'application/json, application/gzip'}});
+async function fetchLimited(url,limit,timeout=30000){
+  const response=await fetch(url,{signal:AbortSignal.timeout(timeout),headers:{accept:'application/json, application/gzip'}});
   if(!response.ok)throw new Error(`${url} answered ${response.status}`);
   const bytes=Buffer.from(await response.arrayBuffer());
   if(bytes.length>limit)throw new Error(`${url} sent more than ${limit} bytes`);
   return bytes;
 }
+// The House ladder: Entry, then Middle, then Top; a robot the service gives no tier comes last.
+const TIERS=['entry','middle','top'],TIER_TITLES={entry:'Entry',middle:'Middle',top:'Top'};
+const tierIn=(row,mode,ruleset)=>(mode&&row.gameTiers?.[`${mode}/${ruleset}`])||row.tier;
+const byLadder=(mode,ruleset)=>(a,b)=>{const rank=row=>{const here=TIERS.indexOf(tierIn(row,mode,ruleset));return here<0?9:here*3+TIERS.indexOf(row.tier);};return rank(a)-rank(b)||a.name.localeCompare(b.name);};
 // The cached list, unless refresh asks for the service's. A service that
 // cannot be reached leaves the cache in use; with none, there is nothing to play.
-async function houseRoster({refresh=false}={}) {
+async function houseRoster({refresh=false,timeout}={}) {
   const file=path.join(houseDirectory(),'index.json');
   let cached=null;try{cached=JSON.parse(fs.readFileSync(file,'utf8'));}catch{}
   if(cached&&!refresh&&cached.origin===HOUSE_ORIGIN())return {...cached,fresh:false};
   try{
-    const value=JSON.parse((await fetchLimited(`${HOUSE_ORIGIN()}/api/arena/house-robots`,1024*1024)).toString('utf8'));
-    const robots=(Array.isArray(value.robots)?value.robots:[]).filter(row=>HOUSE_ID.test(String(row.id))&&typeof row.name==='string'&&typeof row.language==='string'&&HOUSE_KEY.test(keyFor(row.name))&&keyFor(row.name)!=='practice').map(row=>({id:row.id,key:keyFor(row.name),name:row.name,language:row.language,stable:row.stable||null,manifestHash:typeof row.manifestHash==='string'?row.manifestHash:null,supportedModes:Array.isArray(row.supportedModes)?row.supportedModes:[],supportedRulesets:Array.isArray(row.supportedRulesets)?row.supportedRulesets:['classic'],strategist:Boolean(row.strategist)}));
+    const value=JSON.parse((await fetchLimited(`${HOUSE_ORIGIN()}/api/arena/house-robots`,1024*1024,timeout)).toString('utf8'));
+    const robots=(Array.isArray(value.robots)?value.robots:[]).filter(row=>HOUSE_ID.test(String(row.id))&&typeof row.name==='string'&&typeof row.language==='string'&&HOUSE_KEY.test(keyFor(row.name))&&keyFor(row.name)!=='practice').map(row=>({id:row.id,key:keyFor(row.name),name:row.name,language:row.language,stable:row.stable||null,tier:TIERS.includes(row.tier)?row.tier:null,hint:typeof row.hint==='string'?row.hint:null,gameTiers:row.gameTiers&&typeof row.gameTiers==='object'?Object.fromEntries(Object.entries(row.gameTiers).filter(([,tier])=>TIERS.includes(tier))):null,manifestHash:typeof row.manifestHash==='string'?row.manifestHash:null,supportedModes:Array.isArray(row.supportedModes)?row.supportedModes:[],supportedRulesets:Array.isArray(row.supportedRulesets)?row.supportedRulesets:['classic'],strategist:Boolean(row.strategist)}));
     const result={origin:HOUSE_ORIGIN(),fetchedAt:new Date().toISOString(),robots};
     fs.mkdirSync(houseDirectory(),{recursive:true});fs.writeFileSync(file,JSON.stringify(result,null,2)+'\n');
     return {...result,fresh:true};
@@ -407,10 +411,15 @@ async function opponents(args=[]) {
   if(roster.offline)console.log(`${roster.origin} could not be reached (${roster.offline}); showing the cache.`);
   console.log('');
   console.log(`${'practice'.padEnd(10)} ${'Practice rival'.padEnd(15)} ready       vane; 2d and 3d; all rulesets (default)`);
-  for(const row of roster.robots){
+  let heading=null;
+  for(const row of [...roster.robots].sort(byLadder())){
+    const group=TIERS.includes(row.tier)?row.tier:'other';
+    if(group!==heading){heading=group;console.log(`\n${TIER_TITLES[group]||'Other'}${group==='entry'?' (start here)':''}`);}
     let detail=`${row.language}; ${row.supportedModes.join(' and ')||'no modes'}; ${row.supportedRulesets.length>=5?'all rulesets':row.supportedRulesets.join(', ')}${row.strategist?'; plays its reflex without its hosted strategist':''}`,problems=[];
     try{problems=(await stageHouseRobot(row)).diagnose().problems;}catch(error){problems=[error.message];}
     console.log(`${row.key.padEnd(10)} ${row.name.padEnd(15)} ${problems.length?'needs setup':'ready      '} ${detail}`);
+    if(row.hint&&group!=='top')console.log(`           How to beat it: ${row.hint}`);
+    if(row.gameTiers){const other=Object.entries(row.gameTiers).filter(([,tier])=>tier!==row.tier);if(other.length)console.log(`           Plays like: ${other.map(([game,tier])=>`${TIER_TITLES[tier]} in ${game}`).join(', ')}`);}
     for(const problem of problems)console.log(`           ${problem}`);
   }
   if(!roster.robots.length)console.log('The service lists no house robots right now.');
@@ -441,6 +450,11 @@ async function playMatch(args,json) {
       if(problems.length)throw new Error(`${m.name} (${row.language}) needs setup on this computer:\n${problems.map(problem=>`  ${problem}`).join('\n')}\nRun clunkyard opponents to see what each needs.`);
       chosen.push({row,runtime});
     }
+  }
+  // Without --opponent the practice rival plays; point a newcomer at the next rung.
+  if(!names.length){
+    try{const next=(await houseRoster({refresh,timeout:3000})).robots.filter(row=>tierIn(row,mode,ruleset)==='entry'&&row.supportedModes.includes(mode)&&row.supportedRulesets.includes(ruleset)).sort(byLadder(mode,ruleset))[0];
+      if(next)console.log(`Next to try: ${next.name} (Entry): clunkyard match ${seed} ${mode} ${ruleset} --opponent ${next.key}`);}catch{}
   }
   const baseEnvironment={...process.env};
   const self=await prepare();

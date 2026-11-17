@@ -168,6 +168,11 @@ class Sighting(_Record):
     _names = ("tick", "source", "bearing_error", "range_error", "position",)
     source = property(lambda self: _N_SOURCE.get(self._source))
 
+class WallMargin(_Record):
+    """How far your edge is from the walls, from your position, your radius and the arena size."""
+    _fields_ = [("x", c_double), ("y", c_double), ("z", c_double), ("nearest", c_double), ("normal", Vec3)]
+    _names = ("x", "y", "z", "nearest", "normal",)
+
 class Solution(_Record):
     """Where to aim for a shot fired now to meet a target, and when it meets it."""
     _fields_ = [("heading", c_double), ("pitch", c_double), ("time", c_double)]
@@ -256,6 +261,7 @@ _fn("cy_me_angular_velocity", 0, c_void_p, POINTER(Rotation))
 _fn("cy_me_attitude", 1, c_void_p, POINTER(Attitude))
 _fn("cy_me_grounded", 0, c_void_p, _PI)
 _fn("cy_me_altitude", 0, c_void_p, _PD)
+_fn("cy_me_wall_contact", 0, c_void_p, POINTER(Vec3))
 _fn("cy_me_applied", 1, c_void_p, POINTER(Applied))
 _fn("cy_me_hull_mounts", 0, c_void_p, _PI)
 _fn("cy_me_to_mount", 0, c_void_p, c_double, c_double, POINTER(Direction))
@@ -347,6 +353,7 @@ _fn("cy_nav_hill", 1, c_void_p, POINTER(Hill))
 _fn("cy_nav_hill_margin", 0, c_void_p, POINTER(Vec3), _PD)
 _fn("cy_nav_hill_contains", 0, c_void_p, POINTER(Vec3), c_double, _PI)
 _fn("cy_nav_hill_distance_from", 0, c_void_p, POINTER(Vec3), _PD)
+_fn("cy_nav_wall_margin", 1, c_void_p, POINTER(WallMargin))
 _fn("cy_nav_pickups", 1, c_void_p, POINTER(Pickup), c_uint32, _PU)
 _fn("cy_nav_nearest_pickup", 1, c_void_p, c_int32, POINTER(Pickup))
 _fn("cy_nav_field_distance", 0, c_void_p, POINTER(Vec3), POINTER(Vec3), _PD)
@@ -507,6 +514,10 @@ class _Me:
     @property
     def altitude(self):
         return _num(_c.cy_me_altitude, (self._h,), c_double)
+
+    @property
+    def wall_contact(self):
+        return _rec(_c.cy_me_wall_contact, (self._h,), Vec3)
 
     @property
     def applied(self):
@@ -783,6 +794,9 @@ class _Nav:
     @property
     def hill(self):
         return _rec(_c.cy_nav_hill, (self._h,), Hill)
+
+    def wall_margin(self):
+        return _rec(_c.cy_nav_wall_margin, (self._h,), WallMargin)
 
     @property
     def pickups(self):

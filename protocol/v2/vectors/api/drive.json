@@ -179,6 +179,34 @@
      "states": [
 
      ]},
+    {"input": "vectors/api/inputs/walls-2d-classic.ndjson",
+     "hello": [
+      {"call":"drive.hover_lift","value":0}
+     ],
+     "states": [
+
+     ]},
+    {"input": "vectors/api/inputs/walls-2d-inertial-2d.ndjson",
+     "hello": [
+      {"call":"drive.hover_lift","value":0}
+     ],
+     "states": [
+
+     ]},
+    {"input": "vectors/api/inputs/walls-3d-zero-g.ndjson",
+     "hello": [
+      {"call":"drive.hover_lift","value":0}
+     ],
+     "states": [
+
+     ]},
+    {"input": "vectors/api/inputs/walls-3d-gravity-flat.ndjson",
+     "hello": [
+      {"call":"drive.hover_lift","value":0.85}
+     ],
+     "states": [
+
+     ]},
     {"input": "vectors/api/inputs/mounts-2d-classic.ndjson",
      "hello": [
       {"call":"drive.hover_lift","value":0}

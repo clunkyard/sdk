@@ -47,6 +47,10 @@ pub fn applied(r: &Robot) -> Result<AppliedV1, Error> {
     Ok(r.current()?.me.applied)
 }
 
+pub fn wall_contact(r: &Robot) -> Result<Vec3, Error> {
+    Ok(r.current()?.me.wall)
+}
+
 /// The mount frame: chassis angles under hull mounts, world angles otherwise.
 pub fn hull_mounts(r: &Robot) -> Result<bool, Error> {
     Ok(r.hello()?.hull_mounts)

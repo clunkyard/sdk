@@ -43,6 +43,8 @@ static void read_cue(cy_cue_v1 *out){out->source = integer();out->tick = integer
 static void print_cue(const cy_cue_v1 *out){putchar('{');fputs("source=",stdout);enum_source(out->source);putchar(',');fputs("tick=",stdout);bits((double)out->tick);putchar(',');fputs("bearing_error=",stdout);bits((double)out->bearing_error);putchar(',');fputs("position=",stdout);print_vec3(&out->position);putchar('}');}
 static void read_sighting(cy_sighting_v1 *out){out->tick = integer();out->source = integer();out->bearing_error = number();out->range_error = number();read_vec3(&out->position);}
 static void print_sighting(const cy_sighting_v1 *out){putchar('{');fputs("tick=",stdout);bits((double)out->tick);putchar(',');fputs("source=",stdout);enum_source(out->source);putchar(',');fputs("bearing_error=",stdout);bits((double)out->bearing_error);putchar(',');fputs("range_error=",stdout);bits((double)out->range_error);putchar(',');fputs("position=",stdout);print_vec3(&out->position);putchar('}');}
+static void read_wall_margin(cy_wall_margin_v1 *out){out->x = number();out->y = number();out->z = number();out->nearest = number();read_vec3(&out->normal);}
+static void print_wall_margin(const cy_wall_margin_v1 *out){putchar('{');fputs("x=",stdout);bits((double)out->x);putchar(',');fputs("y=",stdout);bits((double)out->y);putchar(',');fputs("z=",stdout);bits((double)out->z);putchar(',');fputs("nearest=",stdout);bits((double)out->nearest);putchar(',');fputs("normal=",stdout);print_vec3(&out->normal);putchar('}');}
 static void read_solution(cy_solution_v1 *out){out->heading = number();out->pitch = number();out->time = number();}
 static void print_solution(const cy_solution_v1 *out){putchar('{');fputs("heading=",stdout);bits((double)out->heading);putchar(',');fputs("pitch=",stdout);bits((double)out->pitch);putchar(',');fputs("time=",stdout);bits((double)out->time);putchar('}');}
 static void read_zone(cy_zone_v1 *out){out->shape = integer();out->reserved = integer();out->radius = number();read_vec3(&out->center);}
@@ -133,6 +135,9 @@ if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');fputs(out
 if(!strcmp(op,"call")&&!strcmp(name,"me.altitude")){double out=0;
 int32_t status=cy_me_altitude(robot,&out);
 if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');bits((double)out);}putchar('\n');}return;}
+if(!strcmp(op,"call")&&!strcmp(name,"me.wall_contact")){cy_vec3 out={0};
+int32_t status=cy_me_wall_contact(robot,&out);
+if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');print_vec3(&out);}putchar('\n');}return;}
 if(!strcmp(op,"call")&&!strcmp(name,"me.applied")){cy_applied_v1 out={0};
 int32_t status=cy_me_applied_v1(robot,&out);
 if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');print_applied(&out);}putchar('\n');}return;}
@@ -448,6 +453,9 @@ if(!strcmp(op,"call")&&!strcmp(name,"nav.hill.distance_from")){cy_vec3 point; re
 double out=0;
 int32_t status=cy_nav_hill_distance_from(robot,&point,&out);
 if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');bits((double)out);}putchar('\n');}return;}
+if(!strcmp(op,"call")&&!strcmp(name,"nav.wall_margin")){cy_wall_margin_v1 out={0};
+int32_t status=cy_nav_wall_margin_v1(robot,&out);
+if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');print_wall_margin(&out);}putchar('\n');}return;}
 if(!strcmp(op,"call")&&!strcmp(name,"nav.pickups")){cy_pickup_v1 out[CAP]; uint32_t count=0;
 int32_t status=cy_nav_pickups_v1(robot,out,CAP,&count);
 if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');putchar('[');for(uint32_t i=0;i<count;i++){if(i)putchar(',');print_pickup(&out[i]);}putchar(']');}putchar('\n');}return;}

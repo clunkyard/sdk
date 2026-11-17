@@ -196,6 +196,18 @@ typedef struct cy_sighting_v1 {
 } cy_sighting_v1;
 
 /*
+ * How far your edge is from the walls, from your position, your radius and the
+ * arena size. 56 bytes.
+ */
+typedef struct cy_wall_margin_v1 {
+  double x; /* The gap along x from your edge to the nearer of the walls at x = 0 and x = width; 0 when touching. */
+  double y; /* The gap along y, as x. */
+  double z; /* The gap along z, as x, in 3D: to the ceiling, and to the floor where it is a wall. Under gravity the floor is the ground, so the gap is your altitude (me.altitude). 1000000000000 in 2D. */
+  double nearest; /* The smallest of the gaps that apply: x and y, and z in 3D. */
+  cy_vec3 normal; /* The unit normal of the nearest wall, pointing into the arena, as me.wall_contact reports a wall: +1 on an axis for the wall at 0, -1 for the far wall. The first of x, y, z on a tie. */
+} cy_wall_margin_v1;
+
+/*
  * Where to aim for a shot fired now to meet a target, and when it meets it. 24
  * bytes.
  */
@@ -328,6 +340,13 @@ CY_API int32_t cy_me_attitude_v1(cy_robot *robot, cy_attitude_v1 *out);
 CY_API int32_t cy_me_grounded(cy_robot *robot, int32_t *out);
 /* me.altitude: In 3D, the height of your underside above the ground. */
 CY_API int32_t cy_me_altitude(cy_robot *robot, double *out);
+/*
+ * me.wall_contact: The walls that stopped or bounced your move in the tick
+ * just simulated, reported by the arena (self.wall); zero when none did. Under
+ * gravity the ground is not a wall (me.grounded), so z is at most the
+ * ceiling's -1 there.
+ */
+CY_API int32_t cy_me_wall_contact(cy_robot *robot, cy_vec3 *out);
 /* me.applied: What the previous tick applied to you. */
 CY_API int32_t cy_me_applied_v1(cy_robot *robot, cy_applied_v1 *out);
 /*
@@ -754,6 +773,12 @@ CY_API int32_t cy_nav_hill_contains(cy_robot *robot, const cy_vec3 *point, doubl
  * absent while there is none. CY_NONE when absent.
  */
 CY_API int32_t cy_nav_hill_distance_from(cy_robot *robot, const cy_vec3 *point, double *out);
+/*
+ * nav.wall_margin: How far the edge of your robot is from the walls: from your
+ * position, your radius (hello.robot.radius) and the arena size, nothing the
+ * arena reports.
+ */
+CY_API int32_t cy_nav_wall_margin_v1(cy_robot *robot, cy_wall_margin_v1 *out);
 /* nav.pickups: Every pickup on the field. */
 CY_API int32_t cy_nav_pickups_v1(cy_robot *robot, cy_pickup_v1 *out, uint32_t capacity, uint32_t *count);
 /*
@@ -890,7 +915,7 @@ CY_API int32_t cy_session_feed(cy_robot *robot, const char *line, uint32_t line_
 CY_API int32_t cy_session_reply(cy_robot *robot, char *buf, uint32_t capacity, uint32_t *length);
 
 /* ---- the DSL words: outside the robot API, for the DSL interpreters and -wasm builds ---- */
-/* One double per word (booleans 1 or 0, enums their CY_ value), in protocol/v2/api.json's word order. 824 bytes. */
+/* One double per word (booleans 1 or 0, enums their CY_ value), in protocol/v2/api.json's word order. 856 bytes. */
 typedef struct cy_dsl_words_v1 {
   double ruleset; /* ruleset */
   double physics_mode; /* physics-mode */
@@ -995,6 +1020,10 @@ typedef struct cy_dsl_words_v1 {
   double target_vy; /* target-vy */
   double target_vz; /* target-vz */
   double muzzle_heard; /* muzzle-heard */
+  double wall_x; /* wall-x */
+  double wall_y; /* wall-y */
+  double wall_z; /* wall-z */
+  double wall_margin; /* wall-margin */
 } cy_dsl_words_v1;
 CY_API int32_t cy_dsl_fill_v1(cy_robot *robot, cy_dsl_words_v1 *out);
 
@@ -1005,6 +1034,7 @@ typedef cy_scan_v1 cy_scan;
 typedef cy_contact_v1 cy_contact;
 typedef cy_cue_v1 cy_cue;
 typedef cy_sighting_v1 cy_sighting;
+typedef cy_wall_margin_v1 cy_wall_margin;
 typedef cy_solution_v1 cy_solution;
 typedef cy_zone_v1 cy_zone;
 typedef cy_storm_v1 cy_storm;
@@ -1027,6 +1057,7 @@ typedef cy_compute_v1 cy_compute;
 #define cy_nav_zone cy_nav_zone_v1
 #define cy_nav_storm cy_nav_storm_v1
 #define cy_nav_hill cy_nav_hill_v1
+#define cy_nav_wall_margin cy_nav_wall_margin_v1
 #define cy_nav_pickups cy_nav_pickups_v1
 #define cy_nav_nearest_pickup cy_nav_nearest_pickup_v1
 #define cy_angles_to_chassis cy_angles_to_chassis_v1

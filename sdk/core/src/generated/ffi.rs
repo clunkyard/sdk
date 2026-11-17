@@ -392,6 +392,15 @@ pub extern "C" fn cy_me_altitude(robot: *mut Robot, out: *mut f64) -> i32 {
     })
 }
 
+/// The walls that stopped or bounced your move in the tick just simulated, reported by the arena (self.wall); zero when none did. Under gravity the ground is not a wall (me.grounded), so z is at most the ceiling's -1 there.
+#[unsafe(no_mangle)]
+pub extern "C" fn cy_me_wall_contact(robot: *mut Robot, out: *mut Vec3) -> i32 {
+    guard(robot, "cy_me_wall_contact", |r| {
+        let value = crate::me::wall_contact(&*r)?;
+        write(out, value)
+    })
+}
+
 /// What the previous tick applied to you.
 #[unsafe(no_mangle)]
 pub extern "C" fn cy_me_applied_v1(robot: *mut Robot, out: *mut AppliedV1) -> i32 {
@@ -1284,6 +1293,15 @@ pub extern "C" fn cy_nav_hill_distance_from(robot: *mut Robot, point: *const Vec
             Some(value) => write(out, value),
             None => Ok(CY_NONE),
         }
+    })
+}
+
+/// How far the edge of your robot is from the walls: from your position, your radius (hello.robot.radius) and the arena size, nothing the arena reports.
+#[unsafe(no_mangle)]
+pub extern "C" fn cy_nav_wall_margin_v1(robot: *mut Robot, out: *mut WallMarginV1) -> i32 {
+    guard(robot, "cy_nav_wall_margin_v1", |r| {
+        let value = crate::nav::wall_margin(&*r)?;
+        write(out, value)
     })
 }
 

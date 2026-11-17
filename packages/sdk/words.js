@@ -2,7 +2,7 @@
 // Generated from protocol/v2/api.json by protocol/v2/codegen/dsl.js; do not edit. Run `make api`.
 //
 // The DSL words, as the core gives them: one f64 a word in the record
-// cy_dsl_words_v1 (824 bytes), which cy_dsl_fill_v1 fills once a
+// cy_dsl_words_v1 (856 bytes), which cy_dsl_fill_v1 fills once a
 // turn, outside the DSL budget. read() turns it into the interpreter's words;
 // booleans are booleans and enums their protocol 2 names, except where the
 // DSL keeps an older spelling (control-model reads "targets" for direct).
@@ -12,7 +12,7 @@
 
 const API_VERSION = '2.0.0';
 const RECORD = 'cy_dsl_words_v1';
-const SIZE = 824;
+const SIZE = 856;
 // The Tracker keeps a passive cue this many ticks.
 const CUE_TICKS = 60;
 // What a distance reads when the thing it measures to is absent.
@@ -126,6 +126,10 @@ const WORDS = Object.freeze([
   { name: "target-vy", index: 100, type: 'number' },
   { name: "target-vz", index: 101, type: 'number' },
   { name: "muzzle-heard", index: 102, type: 'boolean' },
+  { name: "wall-x", index: 103, type: 'number' },
+  { name: "wall-y", index: 104, type: 'number' },
+  { name: "wall-z", index: 105, type: 'number' },
+  { name: "wall-margin", index: 106, type: 'number' },
 ]);
 
 const ALIASES = Object.freeze({
@@ -265,6 +269,10 @@ function read(w, base = 0) {
     "target-vy": w[base + 100],
     "target-vz": w[base + 101],
     "muzzle-heard": w[base + 102] !== 0,
+    "wall-x": w[base + 103],
+    "wall-y": w[base + 104],
+    "wall-z": w[base + 105],
+    "wall-margin": w[base + 106],
   };
   words["energy"] = words["battery"];
   words["max-energy"] = words["battery-capacity"];

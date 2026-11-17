@@ -748,6 +748,64 @@
       ]
     },
     {
+      "name": "wall_margin",
+      "description": "How far your edge is from the walls, from your position, your radius and the arena size.",
+      "versioned": true,
+      "since": "2.0",
+      "cName": "cy_wall_margin_v1",
+      "alias": "cy_wall_margin",
+      "size": 56,
+      "align": 8,
+      "fields": [
+        {
+          "name": "x",
+          "type": {
+            "kind": "f64",
+            "description": "The gap along x from your edge to the nearer of the walls at x = 0 and x = width; 0 when touching."
+          },
+          "description": "The gap along x from your edge to the nearer of the walls at x = 0 and x = width; 0 when touching.",
+          "offset": 0
+        },
+        {
+          "name": "y",
+          "type": {
+            "kind": "f64",
+            "description": "The gap along y, as x."
+          },
+          "description": "The gap along y, as x.",
+          "offset": 8
+        },
+        {
+          "name": "z",
+          "type": {
+            "kind": "f64",
+            "description": "The gap along z, as x, in 3D: to the ceiling, and to the floor where it is a wall. Under gravity the floor is the ground, so the gap is your altitude (me.altitude). 1000000000000 in 2D."
+          },
+          "description": "The gap along z, as x, in 3D: to the ceiling, and to the floor where it is a wall. Under gravity the floor is the ground, so the gap is your altitude (me.altitude). 1000000000000 in 2D.",
+          "offset": 16
+        },
+        {
+          "name": "nearest",
+          "type": {
+            "kind": "f64",
+            "description": "The smallest of the gaps that apply: x and y, and z in 3D."
+          },
+          "description": "The smallest of the gaps that apply: x and y, and z in 3D.",
+          "offset": 24
+        },
+        {
+          "name": "normal",
+          "type": {
+            "kind": "record",
+            "record": "vec3",
+            "description": "The unit normal of the nearest wall, pointing into the arena, as me.wall_contact reports a wall: +1 on an axis for the wall at 0, -1 for the far wall. The first of x, y, z on a tie."
+          },
+          "description": "The unit normal of the nearest wall, pointing into the arena, as me.wall_contact reports a wall: +1 on an axis for the wall at 0, -1 for the far wall. The first of x, y, z on a tie.",
+          "offset": 32
+        }
+      ]
+    },
+    {
       "name": "solution",
       "description": "Where to aim for a shot fired now to meet a target, and when it meets it.",
       "versioned": true,
@@ -2178,6 +2236,40 @@
       "rust": {
         "module": "me",
         "fn": "altitude"
+      }
+    },
+    {
+      "name": "me.wall_contact",
+      "kind": "query",
+      "form": "property",
+      "since": "2.0",
+      "fact": "The walls that stopped or bounced your move in the tick just simulated, reported by the arena (self.wall); zero when none did. Under gravity the ground is not a wall (me.grounded), so z is at most the ceiling's -1 there.",
+      "subsystem": "me",
+      "member": "wall_contact",
+      "path": [
+        "me",
+        "wall_contact"
+      ],
+      "stateless": false,
+      "args": [],
+      "returns": {
+        "kind": "record",
+        "record": "vec3",
+        "description": "The sum of the unit normals of the walls that stopped or bounced you, each pointing into the arena: +1 on an axis for the wall at 0, -1 for the far wall. Zero when none did."
+      },
+      "fields": [],
+      "of": null,
+      "dsl": null,
+      "rename": {},
+      "wasm": true,
+      "bindings": true,
+      "version": 1,
+      "vectors": "protocol/v2/vectors/api/me.json#wall_contact",
+      "symbol": "cy_me_wall_contact",
+      "alias": null,
+      "rust": {
+        "module": "me",
+        "fn": "wall_contact"
       }
     },
     {
@@ -5451,6 +5543,40 @@
       }
     },
     {
+      "name": "nav.wall_margin",
+      "kind": "query",
+      "form": "call",
+      "since": "2.0",
+      "fact": "How far the edge of your robot is from the walls: from your position, your radius (hello.robot.radius) and the arena size, nothing the arena reports.",
+      "subsystem": "nav",
+      "member": "wall_margin",
+      "path": [
+        "nav",
+        "wall_margin"
+      ],
+      "stateless": false,
+      "args": [],
+      "returns": {
+        "kind": "record",
+        "record": "wall_margin",
+        "description": ""
+      },
+      "fields": [],
+      "of": null,
+      "dsl": null,
+      "rename": {},
+      "wasm": true,
+      "bindings": true,
+      "version": 1,
+      "vectors": "protocol/v2/vectors/api/nav.json#wall_margin",
+      "symbol": "cy_nav_wall_margin_v1",
+      "alias": "cy_nav_wall_margin",
+      "rust": {
+        "module": "nav",
+        "fn": "wall_margin"
+      }
+    },
+    {
       "name": "nav.pickups",
       "kind": "query",
       "form": "property",
@@ -7798,6 +7924,38 @@
         "derive": "muzzle_heard"
       },
       "fact": "A shot was heard this tick: a passive muzzle contact is among this tick's sensors.cues, whatever cue the tracker keeps."
+    },
+    {
+      "name": "wall-x",
+      "type": "number",
+      "source": {
+        "derive": "wall_x"
+      },
+      "fact": "The x of me.wall_contact: 1 when the wall at x = 0 stopped or bounced you in the tick just simulated, -1 for the far wall, else 0."
+    },
+    {
+      "name": "wall-y",
+      "type": "number",
+      "source": {
+        "derive": "wall_y"
+      },
+      "fact": "The y of me.wall_contact, as wall-x."
+    },
+    {
+      "name": "wall-z",
+      "type": "number",
+      "source": {
+        "derive": "wall_z"
+      },
+      "fact": "The z of me.wall_contact, as wall-x: the floor where it is a wall, or the ceiling; 0 in 2D, and under gravity the ground is not a wall."
+    },
+    {
+      "name": "wall-margin",
+      "type": "number",
+      "source": {
+        "derive": "wall_margin"
+      },
+      "fact": "The gap from your edge to the nearest wall (nav.wall_margin nearest); under gravity its floor is the ground, at your altitude."
     },
     {
       "name": "energy",

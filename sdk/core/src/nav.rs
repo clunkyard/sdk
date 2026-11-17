@@ -8,7 +8,7 @@
 
 use crate::angles::point;
 use crate::generated::*;
-use crate::maths::{planar_distance, space_distance};
+use crate::maths::{max, min, planar_distance, space_distance};
 use crate::runtime::Robot;
 
 pub fn region_distance(shape: Shape, a: Vec3, b: Vec3) -> f64 {
@@ -120,4 +120,36 @@ pub fn nearest_pickup(r: &Robot, kind: Option<PickupKind>) -> Result<Option<Pick
 
 pub fn field_distance(r: &Robot, a: &Vec3, b: &Vec3) -> Result<f64, Error> {
     Ok(region_distance(r.hello()?.shape, point(a, "a")?, point(b, "b")?))
+}
+
+/// The gaps from the robot's edge to the walls, from its position, its
+/// radius and the arena size. On each axis the nearer wall counts; z is
+/// FAR in 2D, and under gravity its floor is the ground, at the altitude.
+pub fn wall_margin(r: &Robot) -> Result<WallMarginV1, Error> {
+    let hello = r.hello()?;
+    let me = &r.current()?.me;
+    let radius = hello.radius;
+    // The gap and the unit normal of the nearer wall on an axis: the wall
+    // at 0 when the gaps tie.
+    let axis = |at: f64, size: f64| {
+        let (low, high) = (at - radius, size - radius - at);
+        if low <= high { (max(0.0, low), 1.0) } else { (max(0.0, high), -1.0) }
+    };
+    let (x, nx) = axis(me.position.x, hello.width);
+    let (y, ny) = axis(me.position.y, hello.height);
+    let mut best = (x, Vec3 { x: nx, y: 0.0, z: 0.0 });
+    if y < best.0 {
+        best = (y, Vec3 { x: 0.0, y: ny, z: 0.0 });
+    }
+    let mut z = FAR;
+    if hello.mode == Mode::ThreeD {
+        let ceiling = max(0.0, hello.depth - radius - me.position.z);
+        let floor = max(0.0, if hello.gravity.z != 0.0 { me.altitude } else { me.position.z - radius });
+        let normal = if floor <= ceiling { 1.0 } else { -1.0 };
+        z = min(floor, ceiling);
+        if z < best.0 {
+            best = (z, Vec3 { x: 0.0, y: 0.0, z: normal });
+        }
+    }
+    Ok(WallMarginV1 { x, y, z, nearest: best.0, normal: best.1 })
 }

@@ -65,6 +65,7 @@
 //!     crate::me::attitude(r: &Robot) -> Result<AttitudeV1, Error>
 //!     crate::me::grounded(r: &Robot) -> Result<bool, Error>
 //!     crate::me::altitude(r: &Robot) -> Result<f64, Error>
+//!     crate::me::wall_contact(r: &Robot) -> Result<Vec3, Error>
 //!     crate::me::applied(r: &Robot) -> Result<AppliedV1, Error>
 //!     crate::me::hull_mounts(r: &Robot) -> Result<bool, Error>
 //!     crate::me::to_mount(r: &Robot, heading: f64, pitch: f64) -> Result<Direction, Error>
@@ -120,6 +121,7 @@
 //!     crate::nav::hill_margin(r: &Robot, point: &Vec3) -> Result<Option<f64>, Error>
 //!     crate::nav::hill_contains(r: &Robot, point: &Vec3, margin: f64) -> Result<Option<bool>, Error>
 //!     crate::nav::hill_distance_from(r: &Robot, point: &Vec3) -> Result<Option<f64>, Error>
+//!     crate::nav::wall_margin(r: &Robot) -> Result<WallMarginV1, Error>
 //!     crate::nav::pickups(r: &Robot) -> Result<Vec<PickupV1>, Error>
 //!     crate::nav::nearest_pickup(r: &Robot, kind: Option<PickupKind>) -> Result<Option<PickupV1>, Error>
 //!     crate::nav::field_distance(r: &Robot, a: &Vec3, b: &Vec3) -> Result<f64, Error>
@@ -186,6 +188,10 @@
 //!     crate::dsl::target_vy(r: &Robot) -> Result<f64, Error>
 //!     crate::dsl::target_vz(r: &Robot) -> Result<f64, Error>
 //!     crate::dsl::muzzle_heard(r: &Robot) -> Result<bool, Error>
+//!     crate::dsl::wall_x(r: &Robot) -> Result<f64, Error>
+//!     crate::dsl::wall_y(r: &Robot) -> Result<f64, Error>
+//!     crate::dsl::wall_z(r: &Robot) -> Result<f64, Error>
+//!     crate::dsl::wall_margin(r: &Robot) -> Result<f64, Error>
 
 pub mod ffi;
 pub mod records;

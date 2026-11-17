@@ -43,6 +43,8 @@ static void read_cue(cy_cue_v1 *out){out->source = integer();out->tick = integer
 static void print_cue(const cy_cue_v1 *out){putchar('{');fputs("source=",stdout);enum_source(out->source);putchar(',');fputs("tick=",stdout);bits((double)out->tick);putchar(',');fputs("bearing_error=",stdout);bits((double)out->bearing_error);putchar(',');fputs("position=",stdout);print_vec3(&out->position);putchar('}');}
 static void read_sighting(cy_sighting_v1 *out){out->tick = integer();out->source = integer();out->bearing_error = number();out->range_error = number();read_vec3(&out->position);}
 static void print_sighting(const cy_sighting_v1 *out){putchar('{');fputs("tick=",stdout);bits((double)out->tick);putchar(',');fputs("source=",stdout);enum_source(out->source);putchar(',');fputs("bearing_error=",stdout);bits((double)out->bearing_error);putchar(',');fputs("range_error=",stdout);bits((double)out->range_error);putchar(',');fputs("position=",stdout);print_vec3(&out->position);putchar('}');}
+static void read_wall_margin(cy_wall_margin_v1 *out){out->x = number();out->y = number();out->z = number();out->nearest = number();read_vec3(&out->normal);}
+static void print_wall_margin(const cy_wall_margin_v1 *out){putchar('{');fputs("x=",stdout);bits((double)out->x);putchar(',');fputs("y=",stdout);bits((double)out->y);putchar(',');fputs("z=",stdout);bits((double)out->z);putchar(',');fputs("nearest=",stdout);bits((double)out->nearest);putchar(',');fputs("normal=",stdout);print_vec3(&out->normal);putchar('}');}
 static void read_solution(cy_solution_v1 *out){out->heading = number();out->pitch = number();out->time = number();}
 static void print_solution(const cy_solution_v1 *out){putchar('{');fputs("heading=",stdout);bits((double)out->heading);putchar(',');fputs("pitch=",stdout);bits((double)out->pitch);putchar(',');fputs("time=",stdout);bits((double)out->time);putchar('}');}
 static void read_zone(cy_zone_v1 *out){out->shape = integer();out->reserved = integer();out->radius = number();read_vec3(&out->center);}
@@ -80,6 +82,7 @@ static int32_t binding_cy_me_angular_velocity(cy_robot *robot,cy_rotation *out){
 static int32_t binding_cy_me_attitude_v1(cy_robot *robot,cy_attitude_v1 *out){try{clunkyard::Robot binding(robot);auto got=binding.me.attitude();*out=got;return CY_OK;}catch(const clunkyard::Error &error){return error.status;}}
 static int32_t binding_cy_me_grounded(cy_robot *robot,int32_t *out){try{clunkyard::Robot binding(robot);auto got=binding.me.grounded();*out=got;return CY_OK;}catch(const clunkyard::Error &error){return error.status;}}
 static int32_t binding_cy_me_altitude(cy_robot *robot,double *out){try{clunkyard::Robot binding(robot);auto got=binding.me.altitude();*out=got;return CY_OK;}catch(const clunkyard::Error &error){return error.status;}}
+static int32_t binding_cy_me_wall_contact(cy_robot *robot,cy_vec3 *out){try{clunkyard::Robot binding(robot);auto got=binding.me.wall_contact();*out=got;return CY_OK;}catch(const clunkyard::Error &error){return error.status;}}
 static int32_t binding_cy_me_applied_v1(cy_robot *robot,cy_applied_v1 *out){try{clunkyard::Robot binding(robot);auto got=binding.me.applied();*out=got;return CY_OK;}catch(const clunkyard::Error &error){return error.status;}}
 static int32_t binding_cy_me_hull_mounts(cy_robot *robot,int32_t *out){try{clunkyard::Robot binding(robot);auto got=binding.me.hull_mounts();*out=got;return CY_OK;}catch(const clunkyard::Error &error){return error.status;}}
 static int32_t binding_cy_me_to_mount(cy_robot *robot,double heading,double pitch,cy_direction *out){try{clunkyard::Robot binding(robot);auto got=binding.me.to_mount(heading,pitch);*out=got;return CY_OK;}catch(const clunkyard::Error &error){return error.status;}}
@@ -171,6 +174,7 @@ static int32_t binding_cy_nav_hill_v1(cy_robot *robot,cy_hill_v1 *out){try{clunk
 static int32_t binding_cy_nav_hill_margin(cy_robot *robot,const cy_vec3 *point,double *out){try{clunkyard::Robot binding(robot);auto got=binding.nav.hill_margin(*point);if(!got)return CY_NONE;*out=*got;return CY_OK;}catch(const clunkyard::Error &error){return error.status;}}
 static int32_t binding_cy_nav_hill_contains(cy_robot *robot,const cy_vec3 *point,double margin,int32_t *out){try{clunkyard::Robot binding(robot);auto got=binding.nav.hill_contains(*point,margin);if(!got)return CY_NONE;*out=*got;return CY_OK;}catch(const clunkyard::Error &error){return error.status;}}
 static int32_t binding_cy_nav_hill_distance_from(cy_robot *robot,const cy_vec3 *point,double *out){try{clunkyard::Robot binding(robot);auto got=binding.nav.hill_distance_from(*point);if(!got)return CY_NONE;*out=*got;return CY_OK;}catch(const clunkyard::Error &error){return error.status;}}
+static int32_t binding_cy_nav_wall_margin_v1(cy_robot *robot,cy_wall_margin_v1 *out){try{clunkyard::Robot binding(robot);auto got=binding.nav.wall_margin();*out=got;return CY_OK;}catch(const clunkyard::Error &error){return error.status;}}
 static int32_t binding_cy_nav_pickups_v1(cy_robot *robot,cy_pickup_v1 *out,uint32_t capacity,uint32_t *count){try{clunkyard::Robot binding(robot);auto got=binding.nav.pickups();*count=(uint32_t)(got).size();if(capacity<*count)return CY_SHORT;for(uint32_t i=0;i<*count;i++)out[i]=(got)[i];return CY_OK;}catch(const clunkyard::Error &error){return error.status;}}
 static int32_t binding_cy_nav_nearest_pickup_v1(cy_robot *robot,int32_t kind,cy_pickup_v1 *out){try{clunkyard::Robot binding(robot);auto got=binding.nav.nearest_pickup(kind);if(!got)return CY_NONE;*out=*got;return CY_OK;}catch(const clunkyard::Error &error){return error.status;}}
 static int32_t binding_cy_nav_field_distance(cy_robot *robot,const cy_vec3 *a,const cy_vec3 *b,double *out){try{clunkyard::Robot binding(robot);auto got=binding.nav.field_distance(*a,*b);*out=got;return CY_OK;}catch(const clunkyard::Error &error){return error.status;}}
@@ -276,6 +280,9 @@ if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');fputs(out
 if(!strcmp(op,"call")&&!strcmp(name,"me.altitude")){double out=0;
 int32_t status=binding_cy_me_altitude(robot,&out);
 if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');bits((double)out);}putchar('\n');}return;}
+if(!strcmp(op,"call")&&!strcmp(name,"me.wall_contact")){cy_vec3 out={};
+int32_t status=binding_cy_me_wall_contact(robot,&out);
+if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');print_vec3(&out);}putchar('\n');}return;}
 if(!strcmp(op,"call")&&!strcmp(name,"me.applied")){cy_applied_v1 out={};
 int32_t status=binding_cy_me_applied_v1(robot,&out);
 if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');print_applied(&out);}putchar('\n');}return;}
@@ -591,6 +598,9 @@ if(!strcmp(op,"call")&&!strcmp(name,"nav.hill.distance_from")){cy_vec3 point; re
 double out=0;
 int32_t status=binding_cy_nav_hill_distance_from(robot,&point,&out);
 if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');bits((double)out);}putchar('\n');}return;}
+if(!strcmp(op,"call")&&!strcmp(name,"nav.wall_margin")){cy_wall_margin_v1 out={};
+int32_t status=binding_cy_nav_wall_margin_v1(robot,&out);
+if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');print_wall_margin(&out);}putchar('\n');}return;}
 if(!strcmp(op,"call")&&!strcmp(name,"nav.pickups")){cy_pickup_v1 out[CAP]; uint32_t count=0;
 int32_t status=binding_cy_nav_pickups_v1(robot,out,CAP,&count);
 if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');putchar('[');for(uint32_t i=0;i<count;i++){if(i)putchar(',');print_pickup(&out[i]);}putchar(']');}putchar('\n');}return;}

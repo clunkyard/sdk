@@ -53,6 +53,13 @@ export interface Sighting {
   rangeError: number;
   position: Vec3;
 }
+export interface WallMargin {
+  x: number;
+  y: number;
+  z: number;
+  nearest: number;
+  normal: Vec3;
+}
 export interface Solution {
   heading: number;
   pitch: number;
@@ -133,6 +140,7 @@ export interface Me {
   readonly attitude: Attitude;
   readonly grounded: boolean;
   readonly altitude: number;
+  readonly wallContact: Vec3;
   readonly applied: Applied;
   readonly hullMounts: boolean;
   toMount(heading: number, pitch: number): Direction;
@@ -202,6 +210,7 @@ export interface Nav {
   readonly zone: Zone | null;
   readonly storm: Storm | null;
   readonly hill: Hill | null;
+  wallMargin(): WallMargin;
   readonly pickups: Array<Pickup>;
   nearestPickup(kind?: "energy" | "health" | "armour"): Pickup | null;
   fieldDistance(a: Vec3, b: Vec3): number;

@@ -240,3 +240,21 @@ pub fn target_vy(r: &Robot) -> Result<f64, Error> {
 pub fn target_vz(r: &Robot) -> Result<f64, Error> {
     Ok(target_velocity(r)?.z)
 }
+
+/// The gap from the robot edge to the nearest wall.
+pub fn wall_margin(r: &Robot) -> Result<f64, Error> {
+    Ok(crate::nav::wall_margin(r)?.nearest)
+}
+
+/// The x of the walls that stopped or bounced the robot (me.wall_contact).
+pub fn wall_x(r: &Robot) -> Result<f64, Error> {
+    Ok(r.current()?.me.wall.x)
+}
+
+pub fn wall_y(r: &Robot) -> Result<f64, Error> {
+    Ok(r.current()?.me.wall.y)
+}
+
+pub fn wall_z(r: &Robot) -> Result<f64, Error> {
+    Ok(r.current()?.me.wall.z)
+}

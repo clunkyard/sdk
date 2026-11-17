@@ -20,6 +20,7 @@ using Scan = cy_scan_v1;
 using Contact = cy_contact_v1;
 using Cue = cy_cue_v1;
 using Sighting = cy_sighting_v1;
+using WallMargin = cy_wall_margin_v1;
 using Solution = cy_solution_v1;
 struct Zone:public cy_zone_v1{cy_robot *handle;Zone(cy_robot *h,const cy_zone_v1 &value):cy_zone_v1(value),handle(h){}
   std::optional<double> margin(const Vec3 & point) const { double out{}; int32_t status = cy_nav_zone_margin(handle, &point, &out); if(status==CY_NONE)return std::nullopt; check(handle,status); return out; }
@@ -70,6 +71,7 @@ struct Me {cy_robot *&handle; explicit Me(cy_robot *&robot):handle(robot){}
   Attitude attitude() const { cy_attitude_v1 out{}; int32_t status = cy_me_attitude_v1(handle, &out); check(handle,status); return out; }
   bool grounded() const { int32_t out{}; int32_t status = cy_me_grounded(handle, &out); check(handle,status); return out != 0; }
   double altitude() const { double out{}; int32_t status = cy_me_altitude(handle, &out); check(handle,status); return out; }
+  Vec3 wall_contact() const { cy_vec3 out{}; int32_t status = cy_me_wall_contact(handle, &out); check(handle,status); return out; }
   Applied applied() const { cy_applied_v1 out{}; int32_t status = cy_me_applied_v1(handle, &out); check(handle,status); return out; }
   bool hull_mounts() const { int32_t out{}; int32_t status = cy_me_hull_mounts(handle, &out); check(handle,status); return out != 0; }
   Direction to_mount(double heading, double pitch) const { cy_direction out{}; int32_t status = cy_me_to_mount(handle, heading, pitch, &out); check(handle,status); return out; }
@@ -154,6 +156,7 @@ struct Nav {cy_robot *&handle; explicit Nav(cy_robot *&robot):handle(robot){}
   std::optional<Zone> zone() const { cy_zone_v1 out{}; int32_t status = cy_nav_zone_v1(handle, &out); if(status==CY_NONE)return std::nullopt; check(handle,status); return Zone(handle,out); }
   std::optional<Storm> storm() const { cy_storm_v1 out{}; int32_t status = cy_nav_storm_v1(handle, &out); if(status==CY_NONE)return std::nullopt; check(handle,status); return Storm(handle,out); }
   std::optional<Hill> hill() const { cy_hill_v1 out{}; int32_t status = cy_nav_hill_v1(handle, &out); if(status==CY_NONE)return std::nullopt; check(handle,status); return Hill(handle,out); }
+  WallMargin wall_margin() const { cy_wall_margin_v1 out{}; int32_t status = cy_nav_wall_margin_v1(handle, &out); check(handle,status); return out; }
   std::vector<Pickup> pickups() const { std::vector<cy_pickup_v1> out(16);uint32_t count=0; int32_t status = cy_nav_pickups_v1(handle, out.data(), (uint32_t)out.size(), &count); while(status==CY_SHORT){out.resize(count);status=cy_nav_pickups_v1(handle, out.data(), (uint32_t)out.size(), &count);} check(handle,status); out.resize(count);return out; }
   std::optional<Pickup> nearest_pickup(int32_t kind = 0) const { cy_pickup_v1 out{}; int32_t status = cy_nav_nearest_pickup_v1(handle, kind, &out); if(status==CY_NONE)return std::nullopt; check(handle,status); return out; }
   double field_distance(const Vec3 & a, const Vec3 & b) const { double out{}; int32_t status = cy_nav_field_distance(handle, &a, &b, &out); check(handle,status); return out; }
