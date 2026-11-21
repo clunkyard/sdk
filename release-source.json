@@ -1,6 +1,6 @@
 {
   "v": 1,
-  "sourceCommit": "c5becce34d7a2af2fa2f75821abedcebb3255eb5",
+  "sourceCommit": "d71d2b753eee3f363e843cdfc497dbd012e706dc",
   "sourceDirty": false,
   "playerDerivation": {
     "packages": [
@@ -51,8 +51,8 @@
     },
     {
       "path": ".github/workflows/player-native.yml",
-      "bytes": 3444,
-      "sha256": "9b70d8119cc3cbfc67c3144c4b5362c28ad6c3ed013ed54885b84b3d0b1f30f1"
+      "bytes": 3440,
+      "sha256": "0318ad8acaf2f01576d5dd7019a03eecd40e9071be0dbb49eda6092e8b464d0f"
     },
     {
       "path": ".gitignore",
@@ -597,7 +597,7 @@
     {
       "path": "scripts/player-native.cjs",
       "bytes": 5111,
-      "sha256": "4bc69df8c69893eb7b819091970aef15d5d8bdc3366f03da551804d8fe5cdbc6"
+      "sha256": "93c04b7d709c3db2a8d5194a27b62ed3a2dd84b6a05bb39fe8d528776e05c19c"
     },
     {
       "path": "scripts/publish.cjs",

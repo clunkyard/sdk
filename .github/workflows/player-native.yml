@@ -45,7 +45,7 @@ jobs:
       - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961
         with:
           distribution: temurin
-          java-version: '22.0.2'
+          java-version: '25'
       - run: rustup toolchain install 1.96.0 --profile minimal --no-self-update
       - name: Download the exact owned qualification inputs
         env:

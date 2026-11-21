@@ -13,7 +13,7 @@ function selectJava(env,{platform=process.platform,exists=fs.existsSync,probe=sp
     if(!compiler||!exists(compiler))continue;
     const result=probe(compiler,['-version'],{encoding:'utf8',stdio:'pipe',timeout:10000});
     const text=String(result.stdout||'')+String(result.stderr||'');
-    if(result.error||result.status!==0||Number(/javac\s+(\d+)/.exec(text)?.[1])<22||!/javac\s+\d+/.test(text))continue;
+    if(result.error||result.status!==0||Number(/javac\s+(\d+)/.exec(text)?.[1])<25||!/javac\s+\d+/.test(text))continue;
     const selected={...env,JAVA_HOME:home},javaBin=paths.join(home,'bin');
     if(platform==='win32'){
       // A plain object can contain Path and PATH. Node passes only one of
