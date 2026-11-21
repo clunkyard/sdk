@@ -1,6 +1,6 @@
 {
   "v": 1,
-  "sourceCommit": "d71d2b753eee3f363e843cdfc497dbd012e706dc",
+  "sourceCommit": "512ff450c462a5411a8065da4724879e2963d5e4",
   "sourceDirty": false,
   "playerDerivation": {
     "packages": [
@@ -14,10 +14,10 @@
         "name": "@clunkyard/cli",
         "canonicalVersion": "2.3.0",
         "version": "2.3.0",
-        "contentSHA256": "729936eb8f299de2d44fa5b6f9996a138dd592829bc26a005a24a19de1ded235"
+        "contentSHA256": "49e141cb6c9eb5320ee940bbd8c3326d823e784f8ff2eecd2aa048d3fae68f50"
       }
     ],
-    "catalogueSHA256": "f2900174f099d510e30edbe74cb7b3be9b815676d2da2280e25051c0b81dcc47"
+    "catalogueSHA256": "15394236af5fb362312b884d2049eff2ddc8593d1c8c34df2ce6ca986aa6a8dc"
   },
   "packages": [
     "sdk",
@@ -82,7 +82,7 @@
     {
       "path": "packages/cli/catalogue.json",
       "bytes": 95826,
-      "sha256": "f2900174f099d510e30edbe74cb7b3be9b815676d2da2280e25051c0b81dcc47"
+      "sha256": "15394236af5fb362312b884d2049eff2ddc8593d1c8c34df2ce6ca986aa6a8dc"
     },
     {
       "path": "packages/cli/cli.cjs",
@@ -636,13 +636,13 @@
     },
     {
       "path": "scripts/smoke-cli.cjs",
-      "bytes": 6493,
-      "sha256": "919feafe71c734d0364aca197130a14073a9556ebc316d76b94d31f46bd7ee40"
+      "bytes": 6608,
+      "sha256": "50ffdf68299339508eeee779584be6fe00639354576ceb79dc7348b997884002"
     },
     {
       "path": "scripts/smoke-connect.cjs",
-      "bytes": 5454,
-      "sha256": "b99129440decf6daf224069e8d10e6d7419b79223216bd889f5bbf154ec3b523"
+      "bytes": 5468,
+      "sha256": "a8eb576f75d7c68ca51a70dfca919f923dc4844ed69e16ae7feab3ef56e0211a"
     },
     {
       "path": "scripts/verify-oidc.cjs",

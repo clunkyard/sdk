@@ -6,7 +6,7 @@
 const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
 const {spawn}=require('node:child_process');
 const {WebSocketServer}=require('ws');
-const [cli,project,fixtureDirectory]=process.argv.slice(2);
+const [cli,project,fixtureDirectory,sdkVersion]=process.argv.slice(2);
 const messages=fs.readFileSync(path.join(fixtureDirectory,'2d-classic.ndjson'),'utf8').trim().split('\n').slice(0,2).map(JSON.parse);
 const delay=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 function alive(pid){try{process.kill(pid,0);return true;}catch(error){if(error.code==='ESRCH')return false;throw error;}}
@@ -23,7 +23,7 @@ async function trial(mode,source){
       server.once('connection',connected=>{socket=connected;socket.on('message',bytes=>{try{
         const value=JSON.parse(bytes);
         if(value.type==='auth'){assert.equal(value.token,'fixture-connect-key');socket.send(JSON.stringify({v:1,type:'authenticated',botId:'fixture-bot'}));socket.send(JSON.stringify({v:1,type:'request',sessionId:'s',turnId:'hello',deadlineMs:15000,payload:messages[0]}));}
-        else if(value.type==='response'&&value.turnId==='hello'){assert.equal(value.payload.type,'ready');assert.equal(value.payload.sdk.version,'2.0.0');socket.send(JSON.stringify({v:1,type:'request',sessionId:'s',turnId:'state',deadlineMs:15000,payload:messages[1]}));if(mode!=='normal'){clearTimeout(timer);resolve();}}
+        else if(value.type==='response'&&value.turnId==='hello'){assert.equal(value.payload.type,'ready');assert.equal(value.payload.sdk.version,sdkVersion);socket.send(JSON.stringify({v:1,type:'request',sessionId:'s',turnId:'state',deadlineMs:15000,payload:messages[1]}));if(mode!=='normal'){clearTimeout(timer);resolve();}}
         else if(value.type==='response'&&value.turnId==='state'){assert.equal(value.payload.type,'act');clearTimeout(timer);resolve();}
       }catch(error){fail(error)}});});
     });

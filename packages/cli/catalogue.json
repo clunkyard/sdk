@@ -2057,6 +2057,53 @@
         "expandedBytes": 1048576
       }
     },
+    "riscv": {
+      "engine": {
+        "file": "clunkyard-engine-v2.1.0-kit.1.tar.gz",
+        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.1.0-kit.1/clunkyard-engine-v2.1.0-kit.1.tar.gz",
+        "bytes": 6453841,
+        "sha256": "67aee90dd23cb73345f6394e94278e8d93b58472513c9c7cc0e631e6db55afa3",
+        "expandedBytes": 20897790
+      },
+      "version": "v2.1.0-kit.1",
+      "sdkVersion": "2.1.0",
+      "language": "riscv",
+      "portable": false,
+      "sdk": {
+        "file": "clunkyard-sdk-riscv-linux-x64-v2.1.0-kit.1.tar.gz",
+        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.1.0-kit.1/clunkyard-sdk-riscv-linux-x64-v2.1.0-kit.1.tar.gz",
+        "bytes": 11440954,
+        "sha256": "28aff8e43164455190205b7f6e8863a4a3d84b3a1fae2db2264808083e2d6fcd",
+        "expandedBytes": 71886652
+      },
+      "starter": {
+        "file": "starter-riscv-v2.1.0-kit.1.tar.gz",
+        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.1.0-kit.1/starter-riscv-v2.1.0-kit.1.tar.gz",
+        "bytes": 6946,
+        "sha256": "2b27bba42f3889d72d8f6f26ce711c659c497b82ce4a8325aa16c8481e30d579",
+        "expandedBytes": 1048576
+      },
+      "rebuildBindings": [],
+      "tools": [
+        "node"
+      ],
+      "requirements": {
+        "checks": [
+          {
+            "label": "LLVM with the riscv32 target, and ld.lld",
+            "command": "node",
+            "args": [
+              "-e",
+              "const run=require('child_process').spawnSync;const tools={\"CLUNKYARD_CLANG\":[\"clang\",\"clang-23\",\"clang-22\",\"clang-21\",\"clang-20\",\"clang-19\",\"clang-18\",\"clang-17\"],\"CLUNKYARD_LD_LLD\":[\"ld.lld\",\"ld.lld-23\",\"ld.lld-22\",\"ld.lld-21\",\"ld.lld-20\",\"ld.lld-19\",\"ld.lld-18\",\"ld.lld-17\",\"/opt/wasi-sdk/bin/ld.lld\"]};const found=Object.fromEntries(Object.entries(tools).map(([v,names])=>[v,process.env[v]||names.find(name=>!run(name,['--version']).error)]));if(!found.CLUNKYARD_CLANG||!found.CLUNKYARD_LD_LLD||!/\\briscv32\\b/.test(String(run(found.CLUNKYARD_CLANG,['--print-targets'],{encoding:'utf8'}).stdout)))process.exit(1);"
+            ],
+            "hint": "Install LLVM 17 or later with clang and lld: the LLVM release for your platform, brew install llvm lld on macOS, or apt install clang lld on Ubuntu and Debian. Set CLUNKYARD_CLANG and CLUNKYARD_LD_LLD if they are not on PATH."
+          }
+        ],
+        "notes": [
+          "A RISC-V robot is assembly source, assembled and linked by your LLVM and packed into the Clunkyard RISC-V machine, which runs on the Wasmtime host metered by fuel, the same on every computer, as hosted. A local match uses its Standard fuel budget (rates/s3.json)."
+        ]
+      }
+    },
     "wat": {
       "version": "v2.1.0-kit.1",
       "sdkVersion": "2.1.0",
@@ -2331,53 +2378,6 @@
         "bytes": 3792,
         "sha256": "f9e226dada0675c750da3041c4bcf24b03b518c095125f1133bcdbce6c310f97",
         "expandedBytes": 1048576
-      }
-    },
-    "riscv": {
-      "version": "v2.1.0-kit.1",
-      "sdkVersion": "2.1.0",
-      "language": "riscv",
-      "portable": false,
-      "engine": {
-        "file": "clunkyard-engine-v2.1.0-kit.1.tar.gz",
-        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.1.0-kit.1/clunkyard-engine-v2.1.0-kit.1.tar.gz",
-        "bytes": 6453841,
-        "sha256": "67aee90dd23cb73345f6394e94278e8d93b58472513c9c7cc0e631e6db55afa3",
-        "expandedBytes": 20897790
-      },
-      "sdk": {
-        "file": "clunkyard-sdk-riscv-linux-x64-v2.1.0-kit.1.tar.gz",
-        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.1.0-kit.1/clunkyard-sdk-riscv-linux-x64-v2.1.0-kit.1.tar.gz",
-        "bytes": 11440954,
-        "sha256": "28aff8e43164455190205b7f6e8863a4a3d84b3a1fae2db2264808083e2d6fcd",
-        "expandedBytes": 71886652
-      },
-      "starter": {
-        "file": "starter-riscv-v2.1.0-kit.1.tar.gz",
-        "url": "https://github.com/clunkyard/game-kit/releases/download/v2.1.0-kit.1/starter-riscv-v2.1.0-kit.1.tar.gz",
-        "bytes": 6946,
-        "sha256": "2b27bba42f3889d72d8f6f26ce711c659c497b82ce4a8325aa16c8481e30d579",
-        "expandedBytes": 1048576
-      },
-      "rebuildBindings": [],
-      "tools": [
-        "node"
-      ],
-      "requirements": {
-        "checks": [
-          {
-            "label": "LLVM with the riscv32 target, and ld.lld",
-            "command": "node",
-            "args": [
-              "-e",
-              "const run=require('child_process').spawnSync;const tools={\"CLUNKYARD_CLANG\":[\"clang\",\"clang-23\",\"clang-22\",\"clang-21\",\"clang-20\",\"clang-19\",\"clang-18\",\"clang-17\"],\"CLUNKYARD_LD_LLD\":[\"ld.lld\",\"ld.lld-23\",\"ld.lld-22\",\"ld.lld-21\",\"ld.lld-20\",\"ld.lld-19\",\"ld.lld-18\",\"ld.lld-17\",\"/opt/wasi-sdk/bin/ld.lld\"]};const found=Object.fromEntries(Object.entries(tools).map(([v,names])=>[v,process.env[v]||names.find(name=>!run(name,['--version']).error)]));if(!found.CLUNKYARD_CLANG||!found.CLUNKYARD_LD_LLD||!/\\briscv32\\b/.test(String(run(found.CLUNKYARD_CLANG,['--print-targets'],{encoding:'utf8'}).stdout)))process.exit(1);"
-            ],
-            "hint": "Install LLVM 17 or later with clang and lld: the LLVM release for your platform, brew install llvm lld on macOS, or apt install clang lld on Ubuntu and Debian. Set CLUNKYARD_CLANG and CLUNKYARD_LD_LLD if they are not on PATH."
-          }
-        ],
-        "notes": [
-          "A RISC-V robot is assembly source, assembled and linked by your LLVM and packed into the Clunkyard RISC-V machine, which runs on the Wasmtime host metered by fuel, the same on every computer, as hosted. A local match uses its Standard fuel budget (rates/s3.json)."
-        ]
       }
     }
   },

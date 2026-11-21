@@ -24,12 +24,12 @@ try {
   const directory=path.join(prefix,...(process.platform==='win32'?[]:['lib']),'node_modules','@clunkyard','cli');
   const entry=path.join(directory,'cli.cjs');
   const catalogue=JSON.parse(fs.readFileSync(path.join(directory,'catalogue.json')));
-  function checkNpmSDK(projectDirectory){
+  function checkNpmSDK(projectDirectory,{generatedLock=true}={}){
     const expected=catalogue.npmSDK,sdk=JSON.parse(fs.readFileSync(path.join(projectDirectory,'node_modules','clunkyard','package.json')));
     assert.equal(sdk.name,expected.name);assert.equal(sdk.version,expected.version);
     const lock=JSON.parse(fs.readFileSync(path.join(projectDirectory,'package-lock.json'))).packages['node_modules/clunkyard'];
     assert.equal(lock.name,expected.name);assert.equal(lock.version,expected.version);assert.equal(lock.integrity,expected.integrity);
-    assert.equal(lock.resolved,`https://registry.npmjs.org/@clunkyard/sdk/-/sdk-${expected.version}.tgz`);
+    if(generatedLock||lock.resolved!==undefined)assert.equal(lock.resolved,`https://registry.npmjs.org/@clunkyard/sdk/-/sdk-${expected.version}.tgz`);
   }
   const reviewed=JSON.parse(fs.readFileSync(path.join(path.dirname(path.resolve(tarball)),'packages.json'))).packages.find(row=>row.name==='@clunkyard/cli');
   assert.ok(reviewed,'An exact packed CLI receipt is required.');
@@ -49,7 +49,7 @@ try {
   const replay=JSON.parse(fs.readFileSync(path.join(project,'replays','trial-42.json')));
   assert.deepEqual(replay.failures||[],[]);
   assert.ok(replay.stats.bots[0].combat.shots>0,'Starter never fired.');
-  if(Number(process.versions.node.split('.')[0])>=22)run(process.execPath,[path.join(__dirname,'smoke-connect.cjs'),entry,project,fs.existsSync(path.resolve(__dirname,'../protocol/v2/fixtures'))?path.resolve(__dirname,'../protocol/v2/fixtures'):path.resolve(__dirname,'../../protocol/v2/fixtures')]);
+  if(Number(process.versions.node.split('.')[0])>=22)run(process.execPath,[path.join(__dirname,'smoke-connect.cjs'),entry,project,fs.existsSync(path.resolve(__dirname,'../protocol/v2/fixtures'))?path.resolve(__dirname,'../protocol/v2/fixtures'):path.resolve(__dirname,'../../protocol/v2/fixtures'),catalogue.npmSDK.version]);
   const launch=JSON.parse(fs.readFileSync(path.join(project,'.clunkyard','local-bot.json'))).command;
   assert.equal(launch[1],entry);assert.deepEqual(launch.slice(2),['--project',project,'stdio']);
   // A repeated build reuses the verified engine and installed npm SDK.
@@ -67,7 +67,7 @@ try {
   run(process.execPath,[process.env.npm_execpath,'install','--save-dev','--save-exact','typescript@6.0.2','--ignore-scripts','--no-audit','--no-fund'],{cwd:typescript});
   run(process.execPath,[entry,'doctor','--project',typescript]);
   run(process.execPath,[entry,'match','77','3d','zero-g','--project',typescript]);
-  checkNpmSDK(typescript);
+  checkNpmSDK(typescript,{generatedLock:false});
   const tsReplay=JSON.parse(fs.readFileSync(path.join(typescript,'replays','trial-77.json')));
   assert.deepEqual(tsReplay.failures||[],[]);assert.ok(tsReplay.stats.bots[0].combat.shots>0,'TypeScript starter never fired.');
   console.log(JSON.stringify({installedCommand:true,projectWithSpaces:true,explicitProject:true,realMatch:true,npmSDK:true,cacheReuse:true,nestedTypeScript:true,typeModuleProject:true}));
