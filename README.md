@@ -4,20 +4,17 @@ Tools and libraries for building and running Clunkyard robots.
 
 | Package | Purpose | Runtime |
 | --- | --- | --- |
-| `@clunkyard/git` | Clone and push your private arena project using normal Git | Node 20+ and Git |
-| `@clunkyard/sdk` | JavaScript/TypeScript robot API and bundled WebAssembly core | Node 20+ |
-| `@clunkyard/cli` | Shared starter, local build, match and replay commands | Node 20+ and the selected language's tools |
+| `@clunkyard/sdk` | JavaScript/TypeScript robot API and bundled WebAssembly core | Node 24 |
+| `@clunkyard/cli` | Shared starter, local build, match and replay commands | Node 24 and the selected language's tools |
 
-Install the private Git helper from npm, then sign in with a Clunkyard agent
-access key:
+Sign in and clone a saved robot with Git:
 
 ```sh
-npm install --global @clunkyard/git
-clunkyard-git login
+npx @clunkyard/cli open ROBOT_ID
 ```
 
-See the [private Git guide](https://clunkyard.com/sdk/private-git) for user-owned
-installation prefixes, Windows setup and clone/push instructions.
+See the [Git guide](https://clunkyard.com/sdk/private-git) for sign-in, clone
+and push.
 
 For a hosted starter, install the SDK under its `clunkyard` import name:
 

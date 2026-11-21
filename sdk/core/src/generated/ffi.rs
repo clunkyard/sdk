@@ -401,6 +401,15 @@ pub extern "C" fn cy_me_wall_contact(robot: *mut Robot, out: *mut Vec3) -> i32 {
     })
 }
 
+/// The health you lost in the tick just simulated, by cause: shots that hit you, shots that burst near you, collisions with robots and the boundary (the zone, the stall ring or the storm), as the arena reports it (self.hurt); all 0 when you lost none. It never names the robot behind a loss or where it came from.
+#[unsafe(no_mangle)]
+pub extern "C" fn cy_me_hurt_v1(robot: *mut Robot, out: *mut HurtV1) -> i32 {
+    guard(robot, "cy_me_hurt_v1", |r| {
+        let value = crate::me::hurt(&*r)?;
+        write(out, value)
+    })
+}
+
 /// What the previous tick applied to you.
 #[unsafe(no_mangle)]
 pub extern "C" fn cy_me_applied_v1(robot: *mut Robot, out: *mut AppliedV1) -> i32 {
@@ -1367,6 +1376,160 @@ pub extern "C" fn cy_score_armour(robot: *mut Robot, out: *mut f64) -> i32 {
     })
 }
 
+/// You have a drone program to launch (state.drone.has).
+#[unsafe(no_mangle)]
+pub extern "C" fn cy_drone_has(robot: *mut Robot, out: *mut i32) -> i32 {
+    guard(robot, "cy_drone_has", |r| {
+        let value = crate::drone::has(&*r)?;
+        write(out, i32::from(value))
+    })
+}
+
+/// A launch this tick would be accepted (state.drone.ready).
+#[unsafe(no_mangle)]
+pub extern "C" fn cy_drone_ready(robot: *mut Robot, out: *mut i32) -> i32 {
+    guard(robot, "cy_drone_ready", |r| {
+        let value = crate::drone::ready(&*r)?;
+        write(out, i32::from(value))
+    })
+}
+
+/// Your drone is in the air (state.drone.inFlight).
+#[unsafe(no_mangle)]
+pub extern "C" fn cy_drone_in_flight(robot: *mut Robot, out: *mut i32) -> i32 {
+    guard(robot, "cy_drone_in_flight", |r| {
+        let value = crate::drone::in_flight(&*r)?;
+        write(out, i32::from(value))
+    })
+}
+
+/// The launches you have left (state.drone.launchesLeft).
+#[unsafe(no_mangle)]
+pub extern "C" fn cy_drone_launches_left(robot: *mut Robot, out: *mut i32) -> i32 {
+    guard(robot, "cy_drone_launches_left", |r| {
+        let value = crate::drone::launches_left(&*r)?;
+        write(out, value)
+    })
+}
+
+/// Your drone's newest report, kept after the drone ends; absent before the first.
+#[unsafe(no_mangle)]
+pub extern "C" fn cy_drone_report_v1(robot: *mut Robot, out: *mut ReportV1) -> i32 {
+    guard(robot, "cy_drone_report_v1", |r| {
+        match crate::drone::report(&*r)? {
+            Some(value) => write(out, value),
+            None => Ok(CY_NONE),
+        }
+    })
+}
+
+/// What the newest report saw, nearest first, each projected to a world point from the report's position; empty with no report.
+#[unsafe(no_mangle)]
+pub extern "C" fn cy_drone_sightings_v1(robot: *mut Robot, out: *mut DroneSightingV1, capacity: u32, count: *mut u32) -> i32 {
+    guard(robot, "cy_drone_sightings_v1", |r| {
+        let items = crate::drone::sightings(&*r)?;
+        write_list(out, capacity, count, &items)
+    })
+}
+
+/// Ask to launch your drone this tick; the arena decides whether drone.ready allows it. Field: drone.
+#[unsafe(no_mangle)]
+pub extern "C" fn cy_drone_launch(robot: *mut Robot) -> i32 {
+    guard(robot, "cy_drone_launch", |r| {
+        act::set_flag(r, Field::DroneLaunch)?;
+        Ok(CY_OK)
+    })
+}
+
+/// Ask to launch your drone this tick; the arena decides whether drone.ready allows it. Field: drone.heading.
+#[unsafe(no_mangle)]
+pub extern "C" fn cy_drone_launch_heading(robot: *mut Robot, value: f64) -> i32 {
+    guard(robot, "cy_drone_launch_heading", |r| {
+        act::set_number(r, Field::DroneLaunchHeading, finite(value, "heading")?)?;
+        Ok(CY_OK)
+    })
+}
+
+/// Ask to launch your drone this tick; the arena decides whether drone.ready allows it. Field: drone.pitch.
+#[unsafe(no_mangle)]
+pub extern "C" fn cy_drone_launch_pitch(robot: *mut Robot, value: f64) -> i32 {
+    guard(robot, "cy_drone_launch_pitch", |r| {
+        act::set_number(r, Field::DroneLaunchPitch, finite(value, "pitch")?)?;
+        Ok(CY_OK)
+    })
+}
+
+/// Ask to launch your drone this tick; the arena decides whether drone.ready allows it. Field: drone.param.
+#[unsafe(no_mangle)]
+pub extern "C" fn cy_drone_launch_param(robot: *mut Robot, value: f64) -> i32 {
+    guard(robot, "cy_drone_launch_param", |r| {
+        act::set_number(r, Field::DroneLaunchParam, finite(value, "param")?)?;
+        Ok(CY_OK)
+    })
+}
+
+/// Sets one number of this tick's launch brief, which the drone program reads as brief-1 to brief-8; unset numbers before the highest set one go as 0, but brief-1 goes as the launch param when that is set. It goes only with drone.launch, and a later call replaces the number.
+#[unsafe(no_mangle)]
+pub extern "C" fn cy_drone_brief(robot: *mut Robot, index: i32, value: f64) -> i32 {
+    guard(robot, "cy_drone_brief", |r| {
+        crate::drone::brief(r, index, finite(value, "value")?)?;
+        Ok(CY_OK)
+    })
+}
+
+/// Hands the arena a drone program for this match in the ready reply, in place of the one your project names, in the robot's start only; after the first state it refuses with E_PHASE, an unknown language with E_ARGUMENT and a longer source with E_RANGE.
+#[unsafe(no_mangle)]
+pub extern "C" fn cy_drone_program(robot: *mut Robot, language: *const u8, language_length: u32, source: *const u8, source_length: u32) -> i32 {
+    guard(robot, "cy_drone_program", |r| {
+        crate::drone::program(r, text_in(language, language_length, "language")?, text_in(source, source_length, "source")?)?;
+        Ok(CY_OK)
+    })
+}
+
+/// What this tick's act holds for a drone field so far, as set. Field: drone.
+#[unsafe(no_mangle)]
+pub extern "C" fn cy_drone_get_launch(robot: *mut Robot, out: *mut f64) -> i32 {
+    guard(robot, "cy_drone_get_launch", |r| {
+        match act::get(r, Field::DroneLaunch)? {
+            Some(value) => write(out, value),
+            None => Ok(CY_NONE),
+        }
+    })
+}
+
+/// What this tick's act holds for a drone field so far, as set. Field: drone.heading.
+#[unsafe(no_mangle)]
+pub extern "C" fn cy_drone_get_launch_heading(robot: *mut Robot, out: *mut f64) -> i32 {
+    guard(robot, "cy_drone_get_launch_heading", |r| {
+        match act::get(r, Field::DroneLaunchHeading)? {
+            Some(value) => write(out, value),
+            None => Ok(CY_NONE),
+        }
+    })
+}
+
+/// What this tick's act holds for a drone field so far, as set. Field: drone.pitch.
+#[unsafe(no_mangle)]
+pub extern "C" fn cy_drone_get_launch_pitch(robot: *mut Robot, out: *mut f64) -> i32 {
+    guard(robot, "cy_drone_get_launch_pitch", |r| {
+        match act::get(r, Field::DroneLaunchPitch)? {
+            Some(value) => write(out, value),
+            None => Ok(CY_NONE),
+        }
+    })
+}
+
+/// What this tick's act holds for a drone field so far, as set. Field: drone.param.
+#[unsafe(no_mangle)]
+pub extern "C" fn cy_drone_get_launch_param(robot: *mut Robot, out: *mut f64) -> i32 {
+    guard(robot, "cy_drone_get_launch_param", |r| {
+        match act::get(r, Field::DroneLaunchParam)? {
+            Some(value) => write(out, value),
+            None => Ok(CY_NONE),
+        }
+    })
+}
+
 /// An angle brought into 0 to 360, exactly: degrees % 360, plus 360 when that is negative.
 #[unsafe(no_mangle)]
 pub extern "C" fn cy_angles_normalize(degrees: f64, out: *mut f64) -> i32 {
@@ -1559,7 +1722,7 @@ pub extern "C" fn cy_raw_line(robot: *mut Robot, buf: *mut u8, capacity: u32, le
     })
 }
 
-/// Adds fields the API does not cover to this tick's act; a key the API writes (v, type, tick, drive, forces, aim, scan, fire, status, log) is refused with E_ARGUMENT.
+/// Adds fields the API does not cover to this tick's act; a key the API writes (v, type, tick, drive, forces, aim, scan, fire, drone, status, log) is refused with E_ARGUMENT.
 #[unsafe(no_mangle)]
 pub extern "C" fn cy_raw_extra(robot: *mut Robot, json: *const u8, json_length: u32) -> i32 {
     guard(robot, "cy_raw_extra", |r| {

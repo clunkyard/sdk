@@ -308,6 +308,52 @@
       {"tick":12,"slots":["scout","target"],"cases":[{"call":"scanner.last","value":{"heading":264.29,"pitch":-38.26,"arc":30,"range":600}},{"call":"scanner.is_on","value":true}]},
       {"tick":45,"slots":["scout","target"],"cases":[{"call":"scanner.last","value":{"heading":246.84,"pitch":-38.26,"arc":30,"range":600}},{"call":"scanner.is_on","value":true}]}
      ]},
+    {"input": "fixtures/drones/2d-classic.ndjson",
+     "hello": [
+      {"call":"scanner.proximity_range","value":120},
+      {"call":"scanner.reach","args":[1],"value":1200},
+      {"call":"scanner.reach","args":[4],"value":1200},
+      {"call":"scanner.reach","args":[30],"value":600},
+      {"call":"scanner.reach","args":[120],"value":300},
+      {"call":"scanner.reach","args":[180],"value":300},
+      {"call":"scanner.arc_for_reach","args":[0],"value":120},
+      {"call":"scanner.arc_for_reach","args":[120],"value":120},
+      {"call":"scanner.arc_for_reach","args":[600],"value":30},
+      {"call":"scanner.arc_for_reach","args":[1200],"value":7.5},
+      {"call":"scanner.arc_for_reach","args":[2000],"value":4}
+     ],
+     "states": [
+      {"tick":0,"slots":["scout"],"cases":[{"call":"scanner.last","value":{"heading":296.62,"pitch":0,"arc":50,"range":464.76}},{"call":"scanner.is_on","value":true}]},
+      {"tick":59,"slots":["scout","target"],"cases":[{"call":"scanner.last","value":{"heading":351.89,"pitch":0,"arc":30,"range":600}},{"call":"scanner.is_on","value":true}]},
+      {"tick":60,"slots":["scout","target"],"cases":[{"call":"scanner.last","value":{"heading":352.03,"pitch":0,"arc":30,"range":600}},{"call":"scanner.is_on","value":true}]},
+      {"tick":61,"slots":["scout","target"],"cases":[{"call":"scanner.last","value":{"heading":352.15,"pitch":0,"arc":30,"range":600}},{"call":"scanner.is_on","value":true}]},
+      {"tick":70,"slots":["scout","target"],"cases":[{"call":"scanner.last","value":{"heading":352.5,"pitch":0,"arc":30,"range":600}},{"call":"scanner.is_on","value":true}]},
+      {"tick":80,"slots":["scout","target"],"cases":[{"call":"scanner.last","value":{"heading":351.34,"pitch":0,"arc":30,"range":600}},{"call":"scanner.is_on","value":true}]},
+      {"tick":90,"slots":["scout","target"],"cases":[{"call":"scanner.last","value":{"heading":348.74,"pitch":0,"arc":30,"range":600}},{"call":"scanner.is_on","value":true}]}
+     ]},
+    {"input": "fixtures/drones/3d-zero-g.ndjson",
+     "hello": [
+      {"call":"scanner.proximity_range","value":120},
+      {"call":"scanner.reach","args":[1],"value":1200},
+      {"call":"scanner.reach","args":[4],"value":1200},
+      {"call":"scanner.reach","args":[30],"value":600},
+      {"call":"scanner.reach","args":[120],"value":300},
+      {"call":"scanner.reach","args":[180],"value":300},
+      {"call":"scanner.arc_for_reach","args":[0],"value":120},
+      {"call":"scanner.arc_for_reach","args":[120],"value":120},
+      {"call":"scanner.arc_for_reach","args":[600],"value":30},
+      {"call":"scanner.arc_for_reach","args":[1200],"value":7.5},
+      {"call":"scanner.arc_for_reach","args":[2000],"value":4}
+     ],
+     "states": [
+      {"tick":0,"slots":["scout"],"cases":[{"call":"scanner.last","value":{"heading":324.78,"pitch":-38.26,"arc":50,"range":464.76}},{"call":"scanner.is_on","value":true}]},
+      {"tick":59,"slots":["scout"],"cases":[{"call":"scanner.last","value":{"heading":240.98,"pitch":-38.26,"arc":30,"range":600}},{"call":"scanner.is_on","value":true}]},
+      {"tick":60,"slots":["scout"],"cases":[{"call":"scanner.last","value":{"heading":240.7,"pitch":-38.26,"arc":30,"range":600}},{"call":"scanner.is_on","value":true}]},
+      {"tick":61,"slots":["scout"],"cases":[{"call":"scanner.last","value":{"heading":240.44,"pitch":-38.26,"arc":30,"range":600}},{"call":"scanner.is_on","value":true}]},
+      {"tick":70,"slots":["scout"],"cases":[{"call":"scanner.last","value":{"heading":239.26,"pitch":-38.26,"arc":30,"range":600}},{"call":"scanner.is_on","value":true}]},
+      {"tick":80,"slots":["scout"],"cases":[{"call":"scanner.last","value":{"heading":240.18,"pitch":-38.26,"arc":30,"range":600}},{"call":"scanner.is_on","value":true}]},
+      {"tick":90,"slots":["scout"],"cases":[{"call":"scanner.last","value":{"heading":242.29,"pitch":-38.26,"arc":30,"range":600}},{"call":"scanner.is_on","value":true}]}
+     ]},
     {"input": "vectors/api/inputs/tape-2d-classic.ndjson",
      "hello": [
       {"call":"scanner.proximity_range","value":120},
@@ -1073,6 +1119,58 @@
       {"tick":37,"slots":["scout","a"],"cases":[{"call":"scanner.last","value":{"heading":205.16,"pitch":35.41,"arc":16,"range":821.58}},{"call":"scanner.is_on","value":true}]},
       {"tick":38,"slots":["scout","a"],"cases":[{"call":"scanner.last","value":{"heading":203.61,"pitch":33.74,"arc":16,"range":821.58}},{"call":"scanner.is_on","value":true}]},
       {"tick":39,"slots":["scout","a"],"cases":[{"call":"scanner.last","value":{"heading":202.59,"pitch":32.09,"arc":16,"range":821.58}},{"call":"scanner.is_on","value":true}]}
+     ]},
+    {"input": "vectors/api/inputs/hurt-2d-inertial-2d.ndjson",
+     "hello": [
+      {"call":"scanner.proximity_range","value":120},
+      {"call":"scanner.reach","args":[1],"value":1200},
+      {"call":"scanner.reach","args":[4],"value":1200},
+      {"call":"scanner.reach","args":[30],"value":600},
+      {"call":"scanner.reach","args":[120],"value":300},
+      {"call":"scanner.reach","args":[180],"value":300},
+      {"call":"scanner.arc_for_reach","args":[0],"value":120},
+      {"call":"scanner.arc_for_reach","args":[120],"value":120},
+      {"call":"scanner.arc_for_reach","args":[600],"value":30},
+      {"call":"scanner.arc_for_reach","args":[1200],"value":7.5},
+      {"call":"scanner.arc_for_reach","args":[2000],"value":4}
+     ],
+     "states": [
+      {"tick":0,"slots":["a"],"cases":[{"call":"scanner.last","value":{"heading":289.78,"pitch":0,"arc":50,"range":464.76}},{"call":"scanner.is_on","value":true}]},
+      {"tick":24,"slots":["a"],"cases":[{"call":"scanner.last","value":{"heading":289.78,"pitch":0,"arc":50,"range":464.76}},{"call":"scanner.is_on","value":true}]},
+      {"tick":25,"slots":["a","b"],"cases":[{"call":"scanner.last","value":{"heading":289.78,"pitch":0,"arc":50,"range":464.76}},{"call":"scanner.is_on","value":true}]},
+      {"tick":32,"slots":["a","b"],"cases":[{"call":"scanner.last","value":{"heading":289.78,"pitch":0,"arc":50,"range":464.76}},{"call":"scanner.is_on","value":true}]},
+      {"tick":39,"slots":["a","b"],"cases":[{"call":"scanner.last","value":{"heading":289.78,"pitch":0,"arc":50,"range":464.76}},{"call":"scanner.is_on","value":true}]},
+      {"tick":40,"slots":["a","b"],"cases":[{"call":"scanner.last","value":{"heading":289.78,"pitch":0,"arc":50,"range":464.76}},{"call":"scanner.is_on","value":true}]},
+      {"tick":41,"slots":["a","b"],"cases":[{"call":"scanner.last","value":{"heading":289.78,"pitch":0,"arc":50,"range":464.76}},{"call":"scanner.is_on","value":true}]},
+      {"tick":42,"slots":["a","b"],"cases":[{"call":"scanner.last","value":{"heading":289.78,"pitch":0,"arc":50,"range":464.76}},{"call":"scanner.is_on","value":true}]},
+      {"tick":43,"slots":["a","b"],"cases":[{"call":"scanner.last","value":{"heading":289.78,"pitch":0,"arc":50,"range":464.76}},{"call":"scanner.is_on","value":true}]},
+      {"tick":44,"slots":["a","b"],"cases":[{"call":"scanner.last","value":{"heading":289.78,"pitch":0,"arc":50,"range":464.76}},{"call":"scanner.is_on","value":true}]},
+      {"tick":76,"slots":["a","b"],"cases":[{"call":"scanner.last","value":{"heading":289.78,"pitch":0,"arc":50,"range":464.76}},{"call":"scanner.is_on","value":true}]},
+      {"tick":77,"slots":["a","b"],"cases":[{"call":"scanner.last","value":{"heading":289.78,"pitch":0,"arc":50,"range":464.76}},{"call":"scanner.is_on","value":true}]},
+      {"tick":101,"slots":["a","b"],"cases":[{"call":"scanner.last","value":{"heading":289.78,"pitch":0,"arc":50,"range":464.76}},{"call":"scanner.is_on","value":true}]},
+      {"tick":102,"slots":["a","b"],"cases":[{"call":"scanner.last","value":{"heading":289.78,"pitch":0,"arc":50,"range":464.76}},{"call":"scanner.is_on","value":true}]},
+      {"tick":118,"slots":["a","b"],"cases":[{"call":"scanner.last","value":{"heading":289.78,"pitch":0,"arc":50,"range":464.76}},{"call":"scanner.is_on","value":true}]},
+      {"tick":119,"slots":["a","b"],"cases":[{"call":"scanner.last","value":{"heading":289.78,"pitch":0,"arc":50,"range":464.76}},{"call":"scanner.is_on","value":true}]}
+     ]},
+    {"input": "vectors/api/inputs/hurt-3d-zero-g.ndjson",
+     "hello": [
+      {"call":"scanner.proximity_range","value":120},
+      {"call":"scanner.reach","args":[1],"value":1200},
+      {"call":"scanner.reach","args":[4],"value":1200},
+      {"call":"scanner.reach","args":[30],"value":600},
+      {"call":"scanner.reach","args":[120],"value":300},
+      {"call":"scanner.reach","args":[180],"value":300},
+      {"call":"scanner.arc_for_reach","args":[0],"value":120},
+      {"call":"scanner.arc_for_reach","args":[120],"value":120},
+      {"call":"scanner.arc_for_reach","args":[600],"value":30},
+      {"call":"scanner.arc_for_reach","args":[1200],"value":7.5},
+      {"call":"scanner.arc_for_reach","args":[2000],"value":4}
+     ],
+     "states": [
+      {"tick":0,"slots":["a"],"cases":[{"call":"scanner.last","value":{"heading":145.74,"pitch":5.76,"arc":50,"range":464.76}},{"call":"scanner.is_on","value":true}]},
+      {"tick":31,"slots":["a"],"cases":[{"call":"scanner.last","value":{"heading":145.74,"pitch":5.76,"arc":50,"range":464.76}},{"call":"scanner.is_on","value":true}]},
+      {"tick":57,"slots":["a"],"cases":[{"call":"scanner.last","value":{"heading":145.74,"pitch":5.76,"arc":50,"range":464.76}},{"call":"scanner.is_on","value":true}]},
+      {"tick":58,"slots":["a"],"cases":[{"call":"scanner.last","value":{"heading":145.74,"pitch":5.76,"arc":50,"range":464.76}},{"call":"scanner.is_on","value":true}]}
      ]}
   ]
 }

@@ -4,9 +4,9 @@
 use core::mem::{offset_of, size_of};
 
 /// The core's API version (protocol/v2/api.js), separate from the wire protocol.
-pub const API_VERSION: &str = "2.0.0";
+pub const API_VERSION: &str = "2.1.0";
 pub const API_MAJOR: i32 = 2;
-pub const API_MINOR: i32 = 0;
+pub const API_MINOR: i32 = 1;
 pub const API_PATCH: i32 = 0;
 /// The Tracker keeps a passive cue this many ticks unless configured otherwise.
 pub const CUE_TICKS: i32 = 60;
@@ -73,10 +73,12 @@ pub enum Source {
     Muzzle = 5,
     Motion = 6,
     Ping = 7,
+    Launch = 8,
+    Drone = 9,
 }
 
 impl Source {
-    pub const ALL: [Source; 7] = [Source::Scan, Source::Proximity, Source::Faint, Source::Beam, Source::Muzzle, Source::Motion, Source::Ping];
+    pub const ALL: [Source; 9] = [Source::Scan, Source::Proximity, Source::Faint, Source::Beam, Source::Muzzle, Source::Motion, Source::Ping, Source::Launch, Source::Drone];
 
     /// The protocol's name for the value.
     pub fn wire(self) -> &'static str {
@@ -88,6 +90,8 @@ impl Source {
             Source::Muzzle => "muzzle",
             Source::Motion => "motion",
             Source::Ping => "ping",
+            Source::Launch => "launch",
+            Source::Drone => "drone",
         }
     }
 
@@ -340,6 +344,64 @@ impl Event {
     }
 }
 
+/// Why a drone reported: flying, a periodic report; lost, its last as it was destroyed; ended, its last as its life ran out. In a record or an argument, 0 is none.
+#[repr(i32)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+pub enum ReportState {
+    Flying = 1,
+    Lost = 2,
+    Ended = 3,
+}
+
+impl ReportState {
+    pub const ALL: [ReportState; 3] = [ReportState::Flying, ReportState::Lost, ReportState::Ended];
+
+    /// The protocol's name for the value.
+    pub fn wire(self) -> &'static str {
+        match self {
+            ReportState::Flying => "flying",
+            ReportState::Lost => "lost",
+            ReportState::Ended => "ended",
+        }
+    }
+
+    pub fn from_wire(wire: &str) -> Option<Self> {
+        Self::ALL.into_iter().find(|value| value.wire() == wire)
+    }
+
+    pub fn from_i32(value: i32) -> Option<Self> {
+        Self::ALL.into_iter().find(|item| *item as i32 == value)
+    }
+}
+
+/// What a drone saw: a robot, or another drone. In a record or an argument, 0 is none.
+#[repr(i32)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+pub enum SightingKind {
+    Robot = 1,
+    Drone = 2,
+}
+
+impl SightingKind {
+    pub const ALL: [SightingKind; 2] = [SightingKind::Robot, SightingKind::Drone];
+
+    /// The protocol's name for the value.
+    pub fn wire(self) -> &'static str {
+        match self {
+            SightingKind::Robot => "robot",
+            SightingKind::Drone => "drone",
+        }
+    }
+
+    pub fn from_wire(wire: &str) -> Option<Self> {
+        Self::ALL.into_iter().find(|value| value.wire() == wire)
+    }
+
+    pub fn from_i32(value: i32) -> Option<Self> {
+        Self::ALL.into_iter().find(|item| *item as i32 == value)
+    }
+}
+
 /// A vector in world axes. 24 bytes.
 #[repr(C)]
 #[derive(Clone, Copy, Debug, Default, PartialEq)]
@@ -421,6 +483,27 @@ const _: () = assert!(offset_of!(AppliedV1, force) == 0);
 const _: () = assert!(offset_of!(AppliedV1, torque) == 24);
 const _: () = assert!(offset_of!(AppliedV1, brake) == 48);
 
+/// The health you lost in the tick just simulated, by what took it, after armour; all 0 when you lost none. Never who or where it came from. 32 bytes.
+#[repr(C)]
+#[derive(Clone, Copy, Debug, Default, PartialEq)]
+pub struct HurtV1 {
+    /// Lost to shots that hit you.
+    pub shot: f64,
+    /// Lost to shots that burst near you (hello.gun.burst).
+    pub burst: f64,
+    /// Lost colliding with another robot (hello.collisions).
+    pub collision: f64,
+    /// Lost outside the sudden-death zone or the stall ring (state.zone), or inside the storm (state.storm).
+    pub boundary: f64,
+}
+/// The latest version of HurtV1.
+pub type Hurt = HurtV1;
+const _: () = assert!(size_of::<HurtV1>() == 32);
+const _: () = assert!(offset_of!(HurtV1, shot) == 0);
+const _: () = assert!(offset_of!(HurtV1, burst) == 8);
+const _: () = assert!(offset_of!(HurtV1, collision) == 16);
+const _: () = assert!(offset_of!(HurtV1, boundary) == 24);
+
 /// The scan that produced this tick's contacts: where the scanner points now, after slewing toward your previous act's scan. 32 bytes.
 #[repr(C)]
 #[derive(Clone, Copy, Debug, Default, PartialEq)]
@@ -448,7 +531,7 @@ const _: () = assert!(offset_of!(ScanV1, range) == 24);
 pub struct ContactV1 {
     /// The robot: you are 1, and the others are numbered from 2 by first sighting (contacts first, then the hill holder), stable all match; 0 for a passive contact, which does not say which robot it heard.
     pub slot: i32,
-    /// What detected it: scan, inside the scan cone and its reach; proximity, within scanner.proximityRange in any direction. A robot both inside the cone and near reports scan. With hello.sensing, passive sources give a noisy direction and no id: faint, inside the scan cone beyond its reach; beam, a robot whose scan swept over you; muzzle, a robot that fired; motion, a robot moving fast; ping, the periodic ping of every robot. Later sensors add sources; ignore ones you do not know. A Source as i32.
+    /// What detected it: scan, inside the scan cone and its reach; proximity, within scanner.proximityRange in any direction. A robot both inside the cone and near reports scan. With hello.sensing, passive sources give a noisy direction and no id: faint, inside the scan cone beyond its reach; beam, a robot whose scan swept over you; muzzle, a robot that fired; motion, a robot moving fast; ping, the periodic ping of every robot. With hello.drones, launch, another robot launching a drone, and drone, a drone's hum, are passive too. Later sensors add sources; ignore ones you do not know. A Source as i32.
     pub source: i32,
     /// Straight-line distance between centres. For a passive source, noisy and rounded to sensing.rangeBin; for a scan source with hello.scanner.bearing, noisy.
     pub range: f64,
@@ -666,6 +749,75 @@ const _: () = assert!(offset_of!(PickupV1, kind) == 0);
 const _: () = assert!(offset_of!(PickupV1, expires_tick) == 4);
 const _: () = assert!(offset_of!(PickupV1, amount) == 8);
 const _: () = assert!(offset_of!(PickupV1, position) == 16);
+
+/// Your drone's newest report, made at tick and delivered a report period later. 72 bytes.
+#[repr(C)]
+#[derive(Clone, Copy, Debug, Default, PartialEq)]
+pub struct ReportV1 {
+    /// flying, a periodic report; lost, the drone's last report as it was destroyed; ended, its last as its life ran out or you died. A ReportState as i32.
+    pub state: i32,
+    /// The tick it was made.
+    pub tick: i32,
+    /// Flares it has left.
+    pub flares: i32,
+    /// Reserved; always 0. It keeps the record free of hidden padding.
+    pub reserved: i32,
+    /// Seconds since it was made: this tick less its tick, over match.tick_rate.
+    pub age: f64,
+    /// The value its program last said.
+    pub say: f64,
+    /// Its heading.
+    pub heading: f64,
+    /// Its pitch; 0 in 2D.
+    pub pitch: f64,
+    /// Where the drone was when it reported.
+    pub position: Vec3,
+}
+/// The latest version of ReportV1.
+pub type Report = ReportV1;
+const _: () = assert!(size_of::<ReportV1>() == 72);
+const _: () = assert!(offset_of!(ReportV1, state) == 0);
+const _: () = assert!(offset_of!(ReportV1, tick) == 4);
+const _: () = assert!(offset_of!(ReportV1, flares) == 8);
+const _: () = assert!(offset_of!(ReportV1, reserved) == 12);
+const _: () = assert!(offset_of!(ReportV1, age) == 16);
+const _: () = assert!(offset_of!(ReportV1, say) == 24);
+const _: () = assert!(offset_of!(ReportV1, heading) == 32);
+const _: () = assert!(offset_of!(ReportV1, pitch) == 40);
+const _: () = assert!(offset_of!(ReportV1, position) == 48);
+
+/// One thing your drone saw, as its noisy scanner measured it. 72 bytes.
+#[repr(C)]
+#[derive(Clone, Copy, Debug, Default, PartialEq)]
+pub struct DroneSightingV1 {
+    /// A robot other than you, or another drone. A SightingKind as i32.
+    pub kind: i32,
+    /// The tick it was seen.
+    pub tick: i32,
+    /// Distance from the drone, noisy.
+    pub range: f64,
+    /// Heading from the drone, noisy.
+    pub bearing: f64,
+    /// Elevation from the drone; 0 in 2D. Noisy.
+    pub elevation: f64,
+    /// The standard deviation of bearing and elevation.
+    pub bearing_error: f64,
+    /// The standard deviation of the natural log of range.
+    pub range_error: f64,
+    /// The world point it gives: the report's position plus its range along its bearing and elevation.
+    pub position: Vec3,
+}
+/// The latest version of DroneSightingV1.
+pub type DroneSighting = DroneSightingV1;
+const _: () = assert!(size_of::<DroneSightingV1>() == 72);
+const _: () = assert!(offset_of!(DroneSightingV1, kind) == 0);
+const _: () = assert!(offset_of!(DroneSightingV1, tick) == 4);
+const _: () = assert!(offset_of!(DroneSightingV1, range) == 8);
+const _: () = assert!(offset_of!(DroneSightingV1, bearing) == 16);
+const _: () = assert!(offset_of!(DroneSightingV1, elevation) == 24);
+const _: () = assert!(offset_of!(DroneSightingV1, bearing_error) == 32);
+const _: () = assert!(offset_of!(DroneSightingV1, range_error) == 40);
+const _: () = assert!(offset_of!(DroneSightingV1, position) == 48);
 
 /// How the match charges compute against the battery. 16 bytes.
 #[repr(C)]
@@ -904,8 +1056,38 @@ pub struct DslWordsV1 {
     pub wall_z: f64,
     /// The gap from your edge to the nearest wall (nav.wall_margin nearest); under gravity its floor is the ground, at your altitude.
     pub wall_margin: f64,
+    /// A launch now would leave (drone.ready).
+    pub drone_ready: f64,
+    /// Your drone is in the air (drone.in_flight).
+    pub drone_flying: f64,
+    /// Seconds since your drone's newest report was made (drone.report age); 1000000000000 with no report.
+    pub drone_age: f64,
+    /// The x of your drone's newest report; 0 with no report.
+    pub drone_x: f64,
+    /// The y of your drone's newest report; 0 with no report.
+    pub drone_y: f64,
+    /// The z of your drone's newest report; 0 with no report and in 2D.
+    pub drone_z: f64,
+    /// The value your drone's program last said, as of its newest report; 0 with no report.
+    pub drone_say: f64,
+    /// Your drone's newest report saw something (drone.sightings is not empty).
+    pub drone_sighting: f64,
+    /// The x of the world point of the newest report's nearest sighting (drone.sightings position), a robot or a drone; 0 with none.
+    pub drone_sighting_x: f64,
+    /// The y of that point, as drone-sighting-x.
+    pub drone_sighting_y: f64,
+    /// The z of that point, as drone-sighting-x; 0 in 2D.
+    pub drone_sighting_z: f64,
+    /// Health shots that hit you took in the tick just simulated (me.hurt shot); 0 when none did.
+    pub hurt_shot: f64,
+    /// Health shots that burst near you took (me.hurt burst), as hurt-shot.
+    pub hurt_burst: f64,
+    /// Health collisions with robots took (me.hurt collision), as hurt-shot.
+    pub hurt_collision: f64,
+    /// Health the boundary took (me.hurt boundary): the zone, the stall ring or the storm, as hurt-shot.
+    pub hurt_boundary: f64,
 }
-const _: () = assert!(size_of::<DslWordsV1>() == 856);
+const _: () = assert!(size_of::<DslWordsV1>() == 976);
 
 /// What an act field holds.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -936,12 +1118,16 @@ pub enum Field {
     ScannerArc,
     ScannerPitch,
     ScannerOn,
+    DroneLaunch,
+    DroneLaunchHeading,
+    DroneLaunchPitch,
+    DroneLaunchParam,
     StatusText,
     StatusValue,
 }
 
 impl Field {
-    pub const ALL: [Field; 20] = [Field::DriveThrottle, Field::DriveTurn, Field::DrivePitchTurn, Field::DriveThrust, Field::DriveStrafe, Field::DriveLift, Field::DriveYawTorque, Field::DrivePitchTorque, Field::DriveRollTorque, Field::DriveBrake, Field::GunAimHeading, Field::GunAimPitch, Field::GunFire, Field::GunPower, Field::ScannerHeading, Field::ScannerArc, Field::ScannerPitch, Field::ScannerOn, Field::StatusText, Field::StatusValue];
+    pub const ALL: [Field; 24] = [Field::DriveThrottle, Field::DriveTurn, Field::DrivePitchTurn, Field::DriveThrust, Field::DriveStrafe, Field::DriveLift, Field::DriveYawTorque, Field::DrivePitchTorque, Field::DriveRollTorque, Field::DriveBrake, Field::GunAimHeading, Field::GunAimPitch, Field::GunFire, Field::GunPower, Field::ScannerHeading, Field::ScannerArc, Field::ScannerPitch, Field::ScannerOn, Field::DroneLaunch, Field::DroneLaunchHeading, Field::DroneLaunchPitch, Field::DroneLaunchParam, Field::StatusText, Field::StatusValue];
 
     /// The act group and field it writes: ("drive", Some("throttle")); a flag names only its group.
     pub fn wire(self) -> (&'static str, Option<&'static str>) {
@@ -964,6 +1150,10 @@ impl Field {
             Field::ScannerArc => ("scan", Some("arc")),
             Field::ScannerPitch => ("scan", Some("pitch")),
             Field::ScannerOn => ("scan", Some("on")),
+            Field::DroneLaunch => ("drone", None),
+            Field::DroneLaunchHeading => ("drone", Some("heading")),
+            Field::DroneLaunchPitch => ("drone", Some("pitch")),
+            Field::DroneLaunchParam => ("drone", Some("param")),
             Field::StatusText => ("status", Some("text")),
             Field::StatusValue => ("status", Some("value")),
         }
@@ -989,6 +1179,10 @@ impl Field {
             Field::ScannerArc => FieldKind::Number,
             Field::ScannerPitch => FieldKind::Number,
             Field::ScannerOn => FieldKind::Number,
+            Field::DroneLaunch => FieldKind::Flag,
+            Field::DroneLaunchHeading => FieldKind::Number,
+            Field::DroneLaunchPitch => FieldKind::Number,
+            Field::DroneLaunchParam => FieldKind::Number,
             Field::StatusText => FieldKind::Text,
             Field::StatusValue => FieldKind::Number,
         }
@@ -1015,6 +1209,10 @@ impl Field {
             Field::ScannerArc => None,
             Field::ScannerPitch => None,
             Field::ScannerOn => None,
+            Field::DroneLaunch => None,
+            Field::DroneLaunchHeading => None,
+            Field::DroneLaunchPitch => None,
+            Field::DroneLaunchParam => Some((-1000.0, 1000.0)),
             Field::StatusText => None,
             Field::StatusValue => None,
         }

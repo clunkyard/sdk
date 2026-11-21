@@ -10,7 +10,7 @@ use crate::runtime::Robot;
 pub fn nearest_seen(state: &State) -> Option<&SeenContact> {
     let mut best: Option<&SeenContact> = None;
     for contact in &state.contacts {
-        if contact.id.robot().is_some() && best.is_none_or(|b| contact.range < b.range) {
+        if contact.robot().is_some() && best.is_none_or(|b| contact.range < b.range) {
             best = Some(contact);
         }
     }
@@ -19,7 +19,7 @@ pub fn nearest_seen(state: &State) -> Option<&SeenContact> {
 
 /// A contact as its record has it.
 pub fn record(r: &Robot, state: &State, contact: &SeenContact) -> ContactV1 {
-    let precise = contact.id.robot();
+    let precise = contact.robot();
     ContactV1 {
         slot: r.slot(precise),
         source: contact.source,
@@ -53,7 +53,7 @@ pub fn cues(r: &Robot) -> Result<Vec<ContactV1>, Error> {
 pub fn contact(r: &Robot, slot: i32) -> Result<Option<ContactV1>, Error> {
     let id = r.slot_id(slot)?;
     let state = r.current()?;
-    Ok(id.and_then(|id| state.contacts.iter().find(|contact| contact.id.robot() == Some(id))).map(|contact| record(r, state, contact)))
+    Ok(id.and_then(|id| state.contacts.iter().find(|contact| contact.robot() == Some(id))).map(|contact| record(r, state, contact)))
 }
 
 pub fn position_of(r: &Robot, contact: &ContactV1) -> Result<Vec3, Error> {

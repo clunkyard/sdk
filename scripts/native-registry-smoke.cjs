@@ -38,7 +38,7 @@ function main(){
     const installed=path.join(prefix,'node_modules/@clunkyard/cli'),cli=path.join(installed,'cli.cjs'),metadata=JSON.parse(fs.readFileSync(path.join(installed,'package.json'))),catalogue=JSON.parse(fs.readFileSync(path.join(installed,'catalogue.json')));
     if(metadata.version!==input.version||metadata.name!=='@clunkyard/cli')throw Error('Installed another package version.');
     const {extract}=require(path.join(installed,'archive.cjs')),unpacked=path.join(directory,'reviewed-registry-bytes');fs.mkdirSync(unpacked);extract(bytes,unpacked);
-    for(const file of ['cli.cjs','runtime.cjs','project.cjs','archive.cjs','package.json','catalogue.json','README.md','LICENSE'])if(!fs.readFileSync(path.join(installed,file)).equals(fs.readFileSync(path.join(unpacked,'package',file))))throw Error('Installed package differs from the registry archive: '+file);
+    for(const file of ['cli.cjs','runtime.cjs','project.cjs','archive.cjs','hosted-build.cjs','package.json','catalogue.json','README.md','LICENSE'])if(!fs.readFileSync(path.join(installed,file)).equals(fs.readFileSync(path.join(unpacked,'package',file))))throw Error('Installed package differs from the registry archive: '+file);
     receipt.cliCatalogueSHA=hash(fs.readFileSync(path.join(installed,'catalogue.json')));receipt.engineSHA=catalogue.engine.sha256;
     for(const language of input.languages){
       const project=path.join(directory,'fresh robot projects',language),log=path.join(artifacts,language+'.log');fs.mkdirSync(path.dirname(project),{recursive:true});

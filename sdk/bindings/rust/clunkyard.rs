@@ -19,6 +19,8 @@ pub const SOURCE_BEAM:i32=4;
 pub const SOURCE_MUZZLE:i32=5;
 pub const SOURCE_MOTION:i32=6;
 pub const SOURCE_PING:i32=7;
+pub const SOURCE_LAUNCH:i32=8;
+pub const SOURCE_DRONE:i32=9;
 pub const MODE_TWO_D:i32=1;
 pub const MODE_THREE_D:i32=2;
 pub const RULESET_CLASSIC:i32=1;
@@ -43,7 +45,12 @@ pub const COMPUTE_UNIT_CPU_MS:i32=3;
 pub const EVENT_HELLO:i32=1;
 pub const EVENT_STATE:i32=2;
 pub const EVENT_END:i32=3;
-pub const VERSION:&str="2.0.0";
+pub const REPORT_STATE_FLYING:i32=1;
+pub const REPORT_STATE_LOST:i32=2;
+pub const REPORT_STATE_ENDED:i32=3;
+pub const SIGHTING_KIND_ROBOT:i32=1;
+pub const SIGHTING_KIND_DRONE:i32=2;
+pub const VERSION:&str="2.1.0";
 #[repr(C)] #[derive(Default,Clone,Copy,Debug,PartialEq)]
 pub struct RawVec3 {pub x:f64,pub y:f64,pub z:f64,}
 pub type Vec3=RawVec3;
@@ -59,6 +66,9 @@ pub type Attitude=RawAttitude;
 #[repr(C)] #[derive(Default,Clone,Copy,Debug,PartialEq)]
 pub struct RawApplied {pub force:RawVec3,pub torque:RawRotation,pub brake:f64,}
 pub type Applied=RawApplied;
+#[repr(C)] #[derive(Default,Clone,Copy,Debug,PartialEq)]
+pub struct RawHurt {pub shot:f64,pub burst:f64,pub collision:f64,pub boundary:f64,}
+pub type Hurt=RawHurt;
 #[repr(C)] #[derive(Default,Clone,Copy,Debug,PartialEq)]
 pub struct RawScan {pub heading:f64,pub pitch:f64,pub arc:f64,pub range:f64,}
 pub type Scan=RawScan;
@@ -108,6 +118,12 @@ pub fn distance_from(&self,point: &Vec3) -> Result<Option<f64>,Error> {let mut o
 pub struct RawPickup {pub kind:i32,pub expires_tick:i32,pub amount:f64,pub position:RawVec3,}
 pub type Pickup=RawPickup;
 #[repr(C)] #[derive(Default,Clone,Copy,Debug,PartialEq)]
+pub struct RawReport {pub state:i32,pub tick:i32,pub flares:i32,pub reserved:i32,pub age:f64,pub say:f64,pub heading:f64,pub pitch:f64,pub position:RawVec3,}
+pub type Report=RawReport;
+#[repr(C)] #[derive(Default,Clone,Copy,Debug,PartialEq)]
+pub struct RawDroneSighting {pub kind:i32,pub tick:i32,pub range:f64,pub bearing:f64,pub elevation:f64,pub bearing_error:f64,pub range_error:f64,pub position:RawVec3,}
+pub type DroneSighting=RawDroneSighting;
+#[repr(C)] #[derive(Default,Clone,Copy,Debug,PartialEq)]
 pub struct RawCompute {pub k:f64,pub quanta:i32,pub unit:i32,}
 pub type Compute=RawCompute;
 pub mod ffi {use super::*;
@@ -144,6 +160,7 @@ pub fn cy_me_attitude_v1(robot:*mut std::ffi::c_void,out:*mut RawAttitude)->i32;
 pub fn cy_me_grounded(robot:*mut std::ffi::c_void,out:*mut i32)->i32;
 pub fn cy_me_altitude(robot:*mut std::ffi::c_void,out:*mut f64)->i32;
 pub fn cy_me_wall_contact(robot:*mut std::ffi::c_void,out:*mut RawVec3)->i32;
+pub fn cy_me_hurt_v1(robot:*mut std::ffi::c_void,out:*mut RawHurt)->i32;
 pub fn cy_me_applied_v1(robot:*mut std::ffi::c_void,out:*mut RawApplied)->i32;
 pub fn cy_me_hull_mounts(robot:*mut std::ffi::c_void,out:*mut i32)->i32;
 pub fn cy_me_to_mount(robot:*mut std::ffi::c_void,heading:f64,pitch:f64,out:*mut RawDirection)->i32;
@@ -242,6 +259,22 @@ pub fn cy_nav_field_distance(robot:*mut std::ffi::c_void,a:*const RawVec3,b:*con
 pub fn cy_score_me(robot:*mut std::ffi::c_void,out:*mut f64)->i32;
 pub fn cy_score_best(robot:*mut std::ffi::c_void,out:*mut f64)->i32;
 pub fn cy_score_armour(robot:*mut std::ffi::c_void,out:*mut f64)->i32;
+pub fn cy_drone_has(robot:*mut std::ffi::c_void,out:*mut i32)->i32;
+pub fn cy_drone_ready(robot:*mut std::ffi::c_void,out:*mut i32)->i32;
+pub fn cy_drone_in_flight(robot:*mut std::ffi::c_void,out:*mut i32)->i32;
+pub fn cy_drone_launches_left(robot:*mut std::ffi::c_void,out:*mut i32)->i32;
+pub fn cy_drone_report_v1(robot:*mut std::ffi::c_void,out:*mut RawReport)->i32;
+pub fn cy_drone_sightings_v1(robot:*mut std::ffi::c_void,out:*mut RawDroneSighting,capacity:u32,count:*mut u32)->i32;
+pub fn cy_drone_launch(robot:*mut std::ffi::c_void)->i32;
+pub fn cy_drone_launch_heading(robot:*mut std::ffi::c_void,value:f64)->i32;
+pub fn cy_drone_launch_pitch(robot:*mut std::ffi::c_void,value:f64)->i32;
+pub fn cy_drone_launch_param(robot:*mut std::ffi::c_void,value:f64)->i32;
+pub fn cy_drone_brief(robot:*mut std::ffi::c_void,index:i32,value:f64)->i32;
+pub fn cy_drone_program(robot:*mut std::ffi::c_void,language:*const u8,language_length:u32,source:*const u8,source_length:u32)->i32;
+pub fn cy_drone_get_launch(robot:*mut std::ffi::c_void,out:*mut f64)->i32;
+pub fn cy_drone_get_launch_heading(robot:*mut std::ffi::c_void,out:*mut f64)->i32;
+pub fn cy_drone_get_launch_pitch(robot:*mut std::ffi::c_void,out:*mut f64)->i32;
+pub fn cy_drone_get_launch_param(robot:*mut std::ffi::c_void,out:*mut f64)->i32;
 pub fn cy_angles_normalize(degrees:f64,out:*mut f64)->i32;
 pub fn cy_angles_angle_diff(target:f64,current:f64,out:*mut f64)->i32;
 pub fn cy_angles_bearing_to(from:*const RawVec3,to:*const RawVec3,out:*mut f64)->i32;
@@ -310,6 +343,7 @@ pub fn attitude(&self) -> Result<Attitude,Error> {let mut out=RawAttitude::defau
 pub fn grounded(&self) -> Result<bool,Error> {let mut out=i32::default();let mut status=unsafe{ffi::cy_me_grounded(self.handle,&mut out)};check(self.handle,status)?;Ok(out!=0)}
 pub fn altitude(&self) -> Result<f64,Error> {let mut out=f64::default();let mut status=unsafe{ffi::cy_me_altitude(self.handle,&mut out)};check(self.handle,status)?;Ok(out)}
 pub fn wall_contact(&self) -> Result<Vec3,Error> {let mut out=RawVec3::default();let mut status=unsafe{ffi::cy_me_wall_contact(self.handle,&mut out)};check(self.handle,status)?;Ok(out)}
+pub fn hurt(&self) -> Result<Hurt,Error> {let mut out=RawHurt::default();let mut status=unsafe{ffi::cy_me_hurt_v1(self.handle,&mut out)};check(self.handle,status)?;Ok(out)}
 pub fn applied(&self) -> Result<Applied,Error> {let mut out=RawApplied::default();let mut status=unsafe{ffi::cy_me_applied_v1(self.handle,&mut out)};check(self.handle,status)?;Ok(out)}
 pub fn hull_mounts(&self) -> Result<bool,Error> {let mut out=i32::default();let mut status=unsafe{ffi::cy_me_hull_mounts(self.handle,&mut out)};check(self.handle,status)?;Ok(out!=0)}
 pub fn to_mount(&self,heading: f64,pitch: f64) -> Result<Direction,Error> {let mut out=RawDirection::default();let mut status=unsafe{ffi::cy_me_to_mount(self.handle,heading,pitch,&mut out)};check(self.handle,status)?;Ok(out)}
@@ -413,6 +447,21 @@ pub fn me(&self) -> Result<Option<f64>,Error> {let mut out=f64::default();let mu
 pub fn best(&self) -> Result<Option<f64>,Error> {let mut out=f64::default();let mut status=unsafe{ffi::cy_score_best(self.handle,&mut out)};if status==NONE{return Ok(None);}check(self.handle,status)?;Ok(Some(out))}
 pub fn armour(&self) -> Result<Option<f64>,Error> {let mut out=f64::default();let mut status=unsafe{ffi::cy_score_armour(self.handle,&mut out)};if status==NONE{return Ok(None);}check(self.handle,status)?;Ok(Some(out))}
 }
+#[derive(Clone,Copy)] pub struct Drone {handle:*mut c_void} impl Drone {
+pub fn has(&self) -> Result<bool,Error> {let mut out=i32::default();let mut status=unsafe{ffi::cy_drone_has(self.handle,&mut out)};check(self.handle,status)?;Ok(out!=0)}
+pub fn ready(&self) -> Result<bool,Error> {let mut out=i32::default();let mut status=unsafe{ffi::cy_drone_ready(self.handle,&mut out)};check(self.handle,status)?;Ok(out!=0)}
+pub fn in_flight(&self) -> Result<bool,Error> {let mut out=i32::default();let mut status=unsafe{ffi::cy_drone_in_flight(self.handle,&mut out)};check(self.handle,status)?;Ok(out!=0)}
+pub fn launches_left(&self) -> Result<i32,Error> {let mut out=i32::default();let mut status=unsafe{ffi::cy_drone_launches_left(self.handle,&mut out)};check(self.handle,status)?;Ok(out)}
+pub fn report(&self) -> Result<Option<Report>,Error> {let mut out=RawReport::default();let mut status=unsafe{ffi::cy_drone_report_v1(self.handle,&mut out)};if status==NONE{return Ok(None);}check(self.handle,status)?;Ok(Some(out))}
+pub fn sightings(&self) -> Result<Vec<DroneSighting>,Error> {let mut out=vec![RawDroneSighting::default();16];let mut count=0;let mut status=unsafe{ffi::cy_drone_sightings_v1(self.handle,out.as_mut_ptr(),out.len() as u32,&mut count)};while status==SHORT {out.resize(count as usize,RawDroneSighting::default());status=unsafe{ffi::cy_drone_sightings_v1(self.handle,out.as_mut_ptr(),out.len() as u32,&mut count)};}check(self.handle,status)?;out.truncate(count as usize);Ok(out)}
+pub fn launch(&self,heading:Option<f64>,pitch:Option<f64>,param:Option<f64>)->Result<(),Error>{check(self.handle,unsafe{ffi::cy_drone_launch(self.handle)})?;if let Some(value)=heading{check(self.handle,unsafe{ffi::cy_drone_launch_heading(self.handle,value)})?;}if let Some(value)=pitch{check(self.handle,unsafe{ffi::cy_drone_launch_pitch(self.handle,value)})?;}if let Some(value)=param{check(self.handle,unsafe{ffi::cy_drone_launch_param(self.handle,value)})?;}Ok(())}
+pub fn brief(&self,index: i32,value: f64) -> Result<(),Error> {let mut status=unsafe{ffi::cy_drone_brief(self.handle,index,value)};check(self.handle,status)?;Ok(())}
+pub fn program(&self,language: &str,source: &str) -> Result<(),Error> {let mut status=unsafe{ffi::cy_drone_program(self.handle,language.as_ptr(),language.len() as u32,source.as_ptr(),source.len() as u32)};check(self.handle,status)?;Ok(())}
+pub fn get_launch(&self) -> Result<Option<f64>,Error> {let mut out=f64::default();let mut status=unsafe{ffi::cy_drone_get_launch(self.handle,&mut out)};if status==NONE{return Ok(None);}check(self.handle,status)?;Ok(Some(out))}
+pub fn get_heading(&self) -> Result<Option<f64>,Error> {let mut out=f64::default();let mut status=unsafe{ffi::cy_drone_get_launch_heading(self.handle,&mut out)};if status==NONE{return Ok(None);}check(self.handle,status)?;Ok(Some(out))}
+pub fn get_pitch(&self) -> Result<Option<f64>,Error> {let mut out=f64::default();let mut status=unsafe{ffi::cy_drone_get_launch_pitch(self.handle,&mut out)};if status==NONE{return Ok(None);}check(self.handle,status)?;Ok(Some(out))}
+pub fn get_param(&self) -> Result<Option<f64>,Error> {let mut out=f64::default();let mut status=unsafe{ffi::cy_drone_get_launch_param(self.handle,&mut out)};if status==NONE{return Ok(None);}check(self.handle,status)?;Ok(Some(out))}
+}
 #[derive(Clone,Copy)] pub struct Angles {handle:*mut c_void} impl Angles {
 pub fn normalize(&self,degrees: f64) -> Result<f64,Error> {let mut out=f64::default();let mut status=unsafe{ffi::cy_angles_normalize(degrees,&mut out)};check(self.handle,status)?;Ok(out)}
 pub fn angle_diff(&self,target: f64,current: f64) -> Result<f64,Error> {let mut out=f64::default();let mut status=unsafe{ffi::cy_angles_angle_diff(target,current,&mut out)};check(self.handle,status)?;Ok(out)}
@@ -450,9 +499,9 @@ pub fn log(&self,line: &str) -> Result<(),Error> {let mut status=unsafe{ffi::cy_
 pub fn feed(&self,line: &str) -> Result<(),Error> {let mut status=unsafe{ffi::cy_session_feed(self.handle,line.as_ptr(),line.len() as u32)};check(self.handle,status)?;Ok(())}
 pub fn reply(&self) -> Result<Option<String>,Error> {let mut out=vec![0u8;256];let mut count=0;let mut status=unsafe{ffi::cy_session_reply(self.handle,out.as_mut_ptr(),out.len() as u32,&mut count)};while status==SHORT {out.resize(count as usize,0);status=unsafe{ffi::cy_session_reply(self.handle,out.as_mut_ptr(),out.len() as u32,&mut count)};}if status==NONE{return Ok(None);}check(self.handle,status)?;out.truncate(count as usize);Ok(Some(String::from_utf8(out).map_err(|_|Error::new(E_ARGUMENT,"core returned invalid UTF-8"))?))}
 }
-pub struct Robot {handle:*mut c_void,owned:bool,pub r#match:Match,pub clock:Clock,pub arena:Arena,pub me:Me,pub battery:Battery,pub drive:Drive,pub gun:Gun,pub scanner:Scanner,pub sensors:Sensors,pub tracker:Tracker,pub nav:Nav,pub score:Score,pub angles:Angles,pub status:Status,pub debug:Debug,pub raw:Raw,pub session:Session,}
-impl Robot {pub unsafe fn from_raw(handle:*mut c_void)->Self{Self{handle,owned:false,r#match:Match{handle},clock:Clock{handle},arena:Arena{handle},me:Me{handle},battery:Battery{handle},drive:Drive{handle},gun:Gun{handle},scanner:Scanner{handle},sensors:Sensors{handle},tracker:Tracker{handle},nav:Nav{handle},score:Score{handle},angles:Angles{handle},status:Status{handle},debug:Debug{handle},raw:Raw{handle},session:Session{handle},}}
-fn open(memory:bool)->Result<Self,Error>{let mut handle=std::ptr::null_mut();let name=b"clunkyard-rust";let status=unsafe{if memory{ffi::cy_open_memory(2,0,name.as_ptr(),name.len() as u32,VERSION.as_ptr(),VERSION.len() as u32,&mut handle)}else{ffi::cy_open(2,0,name.as_ptr(),name.len() as u32,VERSION.as_ptr(),VERSION.len() as u32,&mut handle)}};check(handle,status)?;let mut robot=unsafe{Self::from_raw(handle)};robot.owned=true;Ok(robot)}}
+pub struct Robot {handle:*mut c_void,owned:bool,pub r#match:Match,pub clock:Clock,pub arena:Arena,pub me:Me,pub battery:Battery,pub drive:Drive,pub gun:Gun,pub scanner:Scanner,pub sensors:Sensors,pub tracker:Tracker,pub nav:Nav,pub score:Score,pub drone:Drone,pub angles:Angles,pub status:Status,pub debug:Debug,pub raw:Raw,pub session:Session,}
+impl Robot {pub unsafe fn from_raw(handle:*mut c_void)->Self{Self{handle,owned:false,r#match:Match{handle},clock:Clock{handle},arena:Arena{handle},me:Me{handle},battery:Battery{handle},drive:Drive{handle},gun:Gun{handle},scanner:Scanner{handle},sensors:Sensors{handle},tracker:Tracker{handle},nav:Nav{handle},score:Score{handle},drone:Drone{handle},angles:Angles{handle},status:Status{handle},debug:Debug{handle},raw:Raw{handle},session:Session{handle},}}
+fn open(memory:bool)->Result<Self,Error>{let mut handle=std::ptr::null_mut();let name=b"clunkyard-rust";let status=unsafe{if memory{ffi::cy_open_memory(2,1,name.as_ptr(),name.len() as u32,VERSION.as_ptr(),VERSION.len() as u32,&mut handle)}else{ffi::cy_open(2,1,name.as_ptr(),name.len() as u32,VERSION.as_ptr(),VERSION.len() as u32,&mut handle)}};check(handle,status)?;let mut robot=unsafe{Self::from_raw(handle)};robot.owned=true;Ok(robot)}}
 impl Drop for Robot{fn drop(&mut self){if self.owned{unsafe{ffi::cy_close(self.handle)}}}}
 
 pub trait Strategy{fn on_start(&mut self,_robot:&Robot)->Result<(),Error>{Ok(())}fn on_turn(&mut self,robot:&Robot)->Result<(),Error>;}

@@ -16,3 +16,4 @@ test:
 	cd ../../.. && CLUNKYARD_LIB=$(CORE_LIBRARY) PYTHONPATH=$(SDK)/bindings/python \
 	  node sdk/bindings/conformance.js $(PYTHON) -P sdk/bindings/python/test_conformance.py
 	CLUNKYARD_LIB=$(CORE_LIBRARY) PYTHONPATH=$(SDK)/bindings/python $(PYTHON) -P test_loop.py
+	CLUNKYARD_LIB=$(CORE_LIBRARY) PYTHONPATH=$(SDK)/bindings/python $(NODE) ../hurt.js $(PYTHON) -P test_hurt.py

@@ -116,6 +116,20 @@
      "states": [
 
      ]},
+    {"input": "fixtures/drones/2d-classic.ndjson",
+     "hello": [
+      {"call":"drive.hover_lift","value":0}
+     ],
+     "states": [
+
+     ]},
+    {"input": "fixtures/drones/3d-zero-g.ndjson",
+     "hello": [
+      {"call":"drive.hover_lift","value":0}
+     ],
+     "states": [
+
+     ]},
     {"input": "vectors/api/inputs/tape-2d-classic.ndjson",
      "hello": [
       {"call":"drive.hover_lift","value":0}
@@ -215,6 +229,20 @@
 
      ]},
     {"input": "vectors/api/inputs/mounts-3d-zero-g.ndjson",
+     "hello": [
+      {"call":"drive.hover_lift","value":0}
+     ],
+     "states": [
+
+     ]},
+    {"input": "vectors/api/inputs/hurt-2d-inertial-2d.ndjson",
+     "hello": [
+      {"call":"drive.hover_lift","value":0}
+     ],
+     "states": [
+
+     ]},
+    {"input": "vectors/api/inputs/hurt-3d-zero-g.ndjson",
      "hello": [
       {"call":"drive.hover_lift","value":0}
      ],

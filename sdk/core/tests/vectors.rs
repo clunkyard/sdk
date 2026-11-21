@@ -180,12 +180,7 @@ fn words(run: &mut Run, file: &Value, robot: &Core, expected: &Value, at: &str) 
         let name = text(word, "name");
         let actual = match word.get("type").and_then(Value::as_str).unwrap() {
             "boolean" => Value::Bool(*value != 0.0),
-            "text" => {
-                let wire = run.api.enum_wire(&text(word, "enum"), *value as i32);
-                // The interpreter's word is "targets" for direct controls
-                // (src/dsl/common.js); src/dsl/words.js gives "direct".
-                if name == "control-model" && wire.as_str() == Some("direct") { Value::String("targets".into()) } else { wire }
-            }
+            "text" => run.api.enum_wire(&text(word, "enum"), *value as i32),
             _ => Value::Number(*value),
         };
         let want = words.get(&name).or_else(|| words.get(list(&run.api.json, "words").iter().find(|w| w.get("alias").and_then(Value::as_str) == Some(&name)).map_or("", |w| w.get("name").and_then(Value::as_str).unwrap())));
@@ -315,6 +310,10 @@ fn controls(run: &mut Run, file: &Value) {
                 (status, value)
             } else if op.get("fire").is_some() {
                 (cy_gun_fire(robot.robot), None)
+            } else if op.get("launch").is_some() {
+                (cy_drone_launch(robot.robot), None)
+            } else if let Some(Value::Array(brief)) = op.get("brief") {
+                (cy_drone_brief(robot.robot, number(&brief[0]).unwrap() as i32, number(&brief[1]).unwrap()), None)
             } else if op.get("log").is_some() {
                 let line = text(op, "log");
                 (cy_debug_log(robot.robot, line.as_ptr(), line.len() as u32), None)
@@ -374,8 +373,27 @@ fn compare_digest(part: &str, lines: &[String]) {
     assert_eq!(want.as_deref(), Some(digest.as_str()), "the {part} transcript ({} lines) differs from tests/vectors.digest; CY_TRANSCRIPT=DIR writes it", lines.len());
 }
 
+// The core runs inside hosts that trap floating-point exceptions, as Free
+// Pascal and SBCL do, so no export may raise invalid, divide by zero or
+// overflow: they trap here, and a trap ends the test.
+#[cfg(all(target_os = "linux", target_env = "gnu"))]
+fn trap_floating_point() {
+    extern "C" {
+        fn feenableexcept(excepts: i32) -> i32;
+    }
+    #[cfg(any(target_arch = "x86_64", target_arch = "x86"))]
+    const TRAPS: i32 = 0x01 | 0x04 | 0x08;
+    #[cfg(target_arch = "aarch64")]
+    const TRAPS: i32 = 0x01 | 0x02 | 0x04;
+    unsafe { feenableexcept(TRAPS) };
+}
+
+#[cfg(not(all(target_os = "linux", target_env = "gnu")))]
+fn trap_floating_point() {}
+
 #[test]
 fn every_api_vector_through_the_exports() {
+    trap_floating_point();
     let mut run = Run { api: Api::load(), lines: Vec::new(), failures: Vec::new(), skipped: Vec::new() };
     let dir = harness::root().join("protocol/v2/vectors/api");
     let mut names: Vec<String> = std::fs::read_dir(&dir).unwrap().filter_map(|e| e.ok()?.file_name().into_string().ok()).filter(|n| n.ends_with(".json")).collect();

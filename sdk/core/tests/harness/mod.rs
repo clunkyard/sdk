@@ -344,7 +344,7 @@ pub fn call(api: &Api, robot: *mut Robot, name: &str, args: &[Value]) -> Outcome
                 None => return Outcome::Unrepresentable(format!("{name}: {} is not a number", value.to_json())),
             },
             "i32" => match number(&value) {
-                Some(x) if x.fract() == 0.0 && (f64::from(i32::MIN)..=f64::from(i32::MAX)).contains(&x) => encoded.int(x as i32),
+                Some(x) if (f64::from(i32::MIN)..=f64::from(i32::MAX)).contains(&x) && x.fract() == 0.0 => encoded.int(x as i32),
                 _ => return Outcome::Unrepresentable(format!("{name}: {} is not an i32", value.to_json())),
             },
             "enum" => encoded.int(api.enum_value(arg.at("type.enum").and_then(Value::as_str).unwrap(), &value)),

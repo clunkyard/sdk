@@ -1,6 +1,6 @@
 /* Generated from protocol/v2/api.json by protocol/v2/codegen/c.js; do not edit. Run `make api`.
  *
- * libclunkyard: the Clunkyard robot core, API 2.0.0 (separate from wire protocol 2).
+ * libclunkyard: the Clunkyard robot core, API 2.1.0 (separate from wire protocol 2).
  * One opaque handle per robot. Every function returns a CY_ status:
  * CY_OK, CY_NONE for absent (not an error), CY_SHORT for a buffer too
  * short, or a negative error, whose message cy_last_error gives. Results
@@ -27,9 +27,9 @@ extern "C" {
 #define CY_API extern
 #endif
 
-#define CY_API_VERSION "2.0.0"
+#define CY_API_VERSION "2.1.0"
 #define CY_API_MAJOR 2
-#define CY_API_MINOR 0
+#define CY_API_MINOR 1
 #define CY_API_PATCH 0
 /* The Tracker keeps a passive cue this many ticks unless configured otherwise. */
 #define CY_CUE_TICKS 60
@@ -56,6 +56,8 @@ extern "C" {
 #define CY_SOURCE_MUZZLE 5 /* muzzle */
 #define CY_SOURCE_MOTION 6 /* motion */
 #define CY_SOURCE_PING 7 /* ping */
+#define CY_SOURCE_LAUNCH 8 /* launch */
+#define CY_SOURCE_DRONE 9 /* drone */
 
 /* The match's dimensions. 0 is none. */
 #define CY_MODE_NONE 0
@@ -110,6 +112,20 @@ extern "C" {
 #define CY_EVENT_STATE 2 /* state */
 #define CY_EVENT_END 3 /* end */
 
+/*
+ * Why a drone reported: flying, a periodic report; lost, its last as it was
+ * destroyed; ended, its last as its life ran out. 0 is none.
+ */
+#define CY_REPORT_STATE_NONE 0
+#define CY_REPORT_STATE_FLYING 1 /* flying */
+#define CY_REPORT_STATE_LOST 2 /* lost */
+#define CY_REPORT_STATE_ENDED 3 /* ended */
+
+/* What a drone saw: a robot, or another drone. 0 is none. */
+#define CY_SIGHTING_KIND_NONE 0
+#define CY_SIGHTING_KIND_ROBOT 1 /* robot */
+#define CY_SIGHTING_KIND_DRONE 2 /* drone */
+
 typedef struct cy_robot cy_robot;
 
 /* A vector in world axes. 24 bytes. */
@@ -150,6 +166,17 @@ typedef struct cy_applied_v1 {
 } cy_applied_v1;
 
 /*
+ * The health you lost in the tick just simulated, by what took it, after
+ * armour; all 0 when you lost none. Never who or where it came from. 32 bytes.
+ */
+typedef struct cy_hurt_v1 {
+  double shot; /* Lost to shots that hit you. */
+  double burst; /* Lost to shots that burst near you (hello.gun.burst). */
+  double collision; /* Lost colliding with another robot (hello.collisions). */
+  double boundary; /* Lost outside the sudden-death zone or the stall ring (state.zone), or inside the storm (state.storm). */
+} cy_hurt_v1;
+
+/*
  * The scan that produced this tick's contacts: where the scanner points now,
  * after slewing toward your previous act's scan. 32 bytes.
  */
@@ -163,7 +190,7 @@ typedef struct cy_scan_v1 {
 /* A robot the sensors detect this tick. 72 bytes. */
 typedef struct cy_contact_v1 {
   int32_t slot; /* The robot: you are 1, and the others are numbered from 2 by first sighting (contacts first, then the hill holder), stable all match; 0 for a passive contact, which does not say which robot it heard. */
-  int32_t source; /* CY_SOURCE_*. What detected it: scan, inside the scan cone and its reach; proximity, within scanner.proximityRange in any direction. A robot both inside the cone and near reports scan. With hello.sensing, passive sources give a noisy direction and no id: faint, inside the scan cone beyond its reach; beam, a robot whose scan swept over you; muzzle, a robot that fired; motion, a robot moving fast; ping, the periodic ping of every robot. Later sensors add sources; ignore ones you do not know. */
+  int32_t source; /* CY_SOURCE_*. What detected it: scan, inside the scan cone and its reach; proximity, within scanner.proximityRange in any direction. A robot both inside the cone and near reports scan. With hello.sensing, passive sources give a noisy direction and no id: faint, inside the scan cone beyond its reach; beam, a robot whose scan swept over you; muzzle, a robot that fired; motion, a robot moving fast; ping, the periodic ping of every robot. With hello.drones, launch, another robot launching a drone, and drone, a drone's hum, are passive too. Later sensors add sources; ignore ones you do not know. */
   double range; /* Straight-line distance between centres. For a passive source, noisy and rounded to sensing.rangeBin; for a scan source with hello.scanner.bearing, noisy. */
   double bearing; /* Heading from you to it, in world axes whatever the mounts. For a passive source, noisy; for a scan source with hello.scanner.bearing, noisy by the scan arc. */
   double elevation; /* Elevation from you to it; 0 in 2D. Noisy as bearing is. */
@@ -256,6 +283,34 @@ typedef struct cy_pickup_v1 {
   cy_vec3 position; /* Where it is. Under gravity it lies on the ground and only x and y count. */
 } cy_pickup_v1;
 
+/*
+ * Your drone's newest report, made at tick and delivered a report period
+ * later. 72 bytes.
+ */
+typedef struct cy_report_v1 {
+  int32_t state; /* CY_REPORT_STATE_*. flying, a periodic report; lost, the drone's last report as it was destroyed; ended, its last as its life ran out or you died. */
+  int32_t tick; /* The tick it was made. */
+  int32_t flares; /* Flares it has left. */
+  int32_t reserved; /* Reserved; always 0. It keeps the record free of hidden padding. */
+  double age; /* Seconds since it was made: this tick less its tick, over match.tick_rate. */
+  double say; /* The value its program last said. */
+  double heading; /* Its heading. */
+  double pitch; /* Its pitch; 0 in 2D. */
+  cy_vec3 position; /* Where the drone was when it reported. */
+} cy_report_v1;
+
+/* One thing your drone saw, as its noisy scanner measured it. 72 bytes. */
+typedef struct cy_drone_sighting_v1 {
+  int32_t kind; /* CY_SIGHTING_KIND_*. A robot other than you, or another drone. */
+  int32_t tick; /* The tick it was seen. */
+  double range; /* Distance from the drone, noisy. */
+  double bearing; /* Heading from the drone, noisy. */
+  double elevation; /* Elevation from the drone; 0 in 2D. Noisy. */
+  double bearing_error; /* The standard deviation of bearing and elevation. */
+  double range_error; /* The standard deviation of the natural log of range. */
+  cy_vec3 position; /* The world point it gives: the report's position plus its range along its bearing and elevation. */
+} cy_drone_sighting_v1;
+
 /* How the match charges compute against the battery. 16 bytes. */
 typedef struct cy_compute_v1 {
   double k; /* The charge for a turn that uses its whole budget. */
@@ -347,6 +402,14 @@ CY_API int32_t cy_me_altitude(cy_robot *robot, double *out);
  * ceiling's -1 there.
  */
 CY_API int32_t cy_me_wall_contact(cy_robot *robot, cy_vec3 *out);
+/*
+ * me.hurt: The health you lost in the tick just simulated, by cause: shots
+ * that hit you, shots that burst near you, collisions with robots and the
+ * boundary (the zone, the stall ring or the storm), as the arena reports it
+ * (self.hurt); all 0 when you lost none. It never names the robot behind a
+ * loss or where it came from.
+ */
+CY_API int32_t cy_me_hurt_v1(cy_robot *robot, cy_hurt_v1 *out);
 /* me.applied: What the previous tick applied to you. */
 CY_API int32_t cy_me_applied_v1(cy_robot *robot, cy_applied_v1 *out);
 /*
@@ -809,6 +872,74 @@ CY_API int32_t cy_score_best(cy_robot *robot, double *out);
  */
 CY_API int32_t cy_score_armour(cy_robot *robot, double *out);
 
+/* ---- drone: Your drone, when the match has drones (hello.drones): its launch and its newest report. Off, it has no program, no launches and no report ---- */
+/* drone.has: You have a drone program to launch (state.drone.has). */
+CY_API int32_t cy_drone_has(cy_robot *robot, int32_t *out);
+/* drone.ready: A launch this tick would be accepted (state.drone.ready). */
+CY_API int32_t cy_drone_ready(cy_robot *robot, int32_t *out);
+/* drone.in_flight: Your drone is in the air (state.drone.inFlight). */
+CY_API int32_t cy_drone_in_flight(cy_robot *robot, int32_t *out);
+/* drone.launches_left: The launches you have left (state.drone.launchesLeft). */
+CY_API int32_t cy_drone_launches_left(cy_robot *robot, int32_t *out);
+/*
+ * drone.report: Your drone's newest report, kept after the drone ends; absent
+ * before the first. CY_NONE when absent.
+ */
+CY_API int32_t cy_drone_report_v1(cy_robot *robot, cy_report_v1 *out);
+/*
+ * drone.sightings: What the newest report saw, nearest first, each projected
+ * to a world point from the report's position; empty with no report.
+ */
+CY_API int32_t cy_drone_sightings_v1(cy_robot *robot, cy_drone_sighting_v1 *out, uint32_t capacity, uint32_t *count);
+/* drone.launch (launch): Sets drone. */
+CY_API int32_t cy_drone_launch(cy_robot *robot);
+/*
+ * drone.launch (heading): Sets drone.heading. CY_E_NOT_FINITE keeps it as it
+ * was.
+ */
+CY_API int32_t cy_drone_launch_heading(cy_robot *robot, double value);
+/* drone.launch (pitch): Sets drone.pitch. CY_E_NOT_FINITE keeps it as it was. */
+CY_API int32_t cy_drone_launch_pitch(cy_robot *robot, double value);
+/*
+ * drone.launch (param): Sets drone.param. The act write clamps it to
+ * -1000..1000. CY_E_NOT_FINITE keeps it as it was.
+ */
+CY_API int32_t cy_drone_launch_param(cy_robot *robot, double value);
+/*
+ * drone.brief: Sets one number of this tick's launch brief, which the drone
+ * program reads as brief-1 to brief-8; unset numbers before the highest set
+ * one go as 0, but brief-1 goes as the launch param when that is set. It goes
+ * only with drone.launch, and a later call replaces the number.
+ */
+CY_API int32_t cy_drone_brief(cy_robot *robot, int32_t index, double value);
+/*
+ * drone.program: Hands the arena a drone program for this match in the ready
+ * reply, in place of the one your project names, in the robot's start only;
+ * after the first state it refuses with E_PHASE, an unknown language with
+ * E_ARGUMENT and a longer source with E_RANGE.
+ */
+CY_API int32_t cy_drone_program(cy_robot *robot, const char *language, uint32_t language_length, const char *source, uint32_t source_length);
+/*
+ * drone.get (launch): Reads back drone. The value as set, before clamping;
+ * CY_NONE while unset.
+ */
+CY_API int32_t cy_drone_get_launch(cy_robot *robot, double *out);
+/*
+ * drone.get (heading): Reads back drone.heading. The value as set, before
+ * clamping; CY_NONE while unset.
+ */
+CY_API int32_t cy_drone_get_launch_heading(cy_robot *robot, double *out);
+/*
+ * drone.get (pitch): Reads back drone.pitch. The value as set, before
+ * clamping; CY_NONE while unset.
+ */
+CY_API int32_t cy_drone_get_launch_pitch(cy_robot *robot, double *out);
+/*
+ * drone.get (param): Reads back drone.param. The value as set, before
+ * clamping; CY_NONE while unset.
+ */
+CY_API int32_t cy_drone_get_launch_param(cy_robot *robot, double *out);
+
 /* ---- angles: Angle and vector arithmetic in the core's maths, so every language agrees bit for bit ---- */
 /*
  * angles.normalize: An angle brought into 0 to 360, exactly: degrees % 360,
@@ -884,8 +1015,8 @@ CY_API int32_t cy_raw_count(cy_robot *robot, const char *path, uint32_t path_len
 CY_API int32_t cy_raw_line(cy_robot *robot, char *buf, uint32_t capacity, uint32_t *length);
 /*
  * raw.extra: Adds fields the API does not cover to this tick's act; a key the
- * API writes (v, type, tick, drive, forces, aim, scan, fire, status, log) is
- * refused with E_ARGUMENT.
+ * API writes (v, type, tick, drive, forces, aim, scan, fire, drone, status,
+ * log) is refused with E_ARGUMENT.
  */
 CY_API int32_t cy_raw_extra(cy_robot *robot, const char *json, uint32_t json_length);
 
@@ -914,8 +1045,8 @@ CY_API int32_t cy_session_feed(cy_robot *robot, const char *line, uint32_t line_
  */
 CY_API int32_t cy_session_reply(cy_robot *robot, char *buf, uint32_t capacity, uint32_t *length);
 
-/* ---- the DSL words: outside the robot API, for the DSL interpreters and -wasm builds ---- */
-/* One double per word (booleans 1 or 0, enums their CY_ value), in protocol/v2/api.json's word order. 856 bytes. */
+/* ---- the DSL words: outside the robot API, for the DSL interpreter ---- */
+/* One double per word (booleans 1 or 0, enums their CY_ value), in protocol/v2/api.json's word order. 976 bytes. */
 typedef struct cy_dsl_words_v1 {
   double ruleset; /* ruleset */
   double physics_mode; /* physics-mode */
@@ -1024,12 +1155,28 @@ typedef struct cy_dsl_words_v1 {
   double wall_y; /* wall-y */
   double wall_z; /* wall-z */
   double wall_margin; /* wall-margin */
+  double drone_ready; /* drone-ready */
+  double drone_flying; /* drone-flying */
+  double drone_age; /* drone-age */
+  double drone_x; /* drone-x */
+  double drone_y; /* drone-y */
+  double drone_z; /* drone-z */
+  double drone_say; /* drone-say */
+  double drone_sighting; /* drone-sighting */
+  double drone_sighting_x; /* drone-sighting-x */
+  double drone_sighting_y; /* drone-sighting-y */
+  double drone_sighting_z; /* drone-sighting-z */
+  double hurt_shot; /* hurt-shot */
+  double hurt_burst; /* hurt-burst */
+  double hurt_collision; /* hurt-collision */
+  double hurt_boundary; /* hurt-boundary */
 } cy_dsl_words_v1;
 CY_API int32_t cy_dsl_fill_v1(cy_robot *robot, cy_dsl_words_v1 *out);
 
 /* Source-level names: always the latest version. */
 typedef cy_attitude_v1 cy_attitude;
 typedef cy_applied_v1 cy_applied;
+typedef cy_hurt_v1 cy_hurt;
 typedef cy_scan_v1 cy_scan;
 typedef cy_contact_v1 cy_contact;
 typedef cy_cue_v1 cy_cue;
@@ -1040,8 +1187,11 @@ typedef cy_zone_v1 cy_zone;
 typedef cy_storm_v1 cy_storm;
 typedef cy_hill_v1 cy_hill;
 typedef cy_pickup_v1 cy_pickup;
+typedef cy_report_v1 cy_report;
+typedef cy_drone_sighting_v1 cy_drone_sighting;
 typedef cy_compute_v1 cy_compute;
 #define cy_me_attitude cy_me_attitude_v1
+#define cy_me_hurt cy_me_hurt_v1
 #define cy_me_applied cy_me_applied_v1
 #define cy_battery_compute cy_battery_compute_v1
 #define cy_gun_lead cy_gun_lead_v1
@@ -1060,6 +1210,8 @@ typedef cy_compute_v1 cy_compute;
 #define cy_nav_wall_margin cy_nav_wall_margin_v1
 #define cy_nav_pickups cy_nav_pickups_v1
 #define cy_nav_nearest_pickup cy_nav_nearest_pickup_v1
+#define cy_drone_report cy_drone_report_v1
+#define cy_drone_sightings cy_drone_sightings_v1
 #define cy_angles_to_chassis cy_angles_to_chassis_v1
 #define cy_angles_from_chassis cy_angles_from_chassis_v1
 

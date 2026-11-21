@@ -1,6 +1,6 @@
 # Clunkyard local CLI
 
-Build a robot, play a real local match and inspect its replay with Node 20+,
+Build a robot, play a real local match and inspect its replay with Node 24,
 npm and your existing language toolchain:
 
 ```sh
@@ -17,12 +17,28 @@ Or clone any [language starter](https://github.com/clunkyard/game-kit) and use
 `--project DIRECTORY` to run commands from another directory.
 
 The CLI downloads the local match engine and the SDK for your robot's language.
-Install that language's toolchain separately. Downloaded files are cached in
+Install that language's toolchain separately, or use Docker: `build --docker`
+and `match --docker` run in the language's public toolchain image,
+`ghcr.io/clunkyard/toolchain/<language>`, and the CLI picks Docker by itself
+when a tool is missing and Docker is running (`--no-docker` keeps a local
+build). Downloaded files are cached in
 `.clunkyard/`. Other commands include `list`, `setup`, `clean` and `migrate`.
 
 Local matches use a resource mode supported by `bot.json`. Open-capable robots
 use Open; Wasm- or DSL-only robots keep their fuel or operation meter and play
 the bundled Vane rival with its DSL meter.
+
+## Open a saved robot in your tools
+
+```sh
+npx @clunkyard/cli open ROBOT_ID --in code   # or cursor, claude, codex
+```
+
+Signs in through your browser the first time, clones the robot with Git
+over HTTPS and adds local `AGENTS.md`, MCP and
+VS Code task settings that Git ignores. The workbench's **Open in** shows the
+command with the robot's ID. See
+[Open in your tools](https://clunkyard.com/sdk/open-in).
 
 ## Play the house robots
 
@@ -58,10 +74,10 @@ own compute budgets, so check your robot in a hosted trial too.
 
 ## Connect a remote robot or strategist
 
-Use Node 22+ for the built-in WebSocket client. Create a remote or strategist
-key in the bot's Connections panel and set `CLUNKYARD_REMOTE_URL`,
-`CLUNKYARD_REMOTE_TOKEN` and `CLUNKYARD_BOT_ID` in your shell, keeping the key
-out of source and command arguments. From your robot directory:
+Create a remote or strategist
+key in the bot's Connections panel and set `CLUNKYARD_REMOTE_TOKEN` and
+`CLUNKYARD_BOT_ID` in your shell, keeping the key out of source and command
+arguments. `CLUNKYARD_REMOTE_URL` defaults to clunkyard.com. From your robot directory:
 
 ```sh
 npx @clunkyard/cli connect
@@ -75,15 +91,9 @@ Use `CLUNKYARD_BOT_ENV_ALLOW` only for additional environment variable names
 your code needs. Keep the CLI running until the match ends; Ctrl-C disconnects
 and stops its robot processes.
 
-For an older generated kit checkout, commit your work and run
-`npx @clunkyard/cli migrate`. It removes only byte-recognized generated
-helper files, preserves robot source and custom README text, and refuses to
-overwrite customized build scripts or dependency manifests. Historical kit
-archives remain available with their original tooling.
-
 Robot builds and local matches execute programs as your user. Use trusted
 source and tools. For online play, use
-[`@clunkyard/git`](https://www.npmjs.com/package/@clunkyard/git) or Clunkyard's
+`npx @clunkyard/cli open` (Git) or Clunkyard's
 GitHub integration, then run hosted trials before entering a tournament.
 
 [SDK and adapters](https://clunkyard.com/sdk) ·

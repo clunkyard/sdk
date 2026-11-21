@@ -16,7 +16,7 @@ static double number(void){char *value=token();if(*value=='i')return strtod(valu
 static char *string(uint32_t *length){char *value=token();*length=(uint32_t)(strlen(value+1)/2);for(uint32_t i=0;i<*length;i++){char pair[3]={value[1+2*i],value[2+2*i],0};value[i]=(char)strtoul(pair,NULL,16);}return value;}
 static void bits(double value){uint64_t raw;memcpy(&raw,&value,8);if(isnan(value))raw=UINT64_C(0x7ff8000000000000);printf("%016" PRIx64,raw);}
 static void text(const char *value,uint32_t length){putchar('s');for(uint32_t i=0;i<length;i++)printf("%02x",(unsigned char)value[i]);}
-static void enum_source(int32_t value){switch(value){case 1:text("scan",4);break;case 2:text("proximity",9);break;case 3:text("faint",5);break;case 4:text("beam",4);break;case 5:text("muzzle",6);break;case 6:text("motion",6);break;case 7:text("ping",4);break;default:putchar('n');}}
+static void enum_source(int32_t value){switch(value){case 1:text("scan",4);break;case 2:text("proximity",9);break;case 3:text("faint",5);break;case 4:text("beam",4);break;case 5:text("muzzle",6);break;case 6:text("motion",6);break;case 7:text("ping",4);break;case 8:text("launch",6);break;case 9:text("drone",5);break;default:putchar('n');}}
 static void enum_mode(int32_t value){switch(value){case 1:text("2d",2);break;case 2:text("3d",2);break;default:putchar('n');}}
 static void enum_ruleset(int32_t value){switch(value){case 1:text("classic",7);break;case 2:text("inertial-2d",11);break;case 3:text("gravity-flat",12);break;case 4:text("gravity-hills",13);break;case 5:text("zero-g",6);break;default:putchar('n');}}
 static void enum_control(int32_t value){switch(value){case 1:text("direct",6);break;case 2:text("forces",6);break;default:putchar('n');}}
@@ -25,6 +25,8 @@ static void enum_shape(int32_t value){switch(value){case 1:text("circle",6);brea
 static void enum_pickup_kind(int32_t value){switch(value){case 1:text("energy",6);break;case 2:text("health",6);break;case 3:text("armour",6);break;default:putchar('n');}}
 static void enum_compute_unit(int32_t value){switch(value){case 1:text("operations",10);break;case 2:text("fuel",4);break;case 3:text("cpu-ms",6);break;default:putchar('n');}}
 static void enum_event(int32_t value){switch(value){case 1:text("hello",5);break;case 2:text("state",5);break;case 3:text("end",3);break;default:putchar('n');}}
+static void enum_report_state(int32_t value){switch(value){case 1:text("flying",6);break;case 2:text("lost",4);break;case 3:text("ended",5);break;default:putchar('n');}}
+static void enum_sighting_kind(int32_t value){switch(value){case 1:text("robot",5);break;case 2:text("drone",5);break;default:putchar('n');}}
 static void read_vec3(cy_vec3 *out){out->x = number();out->y = number();out->z = number();}
 static void print_vec3(const cy_vec3 *out){putchar('{');fputs("x=",stdout);bits((double)out->x);putchar(',');fputs("y=",stdout);bits((double)out->y);putchar(',');fputs("z=",stdout);bits((double)out->z);putchar('}');}
 static void read_rotation(cy_rotation *out){out->yaw = number();out->pitch = number();out->roll = number();}
@@ -35,6 +37,8 @@ static void read_attitude(cy_attitude_v1 *out){read_vec3(&out->forward);read_vec
 static void print_attitude(const cy_attitude_v1 *out){putchar('{');fputs("forward=",stdout);print_vec3(&out->forward);putchar(',');fputs("right=",stdout);print_vec3(&out->right);putchar(',');fputs("up=",stdout);print_vec3(&out->up);putchar('}');}
 static void read_applied(cy_applied_v1 *out){read_vec3(&out->force);read_rotation(&out->torque);out->brake = number();}
 static void print_applied(const cy_applied_v1 *out){putchar('{');fputs("force=",stdout);print_vec3(&out->force);putchar(',');fputs("torque=",stdout);print_rotation(&out->torque);putchar(',');fputs("brake=",stdout);bits((double)out->brake);putchar('}');}
+static void read_hurt(cy_hurt_v1 *out){out->shot = number();out->burst = number();out->collision = number();out->boundary = number();}
+static void print_hurt(const cy_hurt_v1 *out){putchar('{');fputs("shot=",stdout);bits((double)out->shot);putchar(',');fputs("burst=",stdout);bits((double)out->burst);putchar(',');fputs("collision=",stdout);bits((double)out->collision);putchar(',');fputs("boundary=",stdout);bits((double)out->boundary);putchar('}');}
 static void read_scan(cy_scan_v1 *out){out->heading = number();out->pitch = number();out->arc = number();out->range = number();}
 static void print_scan(const cy_scan_v1 *out){putchar('{');fputs("heading=",stdout);bits((double)out->heading);putchar(',');fputs("pitch=",stdout);bits((double)out->pitch);putchar(',');fputs("arc=",stdout);bits((double)out->arc);putchar(',');fputs("range=",stdout);bits((double)out->range);putchar('}');}
 static void read_contact(cy_contact_v1 *out){out->slot = integer();out->source = integer();out->range = number();out->bearing = number();out->elevation = number();out->bearing_error = number();out->range_error = number();read_vec3(&out->position);}
@@ -55,6 +59,10 @@ static void read_hill(cy_hill_v1 *out){out->shape = integer();out->holder = inte
 static void print_hill(const cy_hill_v1 *out){putchar('{');fputs("shape=",stdout);enum_shape(out->shape);putchar(',');fputs("holder=",stdout);bits((double)out->holder);putchar(',');fputs("contested=",stdout);fputs(out->contested?"t":"f",stdout);putchar(',');fputs("moves_tick=",stdout);bits((double)out->moves_tick);putchar(',');fputs("held_ticks=",stdout);bits((double)out->held_ticks);putchar(',');fputs("best_held_ticks=",stdout);bits((double)out->best_held_ticks);putchar(',');fputs("radius=",stdout);bits((double)out->radius);putchar(',');fputs("center=",stdout);print_vec3(&out->center);putchar(',');fputs("next=",stdout);print_vec3(&out->next);putchar('}');}
 static void read_pickup(cy_pickup_v1 *out){out->kind = integer();out->expires_tick = integer();out->amount = number();read_vec3(&out->position);}
 static void print_pickup(const cy_pickup_v1 *out){putchar('{');fputs("kind=",stdout);enum_pickup_kind(out->kind);putchar(',');fputs("expires_tick=",stdout);bits((double)out->expires_tick);putchar(',');fputs("amount=",stdout);bits((double)out->amount);putchar(',');fputs("position=",stdout);print_vec3(&out->position);putchar('}');}
+static void read_report(cy_report_v1 *out){out->state = integer();out->tick = integer();out->flares = integer();out->reserved = integer();out->age = number();out->say = number();out->heading = number();out->pitch = number();read_vec3(&out->position);}
+static void print_report(const cy_report_v1 *out){putchar('{');fputs("state=",stdout);enum_report_state(out->state);putchar(',');fputs("tick=",stdout);bits((double)out->tick);putchar(',');fputs("flares=",stdout);bits((double)out->flares);putchar(',');fputs("age=",stdout);bits((double)out->age);putchar(',');fputs("say=",stdout);bits((double)out->say);putchar(',');fputs("heading=",stdout);bits((double)out->heading);putchar(',');fputs("pitch=",stdout);bits((double)out->pitch);putchar(',');fputs("position=",stdout);print_vec3(&out->position);putchar('}');}
+static void read_drone_sighting(cy_drone_sighting_v1 *out){out->kind = integer();out->tick = integer();out->range = number();out->bearing = number();out->elevation = number();out->bearing_error = number();out->range_error = number();read_vec3(&out->position);}
+static void print_drone_sighting(const cy_drone_sighting_v1 *out){putchar('{');fputs("kind=",stdout);enum_sighting_kind(out->kind);putchar(',');fputs("tick=",stdout);bits((double)out->tick);putchar(',');fputs("range=",stdout);bits((double)out->range);putchar(',');fputs("bearing=",stdout);bits((double)out->bearing);putchar(',');fputs("elevation=",stdout);bits((double)out->elevation);putchar(',');fputs("bearing_error=",stdout);bits((double)out->bearing_error);putchar(',');fputs("range_error=",stdout);bits((double)out->range_error);putchar(',');fputs("position=",stdout);print_vec3(&out->position);putchar('}');}
 static void read_compute(cy_compute_v1 *out){out->k = number();out->quanta = integer();out->unit = integer();}
 static void print_compute(const cy_compute_v1 *out){putchar('{');fputs("k=",stdout);bits((double)out->k);putchar(',');fputs("quanta=",stdout);bits((double)out->quanta);putchar(',');fputs("unit=",stdout);enum_compute_unit(out->unit);putchar('}');}
 static void invoke(const char *op,const char *label,const char *name,const char *field){int answer=strcmp(label,"-")!=0;if(!strcmp(op,"call")&&!strcmp(name,"match.mode")){int32_t out=0;
@@ -138,6 +146,9 @@ if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');bits((dou
 if(!strcmp(op,"call")&&!strcmp(name,"me.wall_contact")){cy_vec3 out={0};
 int32_t status=cy_me_wall_contact(robot,&out);
 if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');print_vec3(&out);}putchar('\n');}return;}
+if(!strcmp(op,"call")&&!strcmp(name,"me.hurt")){cy_hurt_v1 out={0};
+int32_t status=cy_me_hurt_v1(robot,&out);
+if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');print_hurt(&out);}putchar('\n');}return;}
 if(!strcmp(op,"call")&&!strcmp(name,"me.applied")){cy_applied_v1 out={0};
 int32_t status=cy_me_applied_v1(robot,&out);
 if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');print_applied(&out);}putchar('\n');}return;}
@@ -477,6 +488,56 @@ if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');bits((dou
 if(!strcmp(op,"call")&&!strcmp(name,"score.armour")){double out=0;
 int32_t status=cy_score_armour(robot,&out);
 if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');bits((double)out);}putchar('\n');}return;}
+if(!strcmp(op,"call")&&!strcmp(name,"drone.has")){int32_t out=0;
+int32_t status=cy_drone_has(robot,&out);
+if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');fputs(out?"t":"f",stdout);}putchar('\n');}return;}
+if(!strcmp(op,"call")&&!strcmp(name,"drone.ready")){int32_t out=0;
+int32_t status=cy_drone_ready(robot,&out);
+if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');fputs(out?"t":"f",stdout);}putchar('\n');}return;}
+if(!strcmp(op,"call")&&!strcmp(name,"drone.in_flight")){int32_t out=0;
+int32_t status=cy_drone_in_flight(robot,&out);
+if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');fputs(out?"t":"f",stdout);}putchar('\n');}return;}
+if(!strcmp(op,"call")&&!strcmp(name,"drone.launches_left")){int32_t out=0;
+int32_t status=cy_drone_launches_left(robot,&out);
+if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');bits((double)out);}putchar('\n');}return;}
+if(!strcmp(op,"call")&&!strcmp(name,"drone.report")){cy_report_v1 out={0};
+int32_t status=cy_drone_report_v1(robot,&out);
+if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');print_report(&out);}putchar('\n');}return;}
+if(!strcmp(op,"call")&&!strcmp(name,"drone.sightings")){cy_drone_sighting_v1 out[CAP]; uint32_t count=0;
+int32_t status=cy_drone_sightings_v1(robot,out,CAP,&count);
+if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');putchar('[');for(uint32_t i=0;i<count;i++){if(i)putchar(',');print_drone_sighting(&out[i]);}putchar(']');}putchar('\n');}return;}
+if(!strcmp(op,"set")&&!strcmp(name,"drone.launch")&&!strcmp(field,"launch")){
+int32_t status=cy_drone_launch(robot);
+if(answer){printf("%s %d",label,status);if(status==CY_OK && 0){putchar(' ');}putchar('\n');}return;}
+if(!strcmp(op,"set")&&!strcmp(name,"drone.launch")&&!strcmp(field,"heading")){double value = number();
+int32_t status=cy_drone_launch_heading(robot,value);
+if(answer){printf("%s %d",label,status);if(status==CY_OK && 0){putchar(' ');}putchar('\n');}return;}
+if(!strcmp(op,"set")&&!strcmp(name,"drone.launch")&&!strcmp(field,"pitch")){double value = number();
+int32_t status=cy_drone_launch_pitch(robot,value);
+if(answer){printf("%s %d",label,status);if(status==CY_OK && 0){putchar(' ');}putchar('\n');}return;}
+if(!strcmp(op,"set")&&!strcmp(name,"drone.launch")&&!strcmp(field,"param")){double value = number();
+int32_t status=cy_drone_launch_param(robot,value);
+if(answer){printf("%s %d",label,status);if(status==CY_OK && 0){putchar(' ');}putchar('\n');}return;}
+if(!strcmp(op,"call")&&!strcmp(name,"drone.brief")){int32_t index = integer();
+double value = number();
+int32_t status=cy_drone_brief(robot,index,value);
+if(answer){printf("%s %d",label,status);if(status==CY_OK && 0){putchar(' ');}putchar('\n');}return;}
+if(!strcmp(op,"call")&&!strcmp(name,"drone.program")){uint32_t language_length; char *language=string(&language_length);
+uint32_t source_length; char *source=string(&source_length);
+int32_t status=cy_drone_program(robot,language,language_length,source,source_length);
+if(answer){printf("%s %d",label,status);if(status==CY_OK && 0){putchar(' ');}putchar('\n');}return;}
+if(!strcmp(op,"get")&&!strcmp(name,"drone.get")&&!strcmp(field,"launch")){double out=0;
+int32_t status=cy_drone_get_launch(robot,&out);
+if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');bits((double)out);}putchar('\n');}return;}
+if(!strcmp(op,"get")&&!strcmp(name,"drone.get")&&!strcmp(field,"heading")){double out=0;
+int32_t status=cy_drone_get_launch_heading(robot,&out);
+if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');bits((double)out);}putchar('\n');}return;}
+if(!strcmp(op,"get")&&!strcmp(name,"drone.get")&&!strcmp(field,"pitch")){double out=0;
+int32_t status=cy_drone_get_launch_pitch(robot,&out);
+if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');bits((double)out);}putchar('\n');}return;}
+if(!strcmp(op,"get")&&!strcmp(name,"drone.get")&&!strcmp(field,"param")){double out=0;
+int32_t status=cy_drone_get_launch_param(robot,&out);
+if(answer){printf("%s %d",label,status);if(status==CY_OK){putchar(' ');bits((double)out);}putchar('\n');}return;}
 if(!strcmp(op,"call")&&!strcmp(name,"angles.normalize")){double degrees = number();
 double out=0;
 int32_t status=cy_angles_normalize(degrees,&out);
@@ -566,7 +627,7 @@ if(!strcmp(op,"call")&&!strcmp(name,"raw.extra")){uint32_t json_length; char *js
 int32_t status=cy_raw_extra(robot,json,json_length);
 if(answer){printf("%s %d",label,status);if(status==CY_OK && 0){putchar(' ');}putchar('\n');}return;}fprintf(stderr,"no call: %s %s %s\n",op,name,field);exit(2);}
 int main(void){char *line=NULL;size_t capacity=0;while(getline(&line,&capacity,stdin)>=0){line[strcspn(line,"\r\n")]=0;cursor=line;char *op=token();
-if(!strcmp(op,"open")){if(cy_open_memory(2,0,"clunkyard-c-test",16,"2.0.0",5,&robot)!=CY_OK)return 2;continue;}
+if(!strcmp(op,"open")){if(cy_open_memory(2,1,"clunkyard-c-test",16,"2.1.0",5,&robot)!=CY_OK)return 2;continue;}
 if(!strcmp(op,"close")){cy_close(robot);robot=NULL;continue;}
 if(!strcmp(op,"feed")){uint32_t length;char *value=string(&length);if(cy_session_feed(robot,value,length)<0)return 2;continue;}
 if(!strcmp(op,"next")){int32_t event;if(cy_session_next(robot,&event)<0)return 2;continue;}
@@ -576,7 +637,7 @@ char *label=token();
 if(!strcmp(op,"act")){char buf[CAP];uint32_t length;cy_session_send(robot);int status=cy_session_reply(robot,buf,CAP,&length);if(status!=CY_OK)return 2;printf("%s ",label);text(buf,length);putchar('\n');continue;}
 if(!strcmp(op,"slots")){int32_t count;cy_match_robots(robot,&count);printf("%s [",label);for(int32_t i=1;i<=count;i++){char buf[CAP];uint32_t length;cy_robot_id(robot,i,buf,CAP,&length);if(i>1)putchar(',');text(buf,length);}puts("]");continue;}
 char *name=token();const char *field="";
-if(!strcmp(op,"set")||!strcmp(op,"get")){field=token();if(!*field){if(!strcmp(name,"gun.fire")){cy_gun_fire(robot);if(strcmp(label,"-"))printf("%s 0\n",label);continue;}}}
+if(!strcmp(op,"set")||!strcmp(op,"get")){field=token();if(!*field){if(!strcmp(name,"gun.fire")){cy_gun_fire(robot);if(strcmp(label,"-"))printf("%s 0\n",label);continue;}if(!strcmp(name,"drone.launch")){cy_drone_launch(robot);if(strcmp(label,"-"))printf("%s 0\n",label);continue;}}}
 invoke(op,label,name,field);
-if(!strcmp(op,"set")){if(!strcmp(name,"gun.fire")){cy_gun_fire(robot);}}
+if(!strcmp(op,"set")){if(!strcmp(name,"gun.fire")){cy_gun_fire(robot);}if(!strcmp(name,"drone.launch")){cy_drone_launch(robot);}}
 }free(line);cy_close(robot);fflush(stdout);return 0;}

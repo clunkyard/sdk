@@ -11,3 +11,5 @@ test:
 	mkdir -p $(BUILD)
 	$(CC) -std=c17 -O2 -Wall -Wextra -Werror -Wno-unused-function -I$(SDK)/include test_conformance.c $(SDK)/lib/libclunkyard.a -lpthread -ldl -lm -o $(BUILD)/conformance
 	cd ../../.. && node sdk/bindings/conformance.js $(BUILD)/conformance
+	$(CC) -std=c17 -O2 -Wall -Wextra -Werror -I$(SDK)/include test_hurt.c $(SDK)/lib/libclunkyard.a -lpthread -ldl -lm -o $(BUILD)/hurt
+	$(NODE) ../hurt.js $(BUILD)/hurt

@@ -3,13 +3,12 @@
 import {spawn} from 'node:child_process';
 import readline from 'node:readline';
 
-let WebSocket=globalThis.WebSocket;
-if(!WebSocket)try{({WebSocket}=await import('ws'));}catch{console.error('remote-bridge requires Node 22+ or the ws package (npm install ws@8)');process.exit(2);}
+const {WebSocket}=globalThis;
 
 // With --strategist the bridge runs a strategist for the bot's DSL reflex in
 // Open matches instead of the bot itself (docs/protocol.md, "Strategists").
-const argv=process.argv.slice(2),strategist=argv[0]==='--strategist',[command,...args]=strategist?argv.slice(1):argv,url=process.env.CLUNKYARD_REMOTE_URL,token=process.env.CLUNKYARD_REMOTE_TOKEN,botId=process.env.CLUNKYARD_BOT_ID;
-if(!url||!token||!botId||!command){console.error('set CLUNKYARD_REMOTE_URL, CLUNKYARD_REMOTE_TOKEN and CLUNKYARD_BOT_ID; usage: remote-bridge [--strategist] COMMAND [ARGS...]');process.exit(2);}
+const argv=process.argv.slice(2),strategist=argv[0]==='--strategist',[command,...args]=strategist?argv.slice(1):argv,url=process.env.CLUNKYARD_REMOTE_URL||'wss://clunkyard.com/api/remote-bots',token=process.env.CLUNKYARD_REMOTE_TOKEN,botId=process.env.CLUNKYARD_BOT_ID;
+if(!token||!botId||!command){console.error('set CLUNKYARD_REMOTE_TOKEN and CLUNKYARD_BOT_ID (and CLUNKYARD_REMOTE_URL for a server other than clunkyard.com); usage: remote-bridge [--strategist] COMMAND [ARGS...]');process.exit(2);}
 
 const sessions=new Map(),responseCache=new Map(),allowedEnv=new Set(String(process.env.CLUNKYARD_BOT_ENV_ALLOW||'').split(',').map(value=>value.trim()).filter(Boolean));let socket=null,stopping=false,retry=250;
 function botEnvironment(){const result={PATH:process.env.PATH||'/usr/local/bin:/usr/bin:/bin',HOME:process.env.HOME||process.cwd(),TMPDIR:process.env.TMPDIR||'/tmp',LANG:process.env.LANG||'C.UTF-8',LC_ALL:process.env.LC_ALL||''};for(const name of allowedEnv)if(!name.toUpperCase().startsWith('CLUNKYARD_REMOTE_')&&name.toUpperCase()!=='CLUNKYARD_BOT_ID'&&process.env[name]!==undefined)result[name]=process.env[name];return result;}

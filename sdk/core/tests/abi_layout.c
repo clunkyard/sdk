@@ -26,6 +26,11 @@ _Static_assert(sizeof(cy_applied_v1) == 56, "cy_applied_v1 size");
 _Static_assert(offsetof(cy_applied_v1, force) == 0, "cy_applied_v1.force");
 _Static_assert(offsetof(cy_applied_v1, torque) == 24, "cy_applied_v1.torque");
 _Static_assert(offsetof(cy_applied_v1, brake) == 48, "cy_applied_v1.brake");
+_Static_assert(sizeof(cy_hurt_v1) == 32, "cy_hurt_v1 size");
+_Static_assert(offsetof(cy_hurt_v1, shot) == 0, "cy_hurt_v1.shot");
+_Static_assert(offsetof(cy_hurt_v1, burst) == 8, "cy_hurt_v1.burst");
+_Static_assert(offsetof(cy_hurt_v1, collision) == 16, "cy_hurt_v1.collision");
+_Static_assert(offsetof(cy_hurt_v1, boundary) == 24, "cy_hurt_v1.boundary");
 _Static_assert(sizeof(cy_scan_v1) == 32, "cy_scan_v1 size");
 _Static_assert(offsetof(cy_scan_v1, heading) == 0, "cy_scan_v1.heading");
 _Static_assert(offsetof(cy_scan_v1, pitch) == 8, "cy_scan_v1.pitch");
@@ -88,11 +93,30 @@ _Static_assert(offsetof(cy_pickup_v1, kind) == 0, "cy_pickup_v1.kind");
 _Static_assert(offsetof(cy_pickup_v1, expires_tick) == 4, "cy_pickup_v1.expires_tick");
 _Static_assert(offsetof(cy_pickup_v1, amount) == 8, "cy_pickup_v1.amount");
 _Static_assert(offsetof(cy_pickup_v1, position) == 16, "cy_pickup_v1.position");
+_Static_assert(sizeof(cy_report_v1) == 72, "cy_report_v1 size");
+_Static_assert(offsetof(cy_report_v1, state) == 0, "cy_report_v1.state");
+_Static_assert(offsetof(cy_report_v1, tick) == 4, "cy_report_v1.tick");
+_Static_assert(offsetof(cy_report_v1, flares) == 8, "cy_report_v1.flares");
+_Static_assert(offsetof(cy_report_v1, reserved) == 12, "cy_report_v1.reserved");
+_Static_assert(offsetof(cy_report_v1, age) == 16, "cy_report_v1.age");
+_Static_assert(offsetof(cy_report_v1, say) == 24, "cy_report_v1.say");
+_Static_assert(offsetof(cy_report_v1, heading) == 32, "cy_report_v1.heading");
+_Static_assert(offsetof(cy_report_v1, pitch) == 40, "cy_report_v1.pitch");
+_Static_assert(offsetof(cy_report_v1, position) == 48, "cy_report_v1.position");
+_Static_assert(sizeof(cy_drone_sighting_v1) == 72, "cy_drone_sighting_v1 size");
+_Static_assert(offsetof(cy_drone_sighting_v1, kind) == 0, "cy_drone_sighting_v1.kind");
+_Static_assert(offsetof(cy_drone_sighting_v1, tick) == 4, "cy_drone_sighting_v1.tick");
+_Static_assert(offsetof(cy_drone_sighting_v1, range) == 8, "cy_drone_sighting_v1.range");
+_Static_assert(offsetof(cy_drone_sighting_v1, bearing) == 16, "cy_drone_sighting_v1.bearing");
+_Static_assert(offsetof(cy_drone_sighting_v1, elevation) == 24, "cy_drone_sighting_v1.elevation");
+_Static_assert(offsetof(cy_drone_sighting_v1, bearing_error) == 32, "cy_drone_sighting_v1.bearing_error");
+_Static_assert(offsetof(cy_drone_sighting_v1, range_error) == 40, "cy_drone_sighting_v1.range_error");
+_Static_assert(offsetof(cy_drone_sighting_v1, position) == 48, "cy_drone_sighting_v1.position");
 _Static_assert(sizeof(cy_compute_v1) == 16, "cy_compute_v1 size");
 _Static_assert(offsetof(cy_compute_v1, k) == 0, "cy_compute_v1.k");
 _Static_assert(offsetof(cy_compute_v1, quanta) == 8, "cy_compute_v1.quanta");
 _Static_assert(offsetof(cy_compute_v1, unit) == 12, "cy_compute_v1.unit");
-_Static_assert(sizeof(cy_dsl_words_v1) == 856, "cy_dsl_words_v1 size");
+_Static_assert(sizeof(cy_dsl_words_v1) == 976, "cy_dsl_words_v1 size");
 
 typedef void (*cy_any_fn)(void);
 static const cy_any_fn SYMBOLS[] = {
@@ -127,6 +151,7 @@ static const cy_any_fn SYMBOLS[] = {
   (cy_any_fn)cy_me_grounded,
   (cy_any_fn)cy_me_altitude,
   (cy_any_fn)cy_me_wall_contact,
+  (cy_any_fn)cy_me_hurt_v1,
   (cy_any_fn)cy_me_applied_v1,
   (cy_any_fn)cy_me_hull_mounts,
   (cy_any_fn)cy_me_to_mount,
@@ -225,6 +250,22 @@ static const cy_any_fn SYMBOLS[] = {
   (cy_any_fn)cy_score_me,
   (cy_any_fn)cy_score_best,
   (cy_any_fn)cy_score_armour,
+  (cy_any_fn)cy_drone_has,
+  (cy_any_fn)cy_drone_ready,
+  (cy_any_fn)cy_drone_in_flight,
+  (cy_any_fn)cy_drone_launches_left,
+  (cy_any_fn)cy_drone_report_v1,
+  (cy_any_fn)cy_drone_sightings_v1,
+  (cy_any_fn)cy_drone_launch,
+  (cy_any_fn)cy_drone_launch_heading,
+  (cy_any_fn)cy_drone_launch_pitch,
+  (cy_any_fn)cy_drone_launch_param,
+  (cy_any_fn)cy_drone_brief,
+  (cy_any_fn)cy_drone_program,
+  (cy_any_fn)cy_drone_get_launch,
+  (cy_any_fn)cy_drone_get_launch_heading,
+  (cy_any_fn)cy_drone_get_launch_pitch,
+  (cy_any_fn)cy_drone_get_launch_param,
   (cy_any_fn)cy_angles_normalize,
   (cy_any_fn)cy_angles_angle_diff,
   (cy_any_fn)cy_angles_bearing_to,

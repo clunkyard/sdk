@@ -201,3 +201,16 @@ fn a_panic_while_reading_a_state_still_answers_its_tick() {
     throttle(&robot, 0.5);
     assert_eq!(act(&robot).at("drive.throttle").and_then(Value::as_f64), Some(0.5), "the next state plays");
 }
+
+#[test]
+fn the_ready_reply_carries_the_drone_program() {
+    let robot = Core::open("clunkyard-test", "2.0.0");
+    robot.feed(&lines()[0]);
+    assert_eq!(robot.next(), Event::Hello as i32);
+    let (language, source) = ("cadence", "drone Hover\nstate hold\n  drive 0\nend\n");
+    assert_eq!(cy_drone_program(robot.robot, language.as_ptr(), language.len() as u32, source.as_ptr(), source.len() as u32), CY_OK);
+    assert_eq!(robot.send(), CY_OK);
+    let ready = json::parse(&robot.reply().unwrap()).unwrap();
+    assert_eq!(ready.at("drone.language").and_then(Value::as_str), Some(language));
+    assert_eq!(ready.at("drone.source").and_then(Value::as_str), Some(source));
+}

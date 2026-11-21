@@ -308,6 +308,52 @@
       {"tick":12,"slots":["scout","target"],"cases":[{"call":"battery.charge","value":54.94}]},
       {"tick":45,"slots":["scout","target"],"cases":[{"call":"battery.charge","value":51.29}]}
      ]},
+    {"input": "fixtures/drones/2d-classic.ndjson",
+     "hello": [
+      {"call":"battery.capacity","value":60},
+      {"call":"battery.regen","value":7},
+      {"call":"battery.sustainable_drive","value":0.7637626158259734},
+      {"call":"battery.compute","none":true},
+      {"call":"battery.drive_cost","args":[-1.5],"value":12},
+      {"call":"battery.drive_cost","args":[-0.4],"value":1.9200000000000004},
+      {"call":"battery.drive_cost","args":[0],"value":0},
+      {"call":"battery.drive_cost","args":[0.5],"value":3},
+      {"call":"battery.drive_cost","args":[0.7637626158259734],"value":7},
+      {"call":"battery.drive_cost","args":[1],"value":12},
+      {"call":"battery.drive_cost","args":[2],"value":12}
+     ],
+     "states": [
+      {"tick":0,"slots":["scout"],"cases":[{"call":"battery.charge","value":60}]},
+      {"tick":59,"slots":["scout","target"],"cases":[{"call":"battery.charge","value":59.9}]},
+      {"tick":60,"slots":["scout","target"],"cases":[{"call":"battery.charge","value":59.9}]},
+      {"tick":61,"slots":["scout","target"],"cases":[{"call":"battery.charge","value":59.9}]},
+      {"tick":70,"slots":["scout","target"],"cases":[{"call":"battery.charge","value":59.9}]},
+      {"tick":80,"slots":["scout","target"],"cases":[{"call":"battery.charge","value":59.9}]},
+      {"tick":90,"slots":["scout","target"],"cases":[{"call":"battery.charge","value":59.9}]}
+     ]},
+    {"input": "fixtures/drones/3d-zero-g.ndjson",
+     "hello": [
+      {"call":"battery.capacity","value":60},
+      {"call":"battery.regen","value":8},
+      {"call":"battery.sustainable_drive","value":1},
+      {"call":"battery.compute","none":true},
+      {"call":"battery.drive_cost","args":[-1.5],"value":5},
+      {"call":"battery.drive_cost","args":[-0.4],"value":0.8000000000000002},
+      {"call":"battery.drive_cost","args":[0],"value":0},
+      {"call":"battery.drive_cost","args":[0.5],"value":1.25},
+      {"call":"battery.drive_cost","args":[1],"value":5},
+      {"call":"battery.drive_cost","args":[1],"value":5},
+      {"call":"battery.drive_cost","args":[2],"value":5}
+     ],
+     "states": [
+      {"tick":0,"slots":["scout"],"cases":[{"call":"battery.charge","value":60}]},
+      {"tick":59,"slots":["scout"],"cases":[{"call":"battery.charge","value":59.76}]},
+      {"tick":60,"slots":["scout"],"cases":[{"call":"battery.charge","value":59.76}]},
+      {"tick":61,"slots":["scout"],"cases":[{"call":"battery.charge","value":59.76}]},
+      {"tick":70,"slots":["scout"],"cases":[{"call":"battery.charge","value":59.76}]},
+      {"tick":80,"slots":["scout"],"cases":[{"call":"battery.charge","value":59.76}]},
+      {"tick":90,"slots":["scout"],"cases":[{"call":"battery.charge","value":59.76}]}
+     ]},
     {"input": "vectors/api/inputs/tape-2d-classic.ndjson",
      "hello": [
       {"call":"battery.capacity","value":60},
@@ -1073,6 +1119,58 @@
       {"tick":37,"slots":["scout","a"],"cases":[{"call":"battery.charge","value":59.99}]},
       {"tick":38,"slots":["scout","a"],"cases":[{"call":"battery.charge","value":59.99}]},
       {"tick":39,"slots":["scout","a"],"cases":[{"call":"battery.charge","value":59.99}]}
+     ]},
+    {"input": "vectors/api/inputs/hurt-2d-inertial-2d.ndjson",
+     "hello": [
+      {"call":"battery.capacity","value":60},
+      {"call":"battery.regen","value":7},
+      {"call":"battery.sustainable_drive","value":1},
+      {"call":"battery.compute","none":true},
+      {"call":"battery.drive_cost","args":[-1.5],"value":4},
+      {"call":"battery.drive_cost","args":[-0.4],"value":0.6400000000000001},
+      {"call":"battery.drive_cost","args":[0],"value":0},
+      {"call":"battery.drive_cost","args":[0.5],"value":1},
+      {"call":"battery.drive_cost","args":[1],"value":4},
+      {"call":"battery.drive_cost","args":[1],"value":4},
+      {"call":"battery.drive_cost","args":[2],"value":4}
+     ],
+     "states": [
+      {"tick":0,"slots":["a"],"cases":[{"call":"battery.charge","value":60}]},
+      {"tick":24,"slots":["a"],"cases":[{"call":"battery.charge","value":60}]},
+      {"tick":25,"slots":["a","b"],"cases":[{"call":"battery.charge","value":60}]},
+      {"tick":32,"slots":["a","b"],"cases":[{"call":"battery.charge","value":60}]},
+      {"tick":39,"slots":["a","b"],"cases":[{"call":"battery.charge","value":60}]},
+      {"tick":40,"slots":["a","b"],"cases":[{"call":"battery.charge","value":60}]},
+      {"tick":41,"slots":["a","b"],"cases":[{"call":"battery.charge","value":60}]},
+      {"tick":42,"slots":["a","b"],"cases":[{"call":"battery.charge","value":60}]},
+      {"tick":43,"slots":["a","b"],"cases":[{"call":"battery.charge","value":60}]},
+      {"tick":44,"slots":["a","b"],"cases":[{"call":"battery.charge","value":60}]},
+      {"tick":76,"slots":["a","b"],"cases":[{"call":"battery.charge","value":60}]},
+      {"tick":77,"slots":["a","b"],"cases":[{"call":"battery.charge","value":60}]},
+      {"tick":101,"slots":["a","b"],"cases":[{"call":"battery.charge","value":60}]},
+      {"tick":102,"slots":["a","b"],"cases":[{"call":"battery.charge","value":60}]},
+      {"tick":118,"slots":["a","b"],"cases":[{"call":"battery.charge","value":60}]},
+      {"tick":119,"slots":["a","b"],"cases":[{"call":"battery.charge","value":60}]}
+     ]},
+    {"input": "vectors/api/inputs/hurt-3d-zero-g.ndjson",
+     "hello": [
+      {"call":"battery.capacity","value":60},
+      {"call":"battery.regen","value":8},
+      {"call":"battery.sustainable_drive","value":1},
+      {"call":"battery.compute","none":true},
+      {"call":"battery.drive_cost","args":[-1.5],"value":5},
+      {"call":"battery.drive_cost","args":[-0.4],"value":0.8000000000000002},
+      {"call":"battery.drive_cost","args":[0],"value":0},
+      {"call":"battery.drive_cost","args":[0.5],"value":1.25},
+      {"call":"battery.drive_cost","args":[1],"value":5},
+      {"call":"battery.drive_cost","args":[1],"value":5},
+      {"call":"battery.drive_cost","args":[2],"value":5}
+     ],
+     "states": [
+      {"tick":0,"slots":["a"],"cases":[{"call":"battery.charge","value":60}]},
+      {"tick":31,"slots":["a"],"cases":[{"call":"battery.charge","value":59.8}]},
+      {"tick":57,"slots":["a"],"cases":[{"call":"battery.charge","value":59.8}]},
+      {"tick":58,"slots":["a"],"cases":[{"call":"battery.charge","value":59.8}]}
      ]}
   ]
 }

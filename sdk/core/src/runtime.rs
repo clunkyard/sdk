@@ -50,6 +50,8 @@ pub struct Robot {
     pub reset: bool,
     /// The tick a trapped instance was on (wasm32 recovery), before any state.
     pub fault_tick: Option<f64>,
+    /// drone.program's language and source, for the ready reply.
+    pub drone_program: Option<(String, String)>,
 }
 
 pub fn open(port: PortKind, binding: &str, version: &str) -> Result<Robot, Error> {
@@ -77,6 +79,7 @@ pub fn open(port: PortKind, binding: &str, version: &str) -> Result<Robot, Error
         panics: 0,
         reset: false,
         fault_tick: None,
+        drone_program: None,
     })
 }
 
@@ -172,7 +175,7 @@ impl Robot {
             self.reset = false;
         }
         for contact in &state.contacts {
-            let id = contact.id.robot().map(str::to_string);
+            let id = contact.robot().map(str::to_string);
             self.slot_of(id.as_deref());
         }
         if let Some(holder) = state.hill.as_ref().and_then(|hill| hill.holder.clone()) {

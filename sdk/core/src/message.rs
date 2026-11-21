@@ -18,6 +18,12 @@ fn vec3(value: Option<&Value>) -> Vec3 {
     Vec3 { x: number(value, "x"), y: number(value, "y"), z: number(value, "z") }
 }
 
+/// self.hurt, the health lost by cause; zero when the state leaves it out.
+fn hurt(value: Option<&Value>) -> HurtV1 {
+    let Some(value) = value else { return HurtV1::default() };
+    HurtV1 { shot: number(value, "shot"), burst: number(value, "burst"), collision: number(value, "collision"), boundary: number(value, "boundary") }
+}
+
 fn wire<T>(value: Option<&Value>, from: fn(&str) -> Option<T>) -> Option<T> {
     value.and_then(Value::as_str).and_then(from)
 }
@@ -183,12 +189,77 @@ impl Id {
 #[derive(Clone, Debug)]
 pub struct SeenContact {
     pub id: Id,
+    /// kind is drone (hello.drones): the id names a drone, not a robot.
+    pub drone: bool,
     pub source: i32,
     pub range: f64,
     pub bearing: f64,
     pub elevation: f64,
     pub bearing_error: Option<f64>,
     pub range_error: Option<f64>,
+}
+
+impl SeenContact {
+    /// The robot a precise contact names; none for a passive contact or a
+    /// drone, which take no slot and no track.
+    pub fn robot(&self) -> Option<&str> {
+        if self.drone { None } else { self.id.robot() }
+    }
+}
+
+/// state.drone, when the match has drones.
+#[derive(Clone, Debug)]
+pub struct DroneState {
+    pub has: bool,
+    pub ready: bool,
+    pub in_flight: bool,
+    pub launches_left: f64,
+    /// The newest report, its age 0 until a query works it out.
+    pub report: Option<ReportV1>,
+    /// Its sightings, nearest first, projected from its position.
+    pub sightings: Vec<DroneSightingV1>,
+}
+
+impl DroneState {
+    fn decode(value: &Value) -> DroneState {
+        let flag = |name: &str| value.get(name).and_then(Value::as_bool).unwrap_or(false);
+        let report = value.get("report").filter(|r| r.is_object());
+        let at = report.map_or(Vec3::default(), |r| Vec3 { x: number(r, "x"), y: number(r, "y"), z: number(r, "z") });
+        let sightings = report
+            .and_then(|r| r.get("sightings"))
+            .and_then(Value::as_array)
+            .unwrap_or(&[])
+            .iter()
+            .map(|s| DroneSightingV1 {
+                kind: wire(s.get("kind"), SightingKind::from_wire).map_or(0, |k| k as i32),
+                tick: number(s, "tick") as i32,
+                range: number(s, "range"),
+                bearing: number(s, "bearing"),
+                elevation: number(s, "elevation"),
+                bearing_error: number(s, "bearingError"),
+                range_error: number(s, "rangeError"),
+                position: crate::maths::contact_position(at, number(s, "range"), number(s, "bearing"), number(s, "elevation")),
+            })
+            .collect();
+        DroneState {
+            has: flag("has"),
+            ready: flag("ready"),
+            in_flight: flag("inFlight"),
+            launches_left: number(value, "launchesLeft"),
+            report: report.map(|r| ReportV1 {
+                state: wire(r.get("state"), ReportState::from_wire).map_or(0, |s| s as i32),
+                tick: number(r, "tick") as i32,
+                flares: number(r, "flares") as i32,
+                reserved: 0,
+                age: 0.0,
+                say: number(r, "say"),
+                heading: number(r, "heading"),
+                pitch: number(r, "pitch"),
+                position: at,
+            }),
+            sightings,
+        }
+    }
 }
 
 #[derive(Clone, Copy, Debug)]
@@ -220,6 +291,8 @@ pub struct Me {
     pub applied: AppliedV1,
     /// self.wall; zero when the state leaves it out.
     pub wall: Vec3,
+    /// self.hurt; zero when the state leaves it out.
+    pub hurt: HurtV1,
     pub battery: f64,
     pub aim: Direction,
     pub cooldown_ticks: f64,
@@ -245,6 +318,7 @@ pub struct State {
     pub armour: Option<f64>,
     pub max_power: Option<f64>,
     pub damage_scale: Option<f64>,
+    pub drone: Option<DroneState>,
 }
 
 impl State {
@@ -267,6 +341,7 @@ impl State {
             altitude: number(&me, "altitude"),
             applied: AppliedV1 { force: vec3(me.at("applied.force")), torque: rotation(me.at("applied.torque")), brake: number(&me, "applied.brake") },
             wall: vec3(me.get("wall")),
+            hurt: hurt(me.get("hurt")),
             battery: number(&me, "battery"),
             aim: Direction { heading: number(&me, "aim.heading"), pitch: number(&me, "aim.pitch") },
             cooldown_ticks: number(&me, "cooldownTicks"),
@@ -281,6 +356,7 @@ impl State {
             .iter()
             .map(|c| SeenContact {
                 id: Id::of(c.get("id")),
+                drone: c.get("kind").and_then(Value::as_str) == Some("drone"),
                 source: wire(c.get("source"), Source::from_wire).map_or(0, |s| s as i32),
                 range: number(c, "range"),
                 bearing: number(c, "bearing"),
@@ -342,6 +418,7 @@ impl State {
             armour: optional(objectives, "armour"),
             max_power: optional(&raw, "derived.self.maxPower"),
             damage_scale: optional(&raw, "derived.gun.damageScale"),
+            drone: raw.get("drone").filter(|d| d.is_object()).map(DroneState::decode),
             raw,
         }
     }

@@ -100,16 +100,14 @@ function buildTarget(m){
   return target===m.language||wasmRoute()?target:m.language;
 }
 function hostedTarget(m){const file=path.join(engine,'src','build-targets.js');return fs.existsSync(file)?require(file).buildTarget(m.language,m):sdkAsset?.wasmTarget&&m.target!=='native'?sdkAsset.wasmTarget:m.language;}
-// The hosted builder's WASI toolchain is Clang 22 with the wasi-sdk 33
-// sysroot in /opt/wasi-sysroot and Hew in /opt/hew. A player's comes from
-// WASI_SDK_PATH (a wasi-sdk installation), WASI_SYSROOT and HEW_ROOT, or the
-// compilers on PATH.
+// The hosted builder's WebAssembly toolchain is wasi-sdk 34 in /opt/wasi-sdk,
+// where its package installs it, with Hew in /opt/hew. A player's comes from
+// WASI_SDK_PATH and HEW_ROOT, or the same directories.
 let wasiCache;
 function wasiTools(){
   if(wasiCache)return wasiCache;
-  const home=process.env.WASI_SDK_PATH,tool=name=>home?path.join(home,'bin',name):toolAvailable(name+'-22')?name+'-22':name;
-  return wasiCache={executables:{'clang-22':tool('clang'),'clang++-22':tool('clang++'),'wasm-ld-22':tool('wasm-ld')},
-    sysroot:process.env.WASI_SYSROOT||(home?path.join(home,'share','wasi-sysroot'):'/opt/wasi-sysroot'),hew:hewRoot()};
+  const home=path.resolve(process.env.WASI_SDK_PATH||'/opt/wasi-sdk');
+  return wasiCache={home,clang:path.join(home,'bin','clang'),clangxx:path.join(home,'bin','clang++'),wasmLd:path.join(home,'bin','wasm-ld'),sysroot:path.join(home,'share','wasi-sysroot'),hew:hewRoot()};
 }
 function hewRoot(){
   if(process.env.HEW_ROOT)return path.resolve(process.env.HEW_ROOT);
@@ -149,7 +147,7 @@ function stream(command,args,options={}) {
 }
 function environment() {
   const paths=[path.join(sdk,'lib'),process.env.LD_LIBRARY_PATH].filter(Boolean).join(path.delimiter);
-  return {...process.env,CLUNKYARD_SDK:sdk,CLUNKYARD_PROJECT:root,CLUNKYARD_WASM_INCLUDE:path.join(engine,'sdk','wasm','abi4'),CLUNKYARD_LIB:path.join(sdk,'lib',library),LD_LIBRARY_PATH:paths,
+  return {...process.env,CLUNKYARD_SDK:sdk,CLUNKYARD_PROJECT:root,CLUNKYARD_LIB:path.join(sdk,'lib',library),LD_LIBRARY_PATH:paths,
     ...(process.platform==='darwin'?{DYLD_LIBRARY_PATH:[path.join(sdk,'lib'),process.env.DYLD_LIBRARY_PATH].filter(Boolean).join(path.delimiter)}:{}),
     ...(process.platform==='win32'?{PATH:[path.join(sdk,'lib'),process.env.PATH].filter(Boolean).join(path.delimiter),CC:cCompiler(false),CXX:cCompiler(true)}:{}),
     // Hew's binding build and WebAssembly link find Hew's headers and libraries here.
@@ -187,25 +185,27 @@ function checkNativePlatform(){
     if(!suppliedMetadata&&process.platform!=='linux')throw new Error('A custom native SDK on this platform needs platform.json from the native SDK builder.');
   }else if(platformError)throw platformError;
   const glibc=process.report?.getReport().header.glibcVersionRuntime;
-  if(process.platform==='linux'&&(!glibc||Number(glibc.split('.')[0])<2||(Number(glibc.split('.')[0])===2&&Number(glibc.split('.')[1])<39)))throw new Error('This native Linux SDK needs glibc 2.39+ (Ubuntu 24.04+ or WSL2). Use a hosted build or trial on other systems.');
+  if(process.platform==='linux'&&(!glibc||Number(glibc.split('.')[0])<2||(Number(glibc.split('.')[0])===2&&Number(glibc.split('.')[1])<35)))throw new Error('This native Linux SDK needs glibc 2.35+ (Ubuntu 22.04+, Debian 12+ or WSL2). Use a hosted build or trial on other systems.');
 }
+// Any release in the CLI's SDK major works; the project's lockfile chooses which.
+const compatibleNpmSDK=installed=>installed.name===npmSDK.name&&String(installed.version).split('.')[0]===npmSDK.version.split('.')[0];
 function installNpmSDK() {
   const packageFile=path.join(root,'package.json'),lockFile=path.join(root,'package-lock.json');
-  if(!fs.existsSync(packageFile)||!fs.existsSync(lockFile))throw new Error('JavaScript/TypeScript projects need the npm SDK dependency and package-lock.json. Run clunkyard migrate for an older generated starter, or follow the SDK npm guide.');
+  if(!fs.existsSync(packageFile)||!fs.existsSync(lockFile))throw new Error('JavaScript/TypeScript projects need the npm SDK dependency and package-lock.json. Run npx @clunkyard/cli migrate for an older generated starter, or follow the SDK npm guide.');
   const metadata=JSON.parse(fs.readFileSync(packageFile)),packageLock=JSON.parse(fs.readFileSync(lockFile));
-  if(metadata.dependencies?.clunkyard!==`npm:${npmSDK.name}@${npmSDK.version}`||packageLock.packages?.['node_modules/clunkyard']?.integrity!==npmSDK.integrity)throw new Error('Pin clunkyard to the reviewed npm SDK alias and integrity in package.json/package-lock.json.');
+  if(!String(metadata.dependencies?.clunkyard||'').startsWith(`npm:${npmSDK.name}@`)||!packageLock.packages?.['node_modules/clunkyard'])throw new Error(`Add the SDK under its arena import name: npm install clunkyard@npm:${npmSDK.name}`);
   const installedFile=path.join(root,'node_modules','clunkyard','package.json');
   const identity=sha(fs.readFileSync(lockFile)),stamp=path.join(cache,'npm-ready');
   if(fs.existsSync(stamp)&&fs.readFileSync(stamp,'utf8')===identity&&fs.existsSync(installedFile)){
     const installed=JSON.parse(fs.readFileSync(installedFile));
-    if(installed.name===npmSDK.name&&installed.version===npmSDK.version)return;
+    if(compatibleNpmSDK(installed))return;
   }
   const candidates=[process.env.npm_execpath,path.join(path.dirname(process.execPath),'node_modules/npm/bin/npm-cli.js'),path.resolve(path.dirname(process.execPath),'../lib/node_modules/npm/bin/npm-cli.js'),path.resolve(path.dirname(process.execPath),'../share/nodejs/npm/bin/npm-cli.js')];
   const cli=candidates.find(file=>file&&fs.existsSync(file)&&/\.[cm]?js$/.test(file));
   if(!cli)throw new Error('Install Node with npm, then run npm ci in this starter.');
   run(process.execPath,[cli,'ci','--ignore-scripts','--no-audit','--no-fund','--registry=https://registry.npmjs.org']);
   const installed=JSON.parse(fs.readFileSync(installedFile));
-  if(installed.name!==npmSDK.name||installed.version!==npmSDK.version)throw new Error('Installed npm SDK differs from the project dependency.');
+  if(!compatibleNpmSDK(installed))throw new Error(`clunkyard must be ${npmSDK.name} ${npmSDK.version.split('.')[0]}.x; run npm install clunkyard@npm:${npmSDK.name}`);
   fs.writeFileSync(stamp,identity);
 }
 function worker(project=root) {
@@ -215,9 +215,9 @@ function worker(project=root) {
 }
 function rewrite(value) {
   value=value.replaceAll('/opt/arena/libexec/wasm-host',path.join(sdk,'bin','wasm-host')).replaceAll('/opt/arena/',`${engine}/`).replaceAll('/opt/wasmtime/',`${sdk}/`);
-  if(!/^(?:clang(?:\+\+)?|wasm-ld)-22$|\/opt\/(?:wasi-sysroot|hew\/)/.test(value))return value;
+  if(!/\/opt\/(?:wasi-sdk|hew)\//.test(value))return value;
   const tools=wasiTools();
-  return tools.executables[value]||value.replaceAll('/opt/wasi-sysroot',tools.sysroot).replaceAll('/opt/hew/',`${tools.hew}/`);
+  return value.replaceAll('/opt/wasi-sdk/',`${tools.home}/`).replaceAll('/opt/hew/',`${tools.hew}/`);
 }
 function sources(from,to) {
   fs.mkdirSync(to,{recursive:true});
@@ -259,7 +259,7 @@ function typescriptCompiler() {
       if(fs.readFileSync(file,'utf8').startsWith('#!/usr/bin/env node'))return [process.execPath,file];
     }
   }
-  throw new Error('Install TypeScript 6+ (tsc on PATH), then run clunkyard doctor.');
+  throw new Error('Install TypeScript 6+ (tsc on PATH), then run npx @clunkyard/cli doctor.');
 }
 async function build({opponent=false}={}) {
   await setup();const m=manifest(),out=path.join(cache,'build');fs.mkdirSync(out,{recursive:true});
@@ -272,7 +272,10 @@ async function build({opponent=false}={}) {
   if(action){const steps=Array.isArray(action[0])?action:[action];for(const step of steps){const args=step.map(rewrite);if(target==='c')args[0]=cCompiler(false);if(target==='cpp')args[0]=cCompiler(true);run(args[0],args.slice(1),{cwd:copied});}}
   const runtimeSource=path.join(out,'source');fs.rmSync(runtimeSource,{recursive:true,force:true});sources(copied,runtimeSource);
   if(m.language==='typescript')fs.writeFileSync(path.join(out,'package.json'),'{"type":"commonjs"}\n');
-  fs.writeFileSync(path.join(cache,'local-bot.json'),JSON.stringify({...m,command:[process.execPath,entry,'--project',root,...(options.sharedCache?['--shared-cache',store]:[]),'stdio']},null,2)+'\n');
+  // The copy lives in the cache, so it carries the drone program as read from the project.
+  const drone=m.drone===undefined?null:require(path.join(engine,'src','drone','project.js')).readDroneProgram(root,m);
+  if(drone?.error)console.log(`${m.name} plays without a drone: ${drone.error}`);
+  fs.writeFileSync(path.join(cache,'local-bot.json'),JSON.stringify({...m,...(drone?{drone}:{}),command:[process.execPath,entry,'--project',root,...(options.sharedCache?['--shared-cache',store]:[]),'stdio']},null,2)+'\n');
   console.log(`Built ${m.name}${target===m.language?'':` for WebAssembly (${target})`}.${opponent?'':' Run make match or npx @clunkyard/cli match.'}`);
 }
 function stdio() {
@@ -381,30 +384,34 @@ function chooseOpponents(names,roster) {
   const chosen=[],practice={key:'practice',name:'Practice rival',practice:true};
   for(const name of names){
     const wanted=name.toLowerCase(),row=wanted==='practice'||wanted==='practice rival'?practice:roster?.robots.find(row=>row.key===wanted||row.name.toLowerCase()===wanted);
-    if(!row)throw new Error(`No local opponent named ${name}. Run clunkyard opponents to list them.`);
+    if(!row)throw new Error(`No local opponent named ${name}. Run npx @clunkyard/cli opponents to list them.`);
     if(chosen.includes(row))throw new Error(`${row.name} is listed twice; each opponent seats once.`);
     chosen.push(row);
   }
   return chosen;
 }
 function matchOptions(args) {
-  const names=[],rest=[];let refresh=false,json=false;
+  const names=[],rest=[];let refresh=false,json=false,drones='off',objective='none';
   for(let i=0;i<args.length;i++){
     const value=args[i];
     if(value==='--opponent'){
-      if(!args[i+1]||args[i+1].startsWith('--'))throw new Error('--opponent needs a robot name. Run clunkyard opponents to list them.');
+      if(!args[i+1]||args[i+1].startsWith('--'))throw new Error('--opponent needs a robot name. Run npx @clunkyard/cli opponents to list them.');
       names.push(...args[++i].split(','));
     }else if(value.startsWith('--opponent='))names.push(...value.slice(11).split(','));
     else if(value==='--refresh')refresh=true;
+    else if(value==='--drones'||value==='--objective'){
+      if(!args[i+1]||args[i+1].startsWith('--'))throw new Error(`${value} needs a value: ${value==='--drones'?'off or on':'none, hill or pickups'}.`);
+      if(value==='--drones')drones=args[++i];else objective=args[++i];
+    }
     else if(value==='--json')json=true;
-    else if(value.startsWith('--'))throw new Error(`Unknown option ${value}. Use match [seed] [2d|3d] [ruleset] [--opponent NAME]... [--refresh] [--json]`);
+    else if(value.startsWith('--'))throw new Error(`Unknown option ${value}. Use match [seed] [2d|3d] [ruleset] [--opponent NAME]... [--drones on] [--objective hill|pickups] [--refresh] [--json]`);
     else rest.push(value);
   }
-  return {names:names.map(name=>name.trim()).filter(Boolean),rest,refresh,json};
+  return {names:names.map(name=>name.trim()).filter(Boolean),rest,refresh,json,drones,objective};
 }
 async function opponents(args=[]) {
   const unknown=args.filter(value=>value!=='--refresh');
-  if(unknown.length)throw new Error('Use clunkyard opponents [--refresh].');
+  if(unknown.length)throw new Error('Use npx @clunkyard/cli opponents [--refresh].');
   safeCache();
   const roster=await houseRoster({refresh:args.includes('--refresh')});
   console.log(`Local opponents for match --opponent NAME. The house robots are the published source of their hosted projects at ${roster.origin}, as of ${roster.fetchedAt}${roster.fresh?'':' (cached; opponents --refresh updates it)'}.`);
@@ -431,7 +438,7 @@ async function match(args) {
   try{return await playMatch(args,true);}finally{console.log=log;jsonOutput=false;}
 }
 async function playMatch(args,json) {
-  const {names,rest,refresh}=matchOptions(args),seed=rest[0]||'42',mode=rest[1]||'2d',ruleset=rest[2]||(mode==='3d'?'zero-g':'classic');
+  const {names,rest,refresh,drones,objective}=matchOptions(args),seed=rest[0]||'42',mode=rest[1]||'2d',ruleset=rest[2]||(mode==='3d'?'zero-g':'classic');
   if(!/^\d{1,10}$/.test(seed)||Number(seed)>0xffffffff)throw new Error('Match seed must be an integer from 0 to 4294967295.');
   // Name and seat the opponents before the slower builds. A house robot only
   // plays what its own bot.json declares.
@@ -443,18 +450,20 @@ async function playMatch(args,json) {
       if(row.practice){chosen.push({row});continue;}
       const runtime=await stageHouseRobot(row),m=runtime.manifest();
       const rulesets=Array.isArray(m.supportedRulesets)?m.supportedRulesets:['classic'];
-      if(!(m.supportedModes||[]).includes(mode))throw new Error(`${m.name} does not play ${mode} (supports: ${(m.supportedModes||[]).join(', ')||'none'}). Run clunkyard opponents to see what each plays.`);
-      if(!rulesets.includes(ruleset))throw new Error(`${m.name} does not play ${ruleset} (supports: ${rulesets.join(', ')}). Run clunkyard opponents to see what each plays.`);
+      if(!(m.supportedModes||[]).includes(mode))throw new Error(`${m.name} does not play ${mode} (supports: ${(m.supportedModes||[]).join(', ')||'none'}). Run npx @clunkyard/cli opponents to see what each plays.`);
+      if(!rulesets.includes(ruleset))throw new Error(`${m.name} does not play ${ruleset} (supports: ${rulesets.join(', ')}). Run npx @clunkyard/cli opponents to see what each plays.`);
       // The same toolchain check `opponents` makes, before any build output.
       const {problems}=runtime.diagnose();
-      if(problems.length)throw new Error(`${m.name} (${row.language}) needs setup on this computer:\n${problems.map(problem=>`  ${problem}`).join('\n')}\nRun clunkyard opponents to see what each needs.`);
+      if(problems.length)throw new Error(`${m.name} (${row.language}) needs setup on this computer:\n${problems.map(problem=>`  ${problem}`).join('\n')}\nRun npx @clunkyard/cli opponents to see what each needs.`);
       chosen.push({row,runtime});
     }
   }
   // Without --opponent the practice rival plays; point a newcomer at the next rung.
   if(!names.length){
-    try{const next=(await houseRoster({refresh,timeout:3000})).robots.filter(row=>tierIn(row,mode,ruleset)==='entry'&&row.supportedModes.includes(mode)&&row.supportedRulesets.includes(ruleset)).sort(byLadder(mode,ruleset))[0];
-      if(next)console.log(`Next to try: ${next.name} (Entry): clunkyard match ${seed} ${mode} ${ruleset} --opponent ${next.key}`);}catch{}
+    // Suggest only a robot this computer can build, so the command works as printed.
+    try{const candidates=(await houseRoster({refresh,timeout:3000})).robots.filter(row=>tierIn(row,mode,ruleset)==='entry'&&row.supportedModes.includes(mode)&&row.supportedRulesets.includes(ruleset)).sort(byLadder(mode,ruleset));
+      let next=null;for(const row of candidates){try{if(!(await stageHouseRobot(row)).diagnose().problems.length){next=row;break;}}catch{}}
+      if(next)console.log(`Next to try: ${next.name} (Entry): npx @clunkyard/cli match ${seed} ${mode} ${ruleset} --opponent ${next.key}`);}catch{}
   }
   const baseEnvironment={...process.env};
   const self=await prepare();
@@ -472,7 +481,7 @@ async function playMatch(args,json) {
   const details=[];
   if(entries.every(value=>value.resourceMode==='open')){
     // The engine's own Result and Replay lines are replaced by the ones below.
-    const output=run(process.execPath,[path.join(engine,'src','cli.js'),'match',...entries.flatMap(value=>['--bot','@'+value.file]),'--mode',mode,'--ruleset',ruleset,'--resource-mode','open','--seed',seed,'--ticks','360','--turn-ms','2000','--startup-ms','60000','--replay',replay],{encoding:'utf8',stdio:['inherit','pipe','inherit']}).stdout;
+    const output=run(process.execPath,[path.join(engine,'src','cli.js'),'match',...entries.flatMap(value=>['--bot','@'+value.file]),'--mode',mode,'--ruleset',ruleset,'--drones',drones,'--objective',objective,'--resource-mode','open','--seed',seed,'--ticks','360','--turn-ms','2000','--startup-ms','60000','--replay',replay],{encoding:'utf8',stdio:['inherit','pipe','inherit']}).stdout;
     details.push(...output.split('\n').filter(line=>line.trim()&&!/^(Result|Replay): /.test(line)));
   }else{
     // The pinned engine already supports mixed entries: each robot keeps its
@@ -484,7 +493,7 @@ async function playMatch(args,json) {
     const bots=entries.map((value,index)=>{const bot=resolveBot('@'+value.file,[],engine,mode,ruleset);bot.resourcePolicy=policies[index];return bot;});
     validateSelection(bots,mode,ruleset);
     const matchClass=entries.some(value=>value.fuel?.matchClass==='open')||policies.some(policy=>['open','remote'].includes(policy.mode))?'open':'reflex';
-    const result=await runMatch(bots,{mode,ruleset,seed:Number(seed),maxTicks:360,turnMs:2000,startupMs:60000,resourcePolicy:{v:3,class:matchClass,policy:'fair-compute-v1'}});
+    const result=await runMatch(bots,{mode,ruleset,drones,objective,seed:Number(seed),maxTicks:360,turnMs:2000,startupMs:60000,resourcePolicy:{v:3,class:matchClass,policy:'fair-compute-v1'}});
     saveReplay(result.replay,replay);
     if(fuel){
       const turns=result.replay.frames.flatMap(frame=>frame.telemetry?.decisions||[]).filter(decision=>decision.botId===bots[0].id).map(decision=>decision.resources?.usage?.wasmFuel).filter(Number.isFinite).sort((a,b)=>a-b);
@@ -530,21 +539,18 @@ function toolAvailable(tool){
 }
 // The WebAssembly toolchain a target's build uses, as rewrite() resolves it.
 function wasmChecks(target){
-  if(!['c-wasi','cpp-wasm','hew-wasm','rust-wasi','zig-wasi'].includes(target))return [];
+  if(!['c-wasm','c-wasi','cpp-wasm','hew-wasm','rust-wasi','zig-wasi'].includes(target))return [];
   const tools=wasiTools(),checks=[],file=(label,name,hint)=>checks.push({label,ok:fs.existsSync(name),hint});
-  const clang=tools.executables[target==='cpp-wasm'?'clang++-22':'clang-22'];
-  if(['c-wasi','cpp-wasm','hew-wasm'].includes(target)){
-    file('WASI sysroot',path.join(tools.sysroot,'lib','wasm32-wasip1','libc.a'),'Install wasi-sdk 33 and set WASI_SDK_PATH, or set WASI_SYSROOT to its share/wasi-sysroot.');
+  const wasiSdk='Install wasi-sdk 34 and set WASI_SDK_PATH to it (its package installs it in /opt/wasi-sdk).';
+  if(['c-wasm','c-wasi','cpp-wasm'].includes(target)){
+    const clang=target==='cpp-wasm'?tools.clangxx:tools.clang,result=spawnSync(clang,['--version'],{encoding:'utf8',timeout:10000});
+    checks.push({label:`${clang}, wasi-sdk 34`,ok:result.status===0&&/clang version 23\./.test(String(result.stdout)),hint:wasiSdk});
   }
-  if(['c-wasi','cpp-wasm'].includes(target)){
-    // Clang links the wasm32-wasip1 compiler-rt builtins, which wasi-sdk carries.
-    const result=spawnSync(clang,['--target=wasm32-wasip1','-print-libgcc-file-name'],{encoding:'utf8',timeout:10000});
-    checks.push({label:`${clang} for wasm32-wasip1`,ok:result.status===0&&fs.existsSync(String(result.stdout).trim()),hint:'Use the clang from wasi-sdk 33 (WASI_SDK_PATH), or install its libclang_rt builtins for wasm32-wasip1 into your Clang 22.'});
-  }
+  if(['c-wasi','cpp-wasm','hew-wasm'].includes(target))file('WASI sysroot',path.join(tools.sysroot,'lib','wasm32-wasip1','libc.a'),wasiSdk);
   if(target==='hew-wasm'){
-    checks.push({label:'hew',ok:toolAvailable('hew'),hint:'Install Hew 0.10.0 or later.'});
+    checks.push({label:'hew',ok:toolAvailable('hew'),hint:'Install Hew 0.11.0.'});
     file('Hew wasm32-wasip1 runtime',path.join(tools.hew,'lib','wasm32-wasip1','libhew_runtime.a'),'Install a Hew distribution with its wasm32-wasip1 libraries, or set HEW_ROOT to it.');
-    checks.push({label:tools.executables['wasm-ld-22'],ok:path.isAbsolute(tools.executables['wasm-ld-22'])?fs.existsSync(tools.executables['wasm-ld-22']):toolAvailable(tools.executables['wasm-ld-22']),hint:'Install wasm-ld (lld), or wasi-sdk 33 with WASI_SDK_PATH.'});
+    file(tools.wasmLd,tools.wasmLd,wasiSdk);
   }
   if(target==='rust-wasi'){
     const result=spawnSync(process.env.RUSTC||'rustc',['--print','target-libdir','--target','wasm32-wasip1'],{encoding:'utf8',timeout:10000});
@@ -556,6 +562,7 @@ function diagnose(){
   const lines=[],problems=[],log=text=>lines.push(text),fail=text=>{problems.push(text);lines.push(text);};
   log(`Clunkyard CLI ${cliVersion}; engine ${/-(v[^/]*?)\.tar\.gz$/.exec(lock.engine.file)?.[1]||lock.engine.file}; SDK API ${lock.sdkVersion} (the robot-facing API version, which moves less often than the CLI); ${lock.language}; ${process.platform}/${process.arch}; Node ${process.versions.node}`);
   let missing=0,m=null;try{m=manifest();}catch{}
+  if(Number(process.versions.node.split('.')[0])<24){fail('missing Node 24: install Node 24 LTS with npm.');missing++;}
   const target=m?buildTarget(m):lock.language,wasm=m&&target!==m.language;
   if(m&&target!==hostedTarget(m))log(`Hosted builds compile this robot to WebAssembly (${hostedTarget(m)}); this platform's SDK has no WebAssembly host, so local builds are native.`);
   else if(wasm)log(`Builds to WebAssembly (${target}) and runs metered by fuel, as hosted. Set "target": "native" in bot.json for a native build.`);
@@ -591,6 +598,21 @@ function doctor(){
   for(const line of lines)console.log(line);
   if(missing)process.exitCode=1;
 }
+// drone list | drone add NAME: copies a kit drone (docs/drones.md) into
+// drones/ and names it in bot.json.
+function droneCommand([verb,name]=[]){
+  const kit=path.join(engine,'drones'),files=fs.readdirSync(kit).filter(file=>/\.(vane|cadence)$/.test(file)).sort();
+  if(verb==='list'||!verb){for(const file of files)console.log(`${file.replace(/\.[^.]+$/,'').padEnd(10)} ${file}`);return;}
+  if(verb!=='add'||!name)throw new Error('Use drone list, or drone add NAME (for example drone add scout).');
+  const file=files.find(item=>item.replace(/\.[^.]+$/,'')===name);
+  if(!file)throw new Error(`There is no kit drone named ${name}. Run drone list to see them.`);
+  const target=path.join(root,'drones',file);
+  if(fs.existsSync(target))throw new Error(`drones/${file} already exists; edit it, or remove it first.`);
+  fs.mkdirSync(path.dirname(target),{recursive:true});fs.copyFileSync(path.join(kit,file),target);
+  const manifestFile=path.join(root,'bot.json'),data=JSON.parse(fs.readFileSync(manifestFile,'utf8'));data.drone=`drones/${file}`;
+  fs.writeFileSync(manifestFile,JSON.stringify(data,null,2)+'\n');
+  console.log(`Added drones/${file} and set "drone" in bot.json. Launch it from your robot, then try npx @clunkyard/cli match 42 2d classic --drones on.`);
+}
 async function main(action='build',args=[]){
   if(action==='doctor')return doctor();
   safeCache();
@@ -599,9 +621,10 @@ async function main(action='build',args=[]){
   if(action==='stdio')return stdio();
   if(action==='match')return match(args);
   if(action==='opponents')return opponents(args);
+  if(action==='drone'){await setup();return droneCommand(args);}
   if(action==='replay'){await setup();return viewReplay(path.resolve(root,args[0]||'replays/trial-42.json'),args[1]||'8787');}
   if(action==='clean'){fs.rmSync(path.join(cache,'build'),{recursive:true,force:true});fs.rmSync(path.join(cache,'bindings-ready'),{force:true});return;}
-  throw new Error('Use doctor, setup, build, match [seed] [2d|3d] [ruleset] [--opponent NAME], opponents, replay [file] [port], or clean.');
+  throw new Error('Use doctor, setup, build, match [seed] [2d|3d] [ruleset] [--opponent NAME], opponents, drone list|add NAME, replay [file] [port], or clean.');
 }
 
 return {main,manifest,diagnose,prepare};

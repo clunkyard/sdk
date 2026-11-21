@@ -1,6 +1,6 @@
 [package]
 name = "clunkyard-core"
-version = "2.0.0"
+version = "2.1.0"
 edition = "2021"
 rust-version = "1.82"
 description = "The Clunkyard robot core: protocol 2 and the robot subsystems behind one C ABI."

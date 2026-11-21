@@ -16,6 +16,7 @@ using Rotation = cy_rotation;
 using Direction = cy_direction;
 using Attitude = cy_attitude_v1;
 using Applied = cy_applied_v1;
+using Hurt = cy_hurt_v1;
 using Scan = cy_scan_v1;
 using Contact = cy_contact_v1;
 using Cue = cy_cue_v1;
@@ -38,6 +39,8 @@ struct Hill:public cy_hill_v1{cy_robot *handle;Hill(cy_robot *h,const cy_hill_v1
   std::optional<double> distance_from(const Vec3 & point) const { double out{}; int32_t status = cy_nav_hill_distance_from(handle, &point, &out); if(status==CY_NONE)return std::nullopt; check(handle,status); return out; }
 };
 using Pickup = cy_pickup_v1;
+using Report = cy_report_v1;
+using DroneSighting = cy_drone_sighting_v1;
 using Compute = cy_compute_v1;
 struct Match {cy_robot *&handle; explicit Match(cy_robot *&robot):handle(robot){}
   int32_t mode() const { int32_t out{}; int32_t status = cy_match_mode(handle, &out); check(handle,status); return out; }
@@ -72,6 +75,7 @@ struct Me {cy_robot *&handle; explicit Me(cy_robot *&robot):handle(robot){}
   bool grounded() const { int32_t out{}; int32_t status = cy_me_grounded(handle, &out); check(handle,status); return out != 0; }
   double altitude() const { double out{}; int32_t status = cy_me_altitude(handle, &out); check(handle,status); return out; }
   Vec3 wall_contact() const { cy_vec3 out{}; int32_t status = cy_me_wall_contact(handle, &out); check(handle,status); return out; }
+  Hurt hurt() const { cy_hurt_v1 out{}; int32_t status = cy_me_hurt_v1(handle, &out); check(handle,status); return out; }
   Applied applied() const { cy_applied_v1 out{}; int32_t status = cy_me_applied_v1(handle, &out); check(handle,status); return out; }
   bool hull_mounts() const { int32_t out{}; int32_t status = cy_me_hull_mounts(handle, &out); check(handle,status); return out != 0; }
   Direction to_mount(double heading, double pitch) const { cy_direction out{}; int32_t status = cy_me_to_mount(handle, heading, pitch, &out); check(handle,status); return out; }
@@ -175,6 +179,21 @@ struct Score {cy_robot *&handle; explicit Score(cy_robot *&robot):handle(robot){
   std::optional<double> best() const { double out{}; int32_t status = cy_score_best(handle, &out); if(status==CY_NONE)return std::nullopt; check(handle,status); return out; }
   std::optional<double> armour() const { double out{}; int32_t status = cy_score_armour(handle, &out); if(status==CY_NONE)return std::nullopt; check(handle,status); return out; }
 };
+struct Drone {cy_robot *&handle; explicit Drone(cy_robot *&robot):handle(robot){}
+  bool has() const { int32_t out{}; int32_t status = cy_drone_has(handle, &out); check(handle,status); return out != 0; }
+  bool ready() const { int32_t out{}; int32_t status = cy_drone_ready(handle, &out); check(handle,status); return out != 0; }
+  bool in_flight() const { int32_t out{}; int32_t status = cy_drone_in_flight(handle, &out); check(handle,status); return out != 0; }
+  int32_t launches_left() const { int32_t out{}; int32_t status = cy_drone_launches_left(handle, &out); check(handle,status); return out; }
+  std::optional<Report> report() const { cy_report_v1 out{}; int32_t status = cy_drone_report_v1(handle, &out); if(status==CY_NONE)return std::nullopt; check(handle,status); return out; }
+  std::vector<DroneSighting> sightings() const { std::vector<cy_drone_sighting_v1> out(16);uint32_t count=0; int32_t status = cy_drone_sightings_v1(handle, out.data(), (uint32_t)out.size(), &count); while(status==CY_SHORT){out.resize(count);status=cy_drone_sightings_v1(handle, out.data(), (uint32_t)out.size(), &count);} check(handle,status); out.resize(count);return out; }
+  void launch(std::optional<double> heading = std::nullopt, std::optional<double> pitch = std::nullopt, std::optional<double> param = std::nullopt) {check(handle,cy_drone_launch(handle));if(heading)check(handle,cy_drone_launch_heading(handle,*heading));if(pitch)check(handle,cy_drone_launch_pitch(handle,*pitch));if(param)check(handle,cy_drone_launch_param(handle,*param));}
+  void brief(int32_t index, double value) { int32_t status = cy_drone_brief(handle, index, value); check(handle,status); }
+  void program(std::string_view language, std::string_view source) { int32_t status = cy_drone_program(handle, language.data(), (uint32_t)language.size(), source.data(), (uint32_t)source.size()); check(handle,status); }
+  std::optional<double> get_launch() const { double out{}; int32_t status = cy_drone_get_launch(handle, &out); if(status==CY_NONE)return std::nullopt; check(handle,status); return out; }
+  std::optional<double> get_heading() const { double out{}; int32_t status = cy_drone_get_launch_heading(handle, &out); if(status==CY_NONE)return std::nullopt; check(handle,status); return out; }
+  std::optional<double> get_pitch() const { double out{}; int32_t status = cy_drone_get_launch_pitch(handle, &out); if(status==CY_NONE)return std::nullopt; check(handle,status); return out; }
+  std::optional<double> get_param() const { double out{}; int32_t status = cy_drone_get_launch_param(handle, &out); if(status==CY_NONE)return std::nullopt; check(handle,status); return out; }
+};
 struct Angles {cy_robot *&handle; explicit Angles(cy_robot *&robot):handle(robot){}
   double normalize(double degrees) const { double out{}; int32_t status = cy_angles_normalize(degrees, &out); check(handle,status); return out; }
   double angle_diff(double target, double current) const { double out{}; int32_t status = cy_angles_angle_diff(target, current, &out); check(handle,status); return out; }
@@ -228,13 +247,14 @@ public:
   Tracker tracker;
   Nav nav;
   Score score;
+  Drone drone;
   Angles angles;
   Status status;
   Debug debug;
   Raw raw;
   Session session;
-  Robot():match(handle),clock(handle),arena(handle),me(handle),battery(handle),drive(handle),gun(handle),scanner(handle),sensors(handle),tracker(handle),nav(handle),score(handle),angles(handle),status(handle),debug(handle),raw(handle),session(handle) {}
-  explicit Robot(cy_robot *h):handle(h),owned(false),match(handle),clock(handle),arena(handle),me(handle),battery(handle),drive(handle),gun(handle),scanner(handle),sensors(handle),tracker(handle),nav(handle),score(handle),angles(handle),status(handle),debug(handle),raw(handle),session(handle) {}
+  Robot():match(handle),clock(handle),arena(handle),me(handle),battery(handle),drive(handle),gun(handle),scanner(handle),sensors(handle),tracker(handle),nav(handle),score(handle),drone(handle),angles(handle),status(handle),debug(handle),raw(handle),session(handle) {}
+  explicit Robot(cy_robot *h):handle(h),owned(false),match(handle),clock(handle),arena(handle),me(handle),battery(handle),drive(handle),gun(handle),scanner(handle),sensors(handle),tracker(handle),nav(handle),score(handle),drone(handle),angles(handle),status(handle),debug(handle),raw(handle),session(handle) {}
   Robot(const Robot &)=delete;Robot &operator=(const Robot &)=delete;virtual ~Robot(){if(owned)cy_close(handle);}
   virtual void on_start(){} virtual void on_turn(){}
   void run(){open(false);loop();}

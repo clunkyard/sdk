@@ -2,24 +2,22 @@
 // Generated from protocol/v2/api.json by protocol/v2/codegen/dsl.js; do not edit. Run `make api`.
 //
 // The DSL words, as the core gives them: one f64 a word in the record
-// cy_dsl_words_v1 (856 bytes), which cy_dsl_fill_v1 fills once a
+// cy_dsl_words_v1 (976 bytes), which cy_dsl_fill_v1 fills once a
 // turn, outside the DSL budget. read() turns it into the interpreter's words;
-// booleans are booleans and enums their protocol 2 names, except where the
-// DSL keeps an older spelling (control-model reads "targets" for direct).
-// Older names (ALIASES) read the same slot. CONTROLS maps each DSL action
+// booleans are booleans and enums their protocol 2 names. CONTROLS maps each DSL action
 // keyword to the core setter for its act field; the core clamps and writes
 // the act.
 
-const API_VERSION = '2.0.0';
+const API_VERSION = '2.1.0';
 const RECORD = 'cy_dsl_words_v1';
-const SIZE = 856;
+const SIZE = 976;
 // The Tracker keeps a passive cue this many ticks.
 const CUE_TICKS = 60;
 // What a distance reads when the thing it measures to is absent.
 const FAR = 1000000000000;
 
 const RULESET = Object.freeze([null, "classic", "inertial-2d", "gravity-flat", "gravity-hills", "zero-g"]);
-const CONTROL = Object.freeze([null, "targets", "forces"]);
+const CONTROL = Object.freeze([null, "direct", "forces"]);
 const TERRAIN_KIND = Object.freeze([null, "none", "flat", "hills"]);
 
 const WORDS = Object.freeze([
@@ -130,15 +128,22 @@ const WORDS = Object.freeze([
   { name: "wall-y", index: 104, type: 'number' },
   { name: "wall-z", index: 105, type: 'number' },
   { name: "wall-margin", index: 106, type: 'number' },
+  { name: "drone-ready", index: 107, type: 'boolean' },
+  { name: "drone-flying", index: 108, type: 'boolean' },
+  { name: "drone-age", index: 109, type: 'number' },
+  { name: "drone-x", index: 110, type: 'number' },
+  { name: "drone-y", index: 111, type: 'number' },
+  { name: "drone-z", index: 112, type: 'number' },
+  { name: "drone-say", index: 113, type: 'number' },
+  { name: "drone-sighting", index: 114, type: 'boolean' },
+  { name: "drone-sighting-x", index: 115, type: 'number' },
+  { name: "drone-sighting-y", index: 116, type: 'number' },
+  { name: "drone-sighting-z", index: 117, type: 'number' },
+  { name: "hurt-shot", index: 118, type: 'number' },
+  { name: "hurt-burst", index: 119, type: 'number' },
+  { name: "hurt-collision", index: 120, type: 'number' },
+  { name: "hurt-boundary", index: 121, type: 'number' },
 ]);
-
-const ALIASES = Object.freeze({
-  energy: "battery",
-  "max-energy": "battery-capacity",
-  "energy-fraction": "battery-fraction",
-  "fire-base": "shot-cost-base",
-  "fire-per-power": "shot-cost-per-power",
-});
 
 const CONTROLS = Object.freeze({
   drive: { symbol: 'cy_drive_throttle', act: ["drive","throttle"], type: 'number', glyph: "drive!" },
@@ -158,6 +163,10 @@ const CONTROLS = Object.freeze({
   "scan-heading": { symbol: 'cy_scanner_heading', act: ["scan","heading"], type: 'number', glyph: "scan-heading!" },
   "scan-arc": { symbol: 'cy_scanner_arc', act: ["scan","arc"], type: 'number', glyph: "scan-arc!" },
   "scan-pitch": { symbol: 'cy_scanner_pitch', act: ["scan","pitch"], type: 'number', glyph: "scan-pitch!" },
+  launch: { symbol: 'cy_drone_launch', act: ["drone",null], type: 'flag', glyph: "launch!" },
+  "launch-heading": { symbol: 'cy_drone_launch_heading', act: ["drone","heading"], type: 'number', glyph: "launch-heading!" },
+  "launch-pitch": { symbol: 'cy_drone_launch_pitch', act: ["drone","pitch"], type: 'number', glyph: "launch-pitch!" },
+  "launch-param": { symbol: 'cy_drone_launch_param', act: ["drone","param"], type: 'number', glyph: "launch-param!" },
   "status-text": { symbol: 'cy_status_text', act: ["status","text"], type: 'text', glyph: "status-text!" },
   "status-value": { symbol: 'cy_status_value', act: ["status","value"], type: 'number', glyph: "status-value!" },
 });
@@ -273,13 +282,23 @@ function read(w, base = 0) {
     "wall-y": w[base + 104],
     "wall-z": w[base + 105],
     "wall-margin": w[base + 106],
+    "drone-ready": w[base + 107] !== 0,
+    "drone-flying": w[base + 108] !== 0,
+    "drone-age": w[base + 109],
+    "drone-x": w[base + 110],
+    "drone-y": w[base + 111],
+    "drone-z": w[base + 112],
+    "drone-say": w[base + 113],
+    "drone-sighting": w[base + 114] !== 0,
+    "drone-sighting-x": w[base + 115],
+    "drone-sighting-y": w[base + 116],
+    "drone-sighting-z": w[base + 117],
+    "hurt-shot": w[base + 118],
+    "hurt-burst": w[base + 119],
+    "hurt-collision": w[base + 120],
+    "hurt-boundary": w[base + 121],
   };
-  words["energy"] = words["battery"];
-  words["max-energy"] = words["battery-capacity"];
-  words["energy-fraction"] = words["battery-fraction"];
-  words["fire-base"] = words["shot-cost-base"];
-  words["fire-per-power"] = words["shot-cost-per-power"];
   return words;
 }
 
-module.exports = { API_VERSION, RECORD, SIZE, CUE_TICKS, FAR, WORDS, ALIASES, CONTROLS, read, RULESET, CONTROL, TERRAIN_KIND };
+module.exports = { API_VERSION, RECORD, SIZE, CUE_TICKS, FAR, WORDS, CONTROLS, read, RULESET, CONTROL, TERRAIN_KIND };

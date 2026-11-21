@@ -148,6 +148,32 @@
       {"tick":12,"slots":["scout","target"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
       {"tick":45,"slots":["scout","target"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]}
      ]},
+    {"input": "fixtures/drones/2d-classic.ndjson",
+     "hello": [
+
+     ],
+     "states": [
+      {"tick":0,"slots":["scout"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":59,"slots":["scout","target"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":60,"slots":["scout","target"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":61,"slots":["scout","target"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":70,"slots":["scout","target"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":80,"slots":["scout","target"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":90,"slots":["scout","target"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]}
+     ]},
+    {"input": "fixtures/drones/3d-zero-g.ndjson",
+     "hello": [
+
+     ],
+     "states": [
+      {"tick":0,"slots":["scout"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":59,"slots":["scout"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":60,"slots":["scout"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":61,"slots":["scout"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":70,"slots":["scout"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":80,"slots":["scout"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":90,"slots":["scout"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]}
+     ]},
     {"input": "vectors/api/inputs/tape-2d-classic.ndjson",
      "hello": [
 
@@ -161,14 +187,14 @@
       {"tick":5,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
       {"tick":6,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
       {"tick":7,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":0},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
-      {"tick":1200,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":52.55},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
-      {"tick":1201,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":57.52},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
-      {"tick":1202,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":57.51},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
-      {"tick":1203,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":57.51},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
-      {"tick":1204,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":53.32},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
-      {"tick":1205,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":53.32},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
-      {"tick":1206,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":53.31},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
-      {"tick":1207,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":53.31},{"call":"score.best","value":0},{"call":"score.armour","none":true}]}
+      {"tick":1200,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":81.89},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":1201,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":85.79},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":1202,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":85.78},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":1203,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":85.77},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":1204,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":72.67},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":1205,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":72.66},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":1206,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":72.66},{"call":"score.best","value":0},{"call":"score.armour","none":true}]},
+      {"tick":1207,"slots":["tape-scout","tape-target"],"cases":[{"call":"score.me","value":72.65},{"call":"score.best","value":0},{"call":"score.armour","none":true}]}
      ]},
     {"input": "vectors/api/inputs/tape-2d-inertial-2d.ndjson",
      "hello": [
@@ -763,6 +789,38 @@
       {"tick":37,"slots":["scout","a"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
       {"tick":38,"slots":["scout","a"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
       {"tick":39,"slots":["scout","a"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]}
+     ]},
+    {"input": "vectors/api/inputs/hurt-2d-inertial-2d.ndjson",
+     "hello": [
+
+     ],
+     "states": [
+      {"tick":0,"slots":["a"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":24,"slots":["a"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":25,"slots":["a","b"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":32,"slots":["a","b"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":39,"slots":["a","b"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":40,"slots":["a","b"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":41,"slots":["a","b"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":42,"slots":["a","b"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":43,"slots":["a","b"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":44,"slots":["a","b"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":76,"slots":["a","b"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":77,"slots":["a","b"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":101,"slots":["a","b"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":102,"slots":["a","b"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":118,"slots":["a","b"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":119,"slots":["a","b"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]}
+     ]},
+    {"input": "vectors/api/inputs/hurt-3d-zero-g.ndjson",
+     "hello": [
+
+     ],
+     "states": [
+      {"tick":0,"slots":["a"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":31,"slots":["a"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":57,"slots":["a"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]},
+      {"tick":58,"slots":["a"],"cases":[{"call":"score.me","none":true},{"call":"score.best","none":true},{"call":"score.armour","none":true}]}
      ]}
   ]
 }

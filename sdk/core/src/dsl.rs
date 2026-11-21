@@ -225,7 +225,7 @@ pub fn muzzle_heard(r: &Robot) -> Result<bool, Error> {
 /// The nearest contact's tracked velocity (tracker.velocity of its slot),
 /// read by id; zero with none or no track.
 fn target_velocity(r: &Robot) -> Result<Vec3, Error> {
-    let id = crate::sensors::nearest_seen(r.current()?).and_then(|nearest| nearest.id.robot());
+    let id = crate::sensors::nearest_seen(r.current()?).and_then(|nearest| nearest.robot());
     Ok(id.and_then(|id| r.tracker.tracks.get(id)).map_or(Vec3::default(), |track| track.velocity))
 }
 
@@ -257,4 +257,76 @@ pub fn wall_y(r: &Robot) -> Result<f64, Error> {
 
 pub fn wall_z(r: &Robot) -> Result<f64, Error> {
     Ok(r.current()?.me.wall.z)
+}
+
+/// The health each cause took in the tick just simulated (me.hurt).
+pub fn hurt_shot(r: &Robot) -> Result<f64, Error> {
+    Ok(r.current()?.me.hurt.shot)
+}
+
+pub fn hurt_burst(r: &Robot) -> Result<f64, Error> {
+    Ok(r.current()?.me.hurt.burst)
+}
+
+pub fn hurt_collision(r: &Robot) -> Result<f64, Error> {
+    Ok(r.current()?.me.hurt.collision)
+}
+
+pub fn hurt_boundary(r: &Robot) -> Result<f64, Error> {
+    Ok(r.current()?.me.hurt.boundary)
+}
+
+pub fn drone_ready(r: &Robot) -> Result<bool, Error> {
+    crate::drone::ready(r)
+}
+
+pub fn drone_flying(r: &Robot) -> Result<bool, Error> {
+    crate::drone::in_flight(r)
+}
+
+/// Seconds since the newest report was made; FAR with none.
+pub fn drone_age(r: &Robot) -> Result<f64, Error> {
+    Ok(crate::drone::report(r)?.map_or(FAR, |report| report.age))
+}
+
+fn drone_position(r: &Robot) -> Result<Vec3, Error> {
+    Ok(crate::drone::report(r)?.map_or(Vec3::default(), |report| report.position))
+}
+
+pub fn drone_x(r: &Robot) -> Result<f64, Error> {
+    Ok(drone_position(r)?.x)
+}
+
+pub fn drone_y(r: &Robot) -> Result<f64, Error> {
+    Ok(drone_position(r)?.y)
+}
+
+pub fn drone_z(r: &Robot) -> Result<f64, Error> {
+    Ok(drone_position(r)?.z)
+}
+
+pub fn drone_say(r: &Robot) -> Result<f64, Error> {
+    Ok(crate::drone::report(r)?.map_or(0.0, |report| report.say))
+}
+
+/// The world point of the newest report's nearest sighting, the first
+/// listed; zero with none.
+fn drone_sighting_position(r: &Robot) -> Result<Option<Vec3>, Error> {
+    Ok(r.current()?.drone.as_ref().and_then(|d| d.sightings.first()).map(|s| s.position))
+}
+
+pub fn drone_sighting(r: &Robot) -> Result<bool, Error> {
+    Ok(drone_sighting_position(r)?.is_some())
+}
+
+pub fn drone_sighting_x(r: &Robot) -> Result<f64, Error> {
+    Ok(drone_sighting_position(r)?.unwrap_or_default().x)
+}
+
+pub fn drone_sighting_y(r: &Robot) -> Result<f64, Error> {
+    Ok(drone_sighting_position(r)?.unwrap_or_default().y)
+}
+
+pub fn drone_sighting_z(r: &Robot) -> Result<f64, Error> {
+    Ok(drone_sighting_position(r)?.unwrap_or_default().z)
 }

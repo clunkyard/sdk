@@ -308,6 +308,52 @@
       {"tick":12,"slots":["scout","target"],"cases":[{"call":"match.robot_id","args":[0],"error":"E_RANGE"},{"call":"match.robot_id","args":[1],"value":"scout"},{"call":"match.robot_id","args":[2],"value":"target"},{"call":"match.robot_id","args":[3],"error":"E_RANGE"}]},
       {"tick":45,"slots":["scout","target"],"cases":[{"call":"match.robot_id","args":[0],"error":"E_RANGE"},{"call":"match.robot_id","args":[1],"value":"scout"},{"call":"match.robot_id","args":[2],"value":"target"},{"call":"match.robot_id","args":[3],"error":"E_RANGE"}]}
      ]},
+    {"input": "fixtures/drones/2d-classic.ndjson",
+     "hello": [
+      {"call":"match.mode","value":"2d"},
+      {"call":"match.ruleset","value":"classic"},
+      {"call":"match.control","value":"direct"},
+      {"call":"match.robots","value":2},
+      {"call":"match.is_3d","value":false},
+      {"call":"match.tick_rate","value":20},
+      {"call":"match.max_ticks","value":200},
+      {"call":"match.robot_id","args":[0],"error":"E_RANGE"},
+      {"call":"match.robot_id","args":[1],"value":"scout"},
+      {"call":"match.robot_id","args":[2],"value":""},
+      {"call":"match.robot_id","args":[3],"error":"E_RANGE"}
+     ],
+     "states": [
+      {"tick":0,"slots":["scout"],"cases":[{"call":"match.robot_id","args":[0],"error":"E_RANGE"},{"call":"match.robot_id","args":[1],"value":"scout"},{"call":"match.robot_id","args":[2],"value":""},{"call":"match.robot_id","args":[3],"error":"E_RANGE"}]},
+      {"tick":59,"slots":["scout","target"],"cases":[{"call":"match.robot_id","args":[0],"error":"E_RANGE"},{"call":"match.robot_id","args":[1],"value":"scout"},{"call":"match.robot_id","args":[2],"value":"target"},{"call":"match.robot_id","args":[3],"error":"E_RANGE"}]},
+      {"tick":60,"slots":["scout","target"],"cases":[{"call":"match.robot_id","args":[0],"error":"E_RANGE"},{"call":"match.robot_id","args":[1],"value":"scout"},{"call":"match.robot_id","args":[2],"value":"target"},{"call":"match.robot_id","args":[3],"error":"E_RANGE"}]},
+      {"tick":61,"slots":["scout","target"],"cases":[{"call":"match.robot_id","args":[0],"error":"E_RANGE"},{"call":"match.robot_id","args":[1],"value":"scout"},{"call":"match.robot_id","args":[2],"value":"target"},{"call":"match.robot_id","args":[3],"error":"E_RANGE"}]},
+      {"tick":70,"slots":["scout","target"],"cases":[{"call":"match.robot_id","args":[0],"error":"E_RANGE"},{"call":"match.robot_id","args":[1],"value":"scout"},{"call":"match.robot_id","args":[2],"value":"target"},{"call":"match.robot_id","args":[3],"error":"E_RANGE"}]},
+      {"tick":80,"slots":["scout","target"],"cases":[{"call":"match.robot_id","args":[0],"error":"E_RANGE"},{"call":"match.robot_id","args":[1],"value":"scout"},{"call":"match.robot_id","args":[2],"value":"target"},{"call":"match.robot_id","args":[3],"error":"E_RANGE"}]},
+      {"tick":90,"slots":["scout","target"],"cases":[{"call":"match.robot_id","args":[0],"error":"E_RANGE"},{"call":"match.robot_id","args":[1],"value":"scout"},{"call":"match.robot_id","args":[2],"value":"target"},{"call":"match.robot_id","args":[3],"error":"E_RANGE"}]}
+     ]},
+    {"input": "fixtures/drones/3d-zero-g.ndjson",
+     "hello": [
+      {"call":"match.mode","value":"3d"},
+      {"call":"match.ruleset","value":"zero-g"},
+      {"call":"match.control","value":"forces"},
+      {"call":"match.robots","value":2},
+      {"call":"match.is_3d","value":true},
+      {"call":"match.tick_rate","value":20},
+      {"call":"match.max_ticks","value":200},
+      {"call":"match.robot_id","args":[0],"error":"E_RANGE"},
+      {"call":"match.robot_id","args":[1],"value":"scout"},
+      {"call":"match.robot_id","args":[2],"value":""},
+      {"call":"match.robot_id","args":[3],"error":"E_RANGE"}
+     ],
+     "states": [
+      {"tick":0,"slots":["scout"],"cases":[{"call":"match.robot_id","args":[0],"error":"E_RANGE"},{"call":"match.robot_id","args":[1],"value":"scout"},{"call":"match.robot_id","args":[2],"value":""},{"call":"match.robot_id","args":[3],"error":"E_RANGE"}]},
+      {"tick":59,"slots":["scout"],"cases":[{"call":"match.robot_id","args":[0],"error":"E_RANGE"},{"call":"match.robot_id","args":[1],"value":"scout"},{"call":"match.robot_id","args":[2],"value":""},{"call":"match.robot_id","args":[3],"error":"E_RANGE"}]},
+      {"tick":60,"slots":["scout"],"cases":[{"call":"match.robot_id","args":[0],"error":"E_RANGE"},{"call":"match.robot_id","args":[1],"value":"scout"},{"call":"match.robot_id","args":[2],"value":""},{"call":"match.robot_id","args":[3],"error":"E_RANGE"}]},
+      {"tick":61,"slots":["scout"],"cases":[{"call":"match.robot_id","args":[0],"error":"E_RANGE"},{"call":"match.robot_id","args":[1],"value":"scout"},{"call":"match.robot_id","args":[2],"value":""},{"call":"match.robot_id","args":[3],"error":"E_RANGE"}]},
+      {"tick":70,"slots":["scout"],"cases":[{"call":"match.robot_id","args":[0],"error":"E_RANGE"},{"call":"match.robot_id","args":[1],"value":"scout"},{"call":"match.robot_id","args":[2],"value":""},{"call":"match.robot_id","args":[3],"error":"E_RANGE"}]},
+      {"tick":80,"slots":["scout"],"cases":[{"call":"match.robot_id","args":[0],"error":"E_RANGE"},{"call":"match.robot_id","args":[1],"value":"scout"},{"call":"match.robot_id","args":[2],"value":""},{"call":"match.robot_id","args":[3],"error":"E_RANGE"}]},
+      {"tick":90,"slots":["scout"],"cases":[{"call":"match.robot_id","args":[0],"error":"E_RANGE"},{"call":"match.robot_id","args":[1],"value":"scout"},{"call":"match.robot_id","args":[2],"value":""},{"call":"match.robot_id","args":[3],"error":"E_RANGE"}]}
+     ]},
     {"input": "vectors/api/inputs/tape-2d-classic.ndjson",
      "hello": [
       {"call":"match.mode","value":"2d"},
@@ -1075,6 +1121,60 @@
       {"tick":37,"slots":["scout","a"],"cases":[{"call":"match.robot_id","args":[0],"error":"E_RANGE"},{"call":"match.robot_id","args":[1],"value":"scout"},{"call":"match.robot_id","args":[2],"value":"a"},{"call":"match.robot_id","args":[3],"error":"E_RANGE"}]},
       {"tick":38,"slots":["scout","a"],"cases":[{"call":"match.robot_id","args":[0],"error":"E_RANGE"},{"call":"match.robot_id","args":[1],"value":"scout"},{"call":"match.robot_id","args":[2],"value":"a"},{"call":"match.robot_id","args":[3],"error":"E_RANGE"}]},
       {"tick":39,"slots":["scout","a"],"cases":[{"call":"match.robot_id","args":[0],"error":"E_RANGE"},{"call":"match.robot_id","args":[1],"value":"scout"},{"call":"match.robot_id","args":[2],"value":"a"},{"call":"match.robot_id","args":[3],"error":"E_RANGE"}]}
+     ]},
+    {"input": "vectors/api/inputs/hurt-2d-inertial-2d.ndjson",
+     "hello": [
+      {"call":"match.mode","value":"2d"},
+      {"call":"match.ruleset","value":"inertial-2d"},
+      {"call":"match.control","value":"forces"},
+      {"call":"match.robots","value":3},
+      {"call":"match.is_3d","value":false},
+      {"call":"match.tick_rate","value":20},
+      {"call":"match.max_ticks","value":400},
+      {"call":"match.robot_id","args":[0],"error":"E_RANGE"},
+      {"call":"match.robot_id","args":[1],"value":"a"},
+      {"call":"match.robot_id","args":[2],"value":""},
+      {"call":"match.robot_id","args":[3],"value":""},
+      {"call":"match.robot_id","args":[4],"error":"E_RANGE"}
+     ],
+     "states": [
+      {"tick":0,"slots":["a"],"cases":[{"call":"match.robot_id","args":[0],"error":"E_RANGE"},{"call":"match.robot_id","args":[1],"value":"a"},{"call":"match.robot_id","args":[2],"value":""},{"call":"match.robot_id","args":[3],"value":""},{"call":"match.robot_id","args":[4],"error":"E_RANGE"}]},
+      {"tick":24,"slots":["a"],"cases":[{"call":"match.robot_id","args":[0],"error":"E_RANGE"},{"call":"match.robot_id","args":[1],"value":"a"},{"call":"match.robot_id","args":[2],"value":""},{"call":"match.robot_id","args":[3],"value":""},{"call":"match.robot_id","args":[4],"error":"E_RANGE"}]},
+      {"tick":25,"slots":["a","b"],"cases":[{"call":"match.robot_id","args":[0],"error":"E_RANGE"},{"call":"match.robot_id","args":[1],"value":"a"},{"call":"match.robot_id","args":[2],"value":"b"},{"call":"match.robot_id","args":[3],"value":""},{"call":"match.robot_id","args":[4],"error":"E_RANGE"}]},
+      {"tick":32,"slots":["a","b"],"cases":[{"call":"match.robot_id","args":[0],"error":"E_RANGE"},{"call":"match.robot_id","args":[1],"value":"a"},{"call":"match.robot_id","args":[2],"value":"b"},{"call":"match.robot_id","args":[3],"value":""},{"call":"match.robot_id","args":[4],"error":"E_RANGE"}]},
+      {"tick":39,"slots":["a","b"],"cases":[{"call":"match.robot_id","args":[0],"error":"E_RANGE"},{"call":"match.robot_id","args":[1],"value":"a"},{"call":"match.robot_id","args":[2],"value":"b"},{"call":"match.robot_id","args":[3],"value":""},{"call":"match.robot_id","args":[4],"error":"E_RANGE"}]},
+      {"tick":40,"slots":["a","b"],"cases":[{"call":"match.robot_id","args":[0],"error":"E_RANGE"},{"call":"match.robot_id","args":[1],"value":"a"},{"call":"match.robot_id","args":[2],"value":"b"},{"call":"match.robot_id","args":[3],"value":""},{"call":"match.robot_id","args":[4],"error":"E_RANGE"}]},
+      {"tick":41,"slots":["a","b"],"cases":[{"call":"match.robot_id","args":[0],"error":"E_RANGE"},{"call":"match.robot_id","args":[1],"value":"a"},{"call":"match.robot_id","args":[2],"value":"b"},{"call":"match.robot_id","args":[3],"value":""},{"call":"match.robot_id","args":[4],"error":"E_RANGE"}]},
+      {"tick":42,"slots":["a","b"],"cases":[{"call":"match.robot_id","args":[0],"error":"E_RANGE"},{"call":"match.robot_id","args":[1],"value":"a"},{"call":"match.robot_id","args":[2],"value":"b"},{"call":"match.robot_id","args":[3],"value":""},{"call":"match.robot_id","args":[4],"error":"E_RANGE"}]},
+      {"tick":43,"slots":["a","b"],"cases":[{"call":"match.robot_id","args":[0],"error":"E_RANGE"},{"call":"match.robot_id","args":[1],"value":"a"},{"call":"match.robot_id","args":[2],"value":"b"},{"call":"match.robot_id","args":[3],"value":""},{"call":"match.robot_id","args":[4],"error":"E_RANGE"}]},
+      {"tick":44,"slots":["a","b"],"cases":[{"call":"match.robot_id","args":[0],"error":"E_RANGE"},{"call":"match.robot_id","args":[1],"value":"a"},{"call":"match.robot_id","args":[2],"value":"b"},{"call":"match.robot_id","args":[3],"value":""},{"call":"match.robot_id","args":[4],"error":"E_RANGE"}]},
+      {"tick":76,"slots":["a","b"],"cases":[{"call":"match.robot_id","args":[0],"error":"E_RANGE"},{"call":"match.robot_id","args":[1],"value":"a"},{"call":"match.robot_id","args":[2],"value":"b"},{"call":"match.robot_id","args":[3],"value":""},{"call":"match.robot_id","args":[4],"error":"E_RANGE"}]},
+      {"tick":77,"slots":["a","b"],"cases":[{"call":"match.robot_id","args":[0],"error":"E_RANGE"},{"call":"match.robot_id","args":[1],"value":"a"},{"call":"match.robot_id","args":[2],"value":"b"},{"call":"match.robot_id","args":[3],"value":""},{"call":"match.robot_id","args":[4],"error":"E_RANGE"}]},
+      {"tick":101,"slots":["a","b"],"cases":[{"call":"match.robot_id","args":[0],"error":"E_RANGE"},{"call":"match.robot_id","args":[1],"value":"a"},{"call":"match.robot_id","args":[2],"value":"b"},{"call":"match.robot_id","args":[3],"value":""},{"call":"match.robot_id","args":[4],"error":"E_RANGE"}]},
+      {"tick":102,"slots":["a","b"],"cases":[{"call":"match.robot_id","args":[0],"error":"E_RANGE"},{"call":"match.robot_id","args":[1],"value":"a"},{"call":"match.robot_id","args":[2],"value":"b"},{"call":"match.robot_id","args":[3],"value":""},{"call":"match.robot_id","args":[4],"error":"E_RANGE"}]},
+      {"tick":118,"slots":["a","b"],"cases":[{"call":"match.robot_id","args":[0],"error":"E_RANGE"},{"call":"match.robot_id","args":[1],"value":"a"},{"call":"match.robot_id","args":[2],"value":"b"},{"call":"match.robot_id","args":[3],"value":""},{"call":"match.robot_id","args":[4],"error":"E_RANGE"}]},
+      {"tick":119,"slots":["a","b"],"cases":[{"call":"match.robot_id","args":[0],"error":"E_RANGE"},{"call":"match.robot_id","args":[1],"value":"a"},{"call":"match.robot_id","args":[2],"value":"b"},{"call":"match.robot_id","args":[3],"value":""},{"call":"match.robot_id","args":[4],"error":"E_RANGE"}]}
+     ]},
+    {"input": "vectors/api/inputs/hurt-3d-zero-g.ndjson",
+     "hello": [
+      {"call":"match.mode","value":"3d"},
+      {"call":"match.ruleset","value":"zero-g"},
+      {"call":"match.control","value":"forces"},
+      {"call":"match.robots","value":3},
+      {"call":"match.is_3d","value":true},
+      {"call":"match.tick_rate","value":20},
+      {"call":"match.max_ticks","value":400},
+      {"call":"match.robot_id","args":[0],"error":"E_RANGE"},
+      {"call":"match.robot_id","args":[1],"value":"a"},
+      {"call":"match.robot_id","args":[2],"value":""},
+      {"call":"match.robot_id","args":[3],"value":""},
+      {"call":"match.robot_id","args":[4],"error":"E_RANGE"}
+     ],
+     "states": [
+      {"tick":0,"slots":["a"],"cases":[{"call":"match.robot_id","args":[0],"error":"E_RANGE"},{"call":"match.robot_id","args":[1],"value":"a"},{"call":"match.robot_id","args":[2],"value":""},{"call":"match.robot_id","args":[3],"value":""},{"call":"match.robot_id","args":[4],"error":"E_RANGE"}]},
+      {"tick":31,"slots":["a"],"cases":[{"call":"match.robot_id","args":[0],"error":"E_RANGE"},{"call":"match.robot_id","args":[1],"value":"a"},{"call":"match.robot_id","args":[2],"value":""},{"call":"match.robot_id","args":[3],"value":""},{"call":"match.robot_id","args":[4],"error":"E_RANGE"}]},
+      {"tick":57,"slots":["a"],"cases":[{"call":"match.robot_id","args":[0],"error":"E_RANGE"},{"call":"match.robot_id","args":[1],"value":"a"},{"call":"match.robot_id","args":[2],"value":""},{"call":"match.robot_id","args":[3],"value":""},{"call":"match.robot_id","args":[4],"error":"E_RANGE"}]},
+      {"tick":58,"slots":["a"],"cases":[{"call":"match.robot_id","args":[0],"error":"E_RANGE"},{"call":"match.robot_id","args":[1],"value":"a"},{"call":"match.robot_id","args":[2],"value":""},{"call":"match.robot_id","args":[3],"value":""},{"call":"match.robot_id","args":[4],"error":"E_RANGE"}]}
      ]}
   ]
 }

@@ -84,7 +84,7 @@ impl Tracker {
             });
         }
         for contact in contacts {
-            let Some(id) = contact.id.robot() else { continue };
+            let Some(id) = contact.robot() else { continue };
             let position = contact_position(origin, contact.range, contact.bearing, contact.elevation);
             let sightings = self.sightings.entry(id.to_string()).or_default();
             if sightings.len() == TRACKER_HISTORY {
@@ -180,7 +180,7 @@ mod tests {
     use super::*;
 
     fn seen(id: &str, range: f64, bearing_error: Option<f64>, range_error: Option<f64>) -> SeenContact {
-        SeenContact { id: Id::Text(id.to_string()), source: 1, range, bearing: 0.0, elevation: 0.0, bearing_error, range_error }
+        SeenContact { id: Id::Text(id.to_string()), drone: false, source: 1, range, bearing: 0.0, elevation: 0.0, bearing_error, range_error }
     }
 
     fn ticks(tracker: &Tracker, id: &str) -> Vec<i32> {

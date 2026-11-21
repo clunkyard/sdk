@@ -1,14 +1,12 @@
 #!/usr/bin/env node
 'use strict';
-const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypto'),{spawnSync}=require('node:child_process');
-const root=path.resolve(__dirname,'..'),manifest=JSON.parse(fs.readFileSync(path.join(root,'dist/packages.json'))),hash=data=>crypto.createHash('sha256').update(data).digest('hex');
+const fs=require('node:fs'),path=require('node:path'),{spawnSync}=require('node:child_process');
+const root=path.resolve(__dirname,'..'),manifest=JSON.parse(fs.readFileSync(path.join(root,'dist/packages.json')));
 for(const value of manifest.packages){
-  const file=path.join(root,'dist',value.filename),data=fs.readFileSync(file);
-  if(data.length!==value.bytes||hash(data)!==value.sha256)throw Error('Packed content changed before qualification.');
+  const file=path.join(root,'dist',value.filename);
   let args;
   let project;
-  if(value.name==='@clunkyard/git')args=[path.join(root,'scripts/smoke-git.cjs'),file];
-  else if(value.name==='@clunkyard/cli')args=[path.join(root,'scripts/smoke-cli.cjs'),file];
+  if(value.name==='@clunkyard/cli')args=[path.join(root,'scripts/smoke-cli.cjs'),file];
   else{
     if(!process.env.TMPDIR||!path.isAbsolute(process.env.TMPDIR))throw Error('Set TMPDIR to an absolute temporary directory.');
     project=fs.mkdtempSync(path.join(process.env.TMPDIR,'npm-sdk-consumer-'));

@@ -1,5 +1,5 @@
 // Generated from protocol/v2/api.json by protocol/v2/codegen/rust.js; do not edit. Run `make api`.
-//! The core's generated surface, from protocol/v2/api.json (API 2.0.0).
+//! The core's generated surface, from protocol/v2/api.json (API 2.1.0).
 //!
 //! records.rs holds the statuses, enums, records (with size and offset
 //! asserts) and the act fields; ffi.rs every C export; words.rs the DSL
@@ -66,6 +66,7 @@
 //!     crate::me::grounded(r: &Robot) -> Result<bool, Error>
 //!     crate::me::altitude(r: &Robot) -> Result<f64, Error>
 //!     crate::me::wall_contact(r: &Robot) -> Result<Vec3, Error>
+//!     crate::me::hurt(r: &Robot) -> Result<HurtV1, Error>
 //!     crate::me::applied(r: &Robot) -> Result<AppliedV1, Error>
 //!     crate::me::hull_mounts(r: &Robot) -> Result<bool, Error>
 //!     crate::me::to_mount(r: &Robot, heading: f64, pitch: f64) -> Result<Direction, Error>
@@ -128,6 +129,14 @@
 //!     crate::score::me(r: &Robot) -> Result<Option<f64>, Error>
 //!     crate::score::best(r: &Robot) -> Result<Option<f64>, Error>
 //!     crate::score::armour(r: &Robot) -> Result<Option<f64>, Error>
+//!     crate::drone::has(r: &Robot) -> Result<bool, Error>
+//!     crate::drone::ready(r: &Robot) -> Result<bool, Error>
+//!     crate::drone::in_flight(r: &Robot) -> Result<bool, Error>
+//!     crate::drone::launches_left(r: &Robot) -> Result<i32, Error>
+//!     crate::drone::report(r: &Robot) -> Result<Option<ReportV1>, Error>
+//!     crate::drone::sightings(r: &Robot) -> Result<Vec<DroneSightingV1>, Error>
+//!     crate::drone::brief(r: &mut Robot, index: i32, value: f64) -> Result<(), Error>
+//!     crate::drone::program(r: &mut Robot, language: &str, source: &str) -> Result<(), Error>
 //!     crate::angles::normalize(degrees: f64) -> Result<f64, Error>
 //!     crate::angles::angle_diff(target: f64, current: f64) -> Result<f64, Error>
 //!     crate::angles::bearing_to(from: &Vec3, to: &Vec3) -> Result<f64, Error>
@@ -192,6 +201,21 @@
 //!     crate::dsl::wall_y(r: &Robot) -> Result<f64, Error>
 //!     crate::dsl::wall_z(r: &Robot) -> Result<f64, Error>
 //!     crate::dsl::wall_margin(r: &Robot) -> Result<f64, Error>
+//!     crate::dsl::drone_ready(r: &Robot) -> Result<bool, Error>
+//!     crate::dsl::drone_flying(r: &Robot) -> Result<bool, Error>
+//!     crate::dsl::drone_age(r: &Robot) -> Result<f64, Error>
+//!     crate::dsl::drone_x(r: &Robot) -> Result<f64, Error>
+//!     crate::dsl::drone_y(r: &Robot) -> Result<f64, Error>
+//!     crate::dsl::drone_z(r: &Robot) -> Result<f64, Error>
+//!     crate::dsl::drone_say(r: &Robot) -> Result<f64, Error>
+//!     crate::dsl::drone_sighting(r: &Robot) -> Result<bool, Error>
+//!     crate::dsl::drone_sighting_x(r: &Robot) -> Result<f64, Error>
+//!     crate::dsl::drone_sighting_y(r: &Robot) -> Result<f64, Error>
+//!     crate::dsl::drone_sighting_z(r: &Robot) -> Result<f64, Error>
+//!     crate::dsl::hurt_shot(r: &Robot) -> Result<f64, Error>
+//!     crate::dsl::hurt_burst(r: &Robot) -> Result<f64, Error>
+//!     crate::dsl::hurt_collision(r: &Robot) -> Result<f64, Error>
+//!     crate::dsl::hurt_boundary(r: &Robot) -> Result<f64, Error>
 
 pub mod ffi;
 pub mod records;

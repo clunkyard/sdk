@@ -148,6 +148,32 @@
       {"tick":12,"slots":["scout","target"],"cases":[{"call":"clock.tick","value":12},{"call":"clock.seconds","value":0.6},{"call":"clock.remaining_ticks","value":108}]},
       {"tick":45,"slots":["scout","target"],"cases":[{"call":"clock.tick","value":45},{"call":"clock.seconds","value":2.25},{"call":"clock.remaining_ticks","value":75}]}
      ]},
+    {"input": "fixtures/drones/2d-classic.ndjson",
+     "hello": [
+      {"call":"clock.tick","error":"E_PHASE"}
+     ],
+     "states": [
+      {"tick":0,"slots":["scout"],"cases":[{"call":"clock.tick","value":0},{"call":"clock.seconds","value":0},{"call":"clock.remaining_ticks","value":200}]},
+      {"tick":59,"slots":["scout","target"],"cases":[{"call":"clock.tick","value":59},{"call":"clock.seconds","value":2.95},{"call":"clock.remaining_ticks","value":141}]},
+      {"tick":60,"slots":["scout","target"],"cases":[{"call":"clock.tick","value":60},{"call":"clock.seconds","value":3},{"call":"clock.remaining_ticks","value":140}]},
+      {"tick":61,"slots":["scout","target"],"cases":[{"call":"clock.tick","value":61},{"call":"clock.seconds","value":3.05},{"call":"clock.remaining_ticks","value":139}]},
+      {"tick":70,"slots":["scout","target"],"cases":[{"call":"clock.tick","value":70},{"call":"clock.seconds","value":3.5},{"call":"clock.remaining_ticks","value":130}]},
+      {"tick":80,"slots":["scout","target"],"cases":[{"call":"clock.tick","value":80},{"call":"clock.seconds","value":4},{"call":"clock.remaining_ticks","value":120}]},
+      {"tick":90,"slots":["scout","target"],"cases":[{"call":"clock.tick","value":90},{"call":"clock.seconds","value":4.5},{"call":"clock.remaining_ticks","value":110}]}
+     ]},
+    {"input": "fixtures/drones/3d-zero-g.ndjson",
+     "hello": [
+      {"call":"clock.tick","error":"E_PHASE"}
+     ],
+     "states": [
+      {"tick":0,"slots":["scout"],"cases":[{"call":"clock.tick","value":0},{"call":"clock.seconds","value":0},{"call":"clock.remaining_ticks","value":200}]},
+      {"tick":59,"slots":["scout"],"cases":[{"call":"clock.tick","value":59},{"call":"clock.seconds","value":2.95},{"call":"clock.remaining_ticks","value":141}]},
+      {"tick":60,"slots":["scout"],"cases":[{"call":"clock.tick","value":60},{"call":"clock.seconds","value":3},{"call":"clock.remaining_ticks","value":140}]},
+      {"tick":61,"slots":["scout"],"cases":[{"call":"clock.tick","value":61},{"call":"clock.seconds","value":3.05},{"call":"clock.remaining_ticks","value":139}]},
+      {"tick":70,"slots":["scout"],"cases":[{"call":"clock.tick","value":70},{"call":"clock.seconds","value":3.5},{"call":"clock.remaining_ticks","value":130}]},
+      {"tick":80,"slots":["scout"],"cases":[{"call":"clock.tick","value":80},{"call":"clock.seconds","value":4},{"call":"clock.remaining_ticks","value":120}]},
+      {"tick":90,"slots":["scout"],"cases":[{"call":"clock.tick","value":90},{"call":"clock.seconds","value":4.5},{"call":"clock.remaining_ticks","value":110}]}
+     ]},
     {"input": "vectors/api/inputs/tape-2d-classic.ndjson",
      "hello": [
       {"call":"clock.tick","error":"E_PHASE"}
@@ -763,6 +789,38 @@
       {"tick":37,"slots":["scout","a"],"cases":[{"call":"clock.tick","value":37},{"call":"clock.seconds","value":1.85},{"call":"clock.remaining_ticks","value":163}]},
       {"tick":38,"slots":["scout","a"],"cases":[{"call":"clock.tick","value":38},{"call":"clock.seconds","value":1.9},{"call":"clock.remaining_ticks","value":162}]},
       {"tick":39,"slots":["scout","a"],"cases":[{"call":"clock.tick","value":39},{"call":"clock.seconds","value":1.95},{"call":"clock.remaining_ticks","value":161}]}
+     ]},
+    {"input": "vectors/api/inputs/hurt-2d-inertial-2d.ndjson",
+     "hello": [
+      {"call":"clock.tick","error":"E_PHASE"}
+     ],
+     "states": [
+      {"tick":0,"slots":["a"],"cases":[{"call":"clock.tick","value":0},{"call":"clock.seconds","value":0},{"call":"clock.remaining_ticks","value":400}]},
+      {"tick":24,"slots":["a"],"cases":[{"call":"clock.tick","value":24},{"call":"clock.seconds","value":1.2},{"call":"clock.remaining_ticks","value":376}]},
+      {"tick":25,"slots":["a","b"],"cases":[{"call":"clock.tick","value":25},{"call":"clock.seconds","value":1.25},{"call":"clock.remaining_ticks","value":375}]},
+      {"tick":32,"slots":["a","b"],"cases":[{"call":"clock.tick","value":32},{"call":"clock.seconds","value":1.6},{"call":"clock.remaining_ticks","value":368}]},
+      {"tick":39,"slots":["a","b"],"cases":[{"call":"clock.tick","value":39},{"call":"clock.seconds","value":1.95},{"call":"clock.remaining_ticks","value":361}]},
+      {"tick":40,"slots":["a","b"],"cases":[{"call":"clock.tick","value":40},{"call":"clock.seconds","value":2},{"call":"clock.remaining_ticks","value":360}]},
+      {"tick":41,"slots":["a","b"],"cases":[{"call":"clock.tick","value":41},{"call":"clock.seconds","value":2.05},{"call":"clock.remaining_ticks","value":359}]},
+      {"tick":42,"slots":["a","b"],"cases":[{"call":"clock.tick","value":42},{"call":"clock.seconds","value":2.1},{"call":"clock.remaining_ticks","value":358}]},
+      {"tick":43,"slots":["a","b"],"cases":[{"call":"clock.tick","value":43},{"call":"clock.seconds","value":2.15},{"call":"clock.remaining_ticks","value":357}]},
+      {"tick":44,"slots":["a","b"],"cases":[{"call":"clock.tick","value":44},{"call":"clock.seconds","value":2.2},{"call":"clock.remaining_ticks","value":356}]},
+      {"tick":76,"slots":["a","b"],"cases":[{"call":"clock.tick","value":76},{"call":"clock.seconds","value":3.8},{"call":"clock.remaining_ticks","value":324}]},
+      {"tick":77,"slots":["a","b"],"cases":[{"call":"clock.tick","value":77},{"call":"clock.seconds","value":3.85},{"call":"clock.remaining_ticks","value":323}]},
+      {"tick":101,"slots":["a","b"],"cases":[{"call":"clock.tick","value":101},{"call":"clock.seconds","value":5.05},{"call":"clock.remaining_ticks","value":299}]},
+      {"tick":102,"slots":["a","b"],"cases":[{"call":"clock.tick","value":102},{"call":"clock.seconds","value":5.1},{"call":"clock.remaining_ticks","value":298}]},
+      {"tick":118,"slots":["a","b"],"cases":[{"call":"clock.tick","value":118},{"call":"clock.seconds","value":5.9},{"call":"clock.remaining_ticks","value":282}]},
+      {"tick":119,"slots":["a","b"],"cases":[{"call":"clock.tick","value":119},{"call":"clock.seconds","value":5.95},{"call":"clock.remaining_ticks","value":281}]}
+     ]},
+    {"input": "vectors/api/inputs/hurt-3d-zero-g.ndjson",
+     "hello": [
+      {"call":"clock.tick","error":"E_PHASE"}
+     ],
+     "states": [
+      {"tick":0,"slots":["a"],"cases":[{"call":"clock.tick","value":0},{"call":"clock.seconds","value":0},{"call":"clock.remaining_ticks","value":400}]},
+      {"tick":31,"slots":["a"],"cases":[{"call":"clock.tick","value":31},{"call":"clock.seconds","value":1.55},{"call":"clock.remaining_ticks","value":369}]},
+      {"tick":57,"slots":["a"],"cases":[{"call":"clock.tick","value":57},{"call":"clock.seconds","value":2.85},{"call":"clock.remaining_ticks","value":343}]},
+      {"tick":58,"slots":["a"],"cases":[{"call":"clock.tick","value":58},{"call":"clock.seconds","value":2.9},{"call":"clock.remaining_ticks","value":342}]}
      ]}
   ]
 }

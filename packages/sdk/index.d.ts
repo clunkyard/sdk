@@ -24,6 +24,12 @@ export interface Applied {
   torque: Rotation;
   brake: number;
 }
+export interface Hurt {
+  shot: number;
+  burst: number;
+  collision: number;
+  boundary: number;
+}
 export interface Scan {
   heading: number;
   pitch: number;
@@ -32,7 +38,7 @@ export interface Scan {
 }
 export interface Contact {
   slot: number;
-  source: "scan" | "proximity" | "faint" | "beam" | "muzzle" | "motion" | "ping";
+  source: "scan" | "proximity" | "faint" | "beam" | "muzzle" | "motion" | "ping" | "launch" | "drone";
   range: number;
   bearing: number;
   elevation: number;
@@ -41,14 +47,14 @@ export interface Contact {
   position: Vec3;
 }
 export interface Cue {
-  source: "scan" | "proximity" | "faint" | "beam" | "muzzle" | "motion" | "ping";
+  source: "scan" | "proximity" | "faint" | "beam" | "muzzle" | "motion" | "ping" | "launch" | "drone";
   tick: number;
   bearingError: number;
   position: Vec3;
 }
 export interface Sighting {
   tick: number;
-  source: "scan" | "proximity" | "faint" | "beam" | "muzzle" | "motion" | "ping";
+  source: "scan" | "proximity" | "faint" | "beam" | "muzzle" | "motion" | "ping" | "launch" | "drone";
   bearingError: number;
   rangeError: number;
   position: Vec3;
@@ -103,6 +109,26 @@ export interface Pickup {
   amount: number;
   position: Vec3;
 }
+export interface Report {
+  state: "flying" | "lost" | "ended";
+  tick: number;
+  flares: number;
+  age: number;
+  say: number;
+  heading: number;
+  pitch: number;
+  position: Vec3;
+}
+export interface DroneSighting {
+  kind: "robot" | "drone";
+  tick: number;
+  range: number;
+  bearing: number;
+  elevation: number;
+  bearingError: number;
+  rangeError: number;
+  position: Vec3;
+}
 export interface Compute {
   k: number;
   quanta: number;
@@ -141,6 +167,7 @@ export interface Me {
   readonly grounded: boolean;
   readonly altitude: number;
   readonly wallContact: Vec3;
+  readonly hurt: Hurt;
   readonly applied: Applied;
   readonly hullMounts: boolean;
   toMount(heading: number, pitch: number): Direction;
@@ -220,6 +247,18 @@ export interface Score {
   readonly best: number | null;
   readonly armour: number | null;
 }
+export interface Drone {
+  readonly has: boolean;
+  readonly ready: boolean;
+  readonly inFlight: boolean;
+  readonly launchesLeft: number;
+  readonly report: Report | null;
+  readonly sightings: Array<DroneSighting>;
+  launch(fields?: { heading?: number; pitch?: number; param?: number }): void;
+  brief(index: number, value: number): void;
+  program(language: string, source: string): void;
+  get(field: "launch" | "heading" | "pitch" | "param"): number | string | null;
+}
 export interface Angles {
   normalize(degrees: number): number;
   angleDiff(target: number, current: number): number;
@@ -269,6 +308,7 @@ export class Robot {
   tracker: Tracker;
   nav: Nav;
   score: Score;
+  drone: Drone;
   angles: Angles;
   status: Status;
   debug: Debug;

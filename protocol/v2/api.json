@@ -1,7 +1,7 @@
 {
-  "version": "2.0.0",
+  "version": "2.1.0",
   "major": 2,
-  "minor": 0,
+  "minor": 1,
   "patch": 0,
   "statuses": [
     {
@@ -91,6 +91,16 @@
           "wire": "ping",
           "name": "ping",
           "value": 7
+        },
+        {
+          "wire": "launch",
+          "name": "launch",
+          "value": 8
+        },
+        {
+          "wire": "drone",
+          "name": "drone",
+          "value": 9
         }
       ]
     },
@@ -275,6 +285,47 @@
           "wire": "end",
           "name": "end",
           "value": 3
+        }
+      ]
+    },
+    {
+      "name": "report_state",
+      "description": "Why a drone reported: flying, a periodic report; lost, its last as it was destroyed; ended, its last as its life ran out.",
+      "zero": "none",
+      "from": "state.drone.report.state",
+      "values": [
+        {
+          "wire": "flying",
+          "name": "flying",
+          "value": 1
+        },
+        {
+          "wire": "lost",
+          "name": "lost",
+          "value": 2
+        },
+        {
+          "wire": "ended",
+          "name": "ended",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "name": "sighting_kind",
+      "description": "What a drone saw: a robot, or another drone.",
+      "zero": "none",
+      "from": "state.drone.report.sightings[].kind",
+      "values": [
+        {
+          "wire": "robot",
+          "name": "robot",
+          "value": 1
+        },
+        {
+          "wire": "drone",
+          "name": "drone",
+          "value": 2
         }
       ]
     }
@@ -479,6 +530,58 @@
       ]
     },
     {
+      "name": "hurt",
+      "description": "The health you lost in the tick just simulated, by what took it, after armour; all 0 when you lost none. Never who or where it came from.",
+      "versioned": true,
+      "since": "2.0",
+      "cName": "cy_hurt_v1",
+      "alias": "cy_hurt",
+      "size": 32,
+      "align": 8,
+      "fields": [
+        {
+          "name": "shot",
+          "type": {
+            "kind": "f64",
+            "description": "Lost to shots that hit you.",
+            "from": "state.self.hurt.shot"
+          },
+          "description": "Lost to shots that hit you.",
+          "offset": 0
+        },
+        {
+          "name": "burst",
+          "type": {
+            "kind": "f64",
+            "description": "Lost to shots that burst near you (hello.gun.burst).",
+            "from": "state.self.hurt.burst"
+          },
+          "description": "Lost to shots that burst near you (hello.gun.burst).",
+          "offset": 8
+        },
+        {
+          "name": "collision",
+          "type": {
+            "kind": "f64",
+            "description": "Lost colliding with another robot (hello.collisions).",
+            "from": "state.self.hurt.collision"
+          },
+          "description": "Lost colliding with another robot (hello.collisions).",
+          "offset": 16
+        },
+        {
+          "name": "boundary",
+          "type": {
+            "kind": "f64",
+            "description": "Lost outside the sudden-death zone or the stall ring (state.zone), or inside the storm (state.storm).",
+            "from": "state.self.hurt.boundary"
+          },
+          "description": "Lost outside the sudden-death zone or the stall ring (state.zone), or inside the storm (state.storm).",
+          "offset": 24
+        }
+      ]
+    },
+    {
       "name": "scan",
       "description": "The scan that produced this tick's contacts: where the scanner points now, after slewing toward your previous act's scan.",
       "versioned": true,
@@ -561,11 +664,11 @@
           "name": "source",
           "type": {
             "kind": "enum",
-            "description": "What detected it: scan, inside the scan cone and its reach; proximity, within scanner.proximityRange in any direction. A robot both inside the cone and near reports scan. With hello.sensing, passive sources give a noisy direction and no id: faint, inside the scan cone beyond its reach; beam, a robot whose scan swept over you; muzzle, a robot that fired; motion, a robot moving fast; ping, the periodic ping of every robot. Later sensors add sources; ignore ones you do not know.",
+            "description": "What detected it: scan, inside the scan cone and its reach; proximity, within scanner.proximityRange in any direction. A robot both inside the cone and near reports scan. With hello.sensing, passive sources give a noisy direction and no id: faint, inside the scan cone beyond its reach; beam, a robot whose scan swept over you; muzzle, a robot that fired; motion, a robot moving fast; ping, the periodic ping of every robot. With hello.drones, launch, another robot launching a drone, and drone, a drone's hum, are passive too. Later sensors add sources; ignore ones you do not know.",
             "from": "state.sensors.contacts[].source",
             "enum": "source"
           },
-          "description": "What detected it: scan, inside the scan cone and its reach; proximity, within scanner.proximityRange in any direction. A robot both inside the cone and near reports scan. With hello.sensing, passive sources give a noisy direction and no id: faint, inside the scan cone beyond its reach; beam, a robot whose scan swept over you; muzzle, a robot that fired; motion, a robot moving fast; ping, the periodic ping of every robot. Later sensors add sources; ignore ones you do not know.",
+          "description": "What detected it: scan, inside the scan cone and its reach; proximity, within scanner.proximityRange in any direction. A robot both inside the cone and near reports scan. With hello.sensing, passive sources give a noisy direction and no id: faint, inside the scan cone beyond its reach; beam, a robot whose scan swept over you; muzzle, a robot that fired; motion, a robot moving fast; ping, the periodic ping of every robot. With hello.drones, launch, another robot launching a drone, and drone, a drone's hum, are passive too. Later sensors add sources; ignore ones you do not know.",
           "offset": 4
         },
         {
@@ -1131,6 +1234,217 @@
       ]
     },
     {
+      "name": "report",
+      "description": "Your drone's newest report, made at tick and delivered a report period later.",
+      "versioned": true,
+      "since": "2.0",
+      "cName": "cy_report_v1",
+      "alias": "cy_report",
+      "size": 72,
+      "align": 8,
+      "fields": [
+        {
+          "name": "state",
+          "type": {
+            "kind": "enum",
+            "description": "flying, a periodic report; lost, the drone's last report as it was destroyed; ended, its last as its life ran out or you died.",
+            "from": "state.drone.report.state",
+            "enum": "report_state"
+          },
+          "description": "flying, a periodic report; lost, the drone's last report as it was destroyed; ended, its last as its life ran out or you died.",
+          "offset": 0
+        },
+        {
+          "name": "tick",
+          "type": {
+            "kind": "i32",
+            "description": "The tick it was made.",
+            "from": "state.drone.report.tick"
+          },
+          "description": "The tick it was made.",
+          "offset": 4
+        },
+        {
+          "name": "flares",
+          "type": {
+            "kind": "i32",
+            "description": "Flares it has left.",
+            "from": "state.drone.report.flares"
+          },
+          "description": "Flares it has left.",
+          "offset": 8
+        },
+        {
+          "name": "reserved",
+          "type": {
+            "kind": "i32",
+            "reserved": true,
+            "description": "Reserved; always 0. It keeps the record free of hidden padding."
+          },
+          "description": "Reserved; always 0. It keeps the record free of hidden padding.",
+          "offset": 12
+        },
+        {
+          "name": "age",
+          "type": {
+            "kind": "f64",
+            "description": "Seconds since it was made: this tick less its tick, over match.tick_rate."
+          },
+          "description": "Seconds since it was made: this tick less its tick, over match.tick_rate.",
+          "offset": 16
+        },
+        {
+          "name": "say",
+          "type": {
+            "kind": "f64",
+            "description": "The value its program last said.",
+            "from": "state.drone.report.say"
+          },
+          "description": "The value its program last said.",
+          "offset": 24
+        },
+        {
+          "name": "heading",
+          "type": {
+            "kind": "f64",
+            "description": "Its heading.",
+            "from": "state.drone.report.heading",
+            "limits": [
+              0,
+              360
+            ]
+          },
+          "description": "Its heading.",
+          "offset": 32
+        },
+        {
+          "name": "pitch",
+          "type": {
+            "kind": "f64",
+            "description": "Its pitch; 0 in 2D.",
+            "from": "state.drone.report.pitch",
+            "limits": [
+              -90,
+              90
+            ]
+          },
+          "description": "Its pitch; 0 in 2D.",
+          "offset": 40
+        },
+        {
+          "name": "position",
+          "type": {
+            "kind": "record",
+            "record": "vec3",
+            "description": "Where the drone was when it reported."
+          },
+          "description": "Where the drone was when it reported.",
+          "offset": 48
+        }
+      ]
+    },
+    {
+      "name": "drone_sighting",
+      "description": "One thing your drone saw, as its noisy scanner measured it.",
+      "versioned": true,
+      "since": "2.0",
+      "cName": "cy_drone_sighting_v1",
+      "alias": "cy_drone_sighting",
+      "size": 72,
+      "align": 8,
+      "fields": [
+        {
+          "name": "kind",
+          "type": {
+            "kind": "enum",
+            "description": "A robot other than you, or another drone.",
+            "from": "state.drone.report.sightings[].kind",
+            "enum": "sighting_kind"
+          },
+          "description": "A robot other than you, or another drone.",
+          "offset": 0
+        },
+        {
+          "name": "tick",
+          "type": {
+            "kind": "i32",
+            "description": "The tick it was seen.",
+            "from": "state.drone.report.sightings[].tick"
+          },
+          "description": "The tick it was seen.",
+          "offset": 4
+        },
+        {
+          "name": "range",
+          "type": {
+            "kind": "f64",
+            "description": "Distance from the drone, noisy.",
+            "from": "state.drone.report.sightings[].range"
+          },
+          "description": "Distance from the drone, noisy.",
+          "offset": 8
+        },
+        {
+          "name": "bearing",
+          "type": {
+            "kind": "f64",
+            "description": "Heading from the drone, noisy.",
+            "from": "state.drone.report.sightings[].bearing",
+            "limits": [
+              0,
+              360
+            ]
+          },
+          "description": "Heading from the drone, noisy.",
+          "offset": 16
+        },
+        {
+          "name": "elevation",
+          "type": {
+            "kind": "f64",
+            "description": "Elevation from the drone; 0 in 2D. Noisy.",
+            "from": "state.drone.report.sightings[].elevation",
+            "limits": [
+              -90,
+              90
+            ]
+          },
+          "description": "Elevation from the drone; 0 in 2D. Noisy.",
+          "offset": 24
+        },
+        {
+          "name": "bearing_error",
+          "type": {
+            "kind": "f64",
+            "description": "The standard deviation of bearing and elevation.",
+            "from": "state.drone.report.sightings[].bearingError"
+          },
+          "description": "The standard deviation of bearing and elevation.",
+          "offset": 32
+        },
+        {
+          "name": "range_error",
+          "type": {
+            "kind": "f64",
+            "description": "The standard deviation of the natural log of range.",
+            "from": "state.drone.report.sightings[].rangeError"
+          },
+          "description": "The standard deviation of the natural log of range.",
+          "offset": 40
+        },
+        {
+          "name": "position",
+          "type": {
+            "kind": "record",
+            "record": "vec3",
+            "description": "The world point it gives: the report's position plus its range along its bearing and elevation."
+          },
+          "description": "The world point it gives: the report's position plus its range along its bearing and elevation.",
+          "offset": 48
+        }
+      ]
+    },
+    {
       "name": "compute",
       "description": "How the match charges compute against the battery.",
       "versioned": true,
@@ -1246,6 +1560,12 @@
     {
       "name": "score",
       "fact": "Time-limit scoring, when the match scores.",
+      "stateless": false,
+      "rename": {}
+    },
+    {
+      "name": "drone",
+      "fact": "Your drone, when the match has drones (hello.drones): its launch and its newest report. Off, it has no program, no launches and no report.",
       "stateless": false,
       "rename": {}
     },
@@ -2270,6 +2590,40 @@
       "rust": {
         "module": "me",
         "fn": "wall_contact"
+      }
+    },
+    {
+      "name": "me.hurt",
+      "kind": "query",
+      "form": "property",
+      "since": "2.0",
+      "fact": "The health you lost in the tick just simulated, by cause: shots that hit you, shots that burst near you, collisions with robots and the boundary (the zone, the stall ring or the storm), as the arena reports it (self.hurt); all 0 when you lost none. It never names the robot behind a loss or where it came from.",
+      "subsystem": "me",
+      "member": "hurt",
+      "path": [
+        "me",
+        "hurt"
+      ],
+      "stateless": false,
+      "args": [],
+      "returns": {
+        "kind": "record",
+        "record": "hurt",
+        "description": ""
+      },
+      "fields": [],
+      "of": null,
+      "dsl": null,
+      "rename": {},
+      "wasm": true,
+      "bindings": true,
+      "version": 1,
+      "vectors": "protocol/v2/vectors/api/me.json#hurt",
+      "symbol": "cy_me_hurt_v1",
+      "alias": "cy_me_hurt",
+      "rust": {
+        "module": "me",
+        "fn": "hurt"
       }
     },
     {
@@ -5824,6 +6178,504 @@
       }
     },
     {
+      "name": "drone.has",
+      "kind": "query",
+      "form": "property",
+      "since": "2.0",
+      "fact": "You have a drone program to launch (state.drone.has).",
+      "subsystem": "drone",
+      "member": "has",
+      "path": [
+        "drone",
+        "has"
+      ],
+      "stateless": false,
+      "args": [],
+      "returns": {
+        "kind": "bool",
+        "description": "True when you have a drone program that compiled."
+      },
+      "fields": [],
+      "of": null,
+      "dsl": null,
+      "rename": {},
+      "wasm": true,
+      "bindings": true,
+      "version": 1,
+      "vectors": "protocol/v2/vectors/api/drone.json#has",
+      "symbol": "cy_drone_has",
+      "alias": null,
+      "rust": {
+        "module": "drone",
+        "fn": "has"
+      }
+    },
+    {
+      "name": "drone.ready",
+      "kind": "query",
+      "form": "property",
+      "since": "2.0",
+      "fact": "A launch this tick would be accepted (state.drone.ready).",
+      "subsystem": "drone",
+      "member": "ready",
+      "path": [
+        "drone",
+        "ready"
+      ],
+      "stateless": false,
+      "args": [],
+      "returns": {
+        "kind": "bool",
+        "description": "True when a launch now would leave."
+      },
+      "fields": [],
+      "of": null,
+      "dsl": null,
+      "rename": {},
+      "wasm": true,
+      "bindings": true,
+      "version": 1,
+      "vectors": "protocol/v2/vectors/api/drone.json#ready",
+      "symbol": "cy_drone_ready",
+      "alias": null,
+      "rust": {
+        "module": "drone",
+        "fn": "ready"
+      }
+    },
+    {
+      "name": "drone.in_flight",
+      "kind": "query",
+      "form": "property",
+      "since": "2.0",
+      "fact": "Your drone is in the air (state.drone.inFlight).",
+      "subsystem": "drone",
+      "member": "in_flight",
+      "path": [
+        "drone",
+        "in_flight"
+      ],
+      "stateless": false,
+      "args": [],
+      "returns": {
+        "kind": "bool",
+        "description": "True while your drone is in the air."
+      },
+      "fields": [],
+      "of": null,
+      "dsl": null,
+      "rename": {},
+      "wasm": true,
+      "bindings": true,
+      "version": 1,
+      "vectors": "protocol/v2/vectors/api/drone.json#in_flight",
+      "symbol": "cy_drone_in_flight",
+      "alias": null,
+      "rust": {
+        "module": "drone",
+        "fn": "in_flight"
+      }
+    },
+    {
+      "name": "drone.launches_left",
+      "kind": "query",
+      "form": "property",
+      "since": "2.0",
+      "fact": "The launches you have left (state.drone.launchesLeft).",
+      "subsystem": "drone",
+      "member": "launches_left",
+      "path": [
+        "drone",
+        "launches_left"
+      ],
+      "stateless": false,
+      "args": [],
+      "returns": {
+        "kind": "i32",
+        "description": "Launches left; 0 when the match has no drones."
+      },
+      "fields": [],
+      "of": null,
+      "dsl": null,
+      "rename": {},
+      "wasm": true,
+      "bindings": true,
+      "version": 1,
+      "vectors": "protocol/v2/vectors/api/drone.json#launches_left",
+      "symbol": "cy_drone_launches_left",
+      "alias": null,
+      "rust": {
+        "module": "drone",
+        "fn": "launches_left"
+      }
+    },
+    {
+      "name": "drone.report",
+      "kind": "query",
+      "form": "property",
+      "since": "2.0",
+      "fact": "Your drone's newest report, kept after the drone ends; absent before the first.",
+      "subsystem": "drone",
+      "member": "report",
+      "path": [
+        "drone",
+        "report"
+      ],
+      "stateless": false,
+      "args": [],
+      "returns": {
+        "kind": "record",
+        "record": "report",
+        "description": "",
+        "optional": true
+      },
+      "fields": [],
+      "of": null,
+      "dsl": null,
+      "rename": {},
+      "wasm": true,
+      "bindings": true,
+      "version": 1,
+      "vectors": "protocol/v2/vectors/api/drone.json#report",
+      "symbol": "cy_drone_report_v1",
+      "alias": "cy_drone_report",
+      "rust": {
+        "module": "drone",
+        "fn": "report"
+      }
+    },
+    {
+      "name": "drone.sightings",
+      "kind": "query",
+      "form": "property",
+      "since": "2.0",
+      "fact": "What the newest report saw, nearest first, each projected to a world point from the report's position; empty with no report.",
+      "subsystem": "drone",
+      "member": "sightings",
+      "path": [
+        "drone",
+        "sightings"
+      ],
+      "stateless": false,
+      "args": [],
+      "returns": {
+        "kind": "record",
+        "record": "drone_sighting",
+        "description": "",
+        "list": true
+      },
+      "fields": [],
+      "of": null,
+      "dsl": null,
+      "rename": {},
+      "wasm": true,
+      "bindings": true,
+      "version": 1,
+      "vectors": "protocol/v2/vectors/api/drone.json#sightings",
+      "symbol": "cy_drone_sightings_v1",
+      "alias": "cy_drone_sightings",
+      "rust": {
+        "module": "drone",
+        "fn": "sightings"
+      }
+    },
+    {
+      "name": "drone.launch",
+      "kind": "control",
+      "form": "call",
+      "since": "2.0",
+      "fact": "Ask to launch your drone this tick; the arena decides whether drone.ready allows it.",
+      "subsystem": "drone",
+      "member": "launch",
+      "path": [
+        "drone",
+        "launch"
+      ],
+      "stateless": false,
+      "args": [],
+      "returns": null,
+      "fields": [
+        {
+          "key": "launch",
+          "arg": "launch",
+          "type": "flag",
+          "act": [
+            "drone",
+            null
+          ],
+          "limits": null,
+          "optional": false,
+          "description": "Launch this tick.",
+          "symbol": "cy_drone_launch",
+          "getter": "cy_drone_get_launch",
+          "dsl": "launch",
+          "glyph": "launch!"
+        },
+        {
+          "key": "launch_heading",
+          "arg": "heading",
+          "type": "number",
+          "act": [
+            "drone",
+            "heading"
+          ],
+          "limits": null,
+          "optional": true,
+          "description": "The heading it leaves along, in world axes whatever the mounts.",
+          "symbol": "cy_drone_launch_heading",
+          "getter": "cy_drone_get_launch_heading",
+          "dsl": "launch-heading",
+          "glyph": "launch-heading!"
+        },
+        {
+          "key": "launch_pitch",
+          "arg": "pitch",
+          "type": "number",
+          "act": [
+            "drone",
+            "pitch"
+          ],
+          "limits": null,
+          "optional": true,
+          "description": "The pitch it leaves at, within ±robot.maxPitch; ignored in 2D.",
+          "symbol": "cy_drone_launch_pitch",
+          "getter": "cy_drone_get_launch_pitch",
+          "dsl": "launch-pitch",
+          "glyph": "launch-pitch!"
+        },
+        {
+          "key": "launch_param",
+          "arg": "param",
+          "type": "number",
+          "act": [
+            "drone",
+            "param"
+          ],
+          "limits": [
+            -1000,
+            1000
+          ],
+          "optional": true,
+          "description": "A number the drone program reads as param.",
+          "symbol": "cy_drone_launch_param",
+          "getter": "cy_drone_get_launch_param",
+          "dsl": "launch-param",
+          "glyph": "launch-param!"
+        }
+      ],
+      "of": null,
+      "dsl": null,
+      "rename": {},
+      "wasm": true,
+      "bindings": true,
+      "version": 1,
+      "vectors": "protocol/v2/vectors/api/drone.json#launch",
+      "symbol": "cy_drone_launch",
+      "alias": null,
+      "rust": {
+        "module": "drone",
+        "fn": "launch"
+      }
+    },
+    {
+      "name": "drone.brief",
+      "kind": "command",
+      "form": "call",
+      "since": "2.0",
+      "fact": "Sets one number of this tick's launch brief, which the drone program reads as brief-1 to brief-8; unset numbers before the highest set one go as 0, but brief-1 goes as the launch param when that is set. It goes only with drone.launch, and a later call replaces the number.",
+      "subsystem": "drone",
+      "member": "brief",
+      "path": [
+        "drone",
+        "brief"
+      ],
+      "stateless": false,
+      "args": [
+        {
+          "name": "index",
+          "type": {
+            "kind": "i32",
+            "description": "Which number, 1 to 8 (hello.drones.brief)."
+          },
+          "description": "Which number, 1 to 8 (hello.drones.brief)."
+        },
+        {
+          "name": "value",
+          "type": {
+            "kind": "f64",
+            "description": "The number; the act clamps it to ±1,000,000."
+          },
+          "description": "The number; the act clamps it to ±1,000,000."
+        }
+      ],
+      "returns": null,
+      "fields": [],
+      "of": null,
+      "dsl": null,
+      "rename": {},
+      "wasm": true,
+      "bindings": true,
+      "version": 1,
+      "vectors": "protocol/v2/vectors/api/drone.json#brief",
+      "symbol": "cy_drone_brief",
+      "alias": null,
+      "rust": {
+        "module": "drone",
+        "fn": "brief"
+      }
+    },
+    {
+      "name": "drone.program",
+      "kind": "command",
+      "form": "call",
+      "since": "2.0",
+      "fact": "Hands the arena a drone program for this match in the ready reply, in place of the one your project names, in the robot's start only; after the first state it refuses with E_PHASE, an unknown language with E_ARGUMENT and a longer source with E_RANGE.",
+      "subsystem": "drone",
+      "member": "program",
+      "path": [
+        "drone",
+        "program"
+      ],
+      "stateless": false,
+      "args": [
+        {
+          "name": "language",
+          "type": {
+            "kind": "text",
+            "description": "vane or cadence."
+          },
+          "description": "vane or cadence."
+        },
+        {
+          "name": "source",
+          "type": {
+            "kind": "text",
+            "description": "The program, up to 4096 bytes of UTF-8."
+          },
+          "description": "The program, up to 4096 bytes of UTF-8."
+        }
+      ],
+      "returns": null,
+      "fields": [],
+      "of": null,
+      "dsl": null,
+      "rename": {},
+      "wasm": false,
+      "bindings": true,
+      "version": 1,
+      "vectors": "protocol/v2/vectors/api/drone.json#program",
+      "symbol": "cy_drone_program",
+      "alias": null,
+      "rust": {
+        "module": "drone",
+        "fn": "program"
+      }
+    },
+    {
+      "name": "drone.get",
+      "kind": "getter",
+      "form": "call",
+      "since": "2.0",
+      "fact": "What this tick's act holds for a drone field so far, as set.",
+      "subsystem": "drone",
+      "member": "get",
+      "path": [
+        "drone",
+        "get"
+      ],
+      "stateless": false,
+      "args": [],
+      "returns": {
+        "kind": "f64",
+        "description": "The value as set, before clamping (1 for launch), or absent while unset.",
+        "optional": true
+      },
+      "fields": [
+        {
+          "key": "launch",
+          "arg": "launch",
+          "type": "flag",
+          "act": [
+            "drone",
+            null
+          ],
+          "limits": null,
+          "optional": false,
+          "description": "Launch this tick.",
+          "symbol": "cy_drone_launch",
+          "getter": "cy_drone_get_launch",
+          "dsl": "launch",
+          "glyph": "launch!"
+        },
+        {
+          "key": "launch_heading",
+          "arg": "heading",
+          "type": "number",
+          "act": [
+            "drone",
+            "heading"
+          ],
+          "limits": null,
+          "optional": true,
+          "description": "The heading it leaves along, in world axes whatever the mounts.",
+          "symbol": "cy_drone_launch_heading",
+          "getter": "cy_drone_get_launch_heading",
+          "dsl": "launch-heading",
+          "glyph": "launch-heading!"
+        },
+        {
+          "key": "launch_pitch",
+          "arg": "pitch",
+          "type": "number",
+          "act": [
+            "drone",
+            "pitch"
+          ],
+          "limits": null,
+          "optional": true,
+          "description": "The pitch it leaves at, within ±robot.maxPitch; ignored in 2D.",
+          "symbol": "cy_drone_launch_pitch",
+          "getter": "cy_drone_get_launch_pitch",
+          "dsl": "launch-pitch",
+          "glyph": "launch-pitch!"
+        },
+        {
+          "key": "launch_param",
+          "arg": "param",
+          "type": "number",
+          "act": [
+            "drone",
+            "param"
+          ],
+          "limits": [
+            -1000,
+            1000
+          ],
+          "optional": true,
+          "description": "A number the drone program reads as param.",
+          "symbol": "cy_drone_launch_param",
+          "getter": "cy_drone_get_launch_param",
+          "dsl": "launch-param",
+          "glyph": "launch-param!"
+        }
+      ],
+      "of": [
+        "drone.launch"
+      ],
+      "dsl": null,
+      "rename": {},
+      "wasm": true,
+      "bindings": true,
+      "version": 1,
+      "vectors": "protocol/v2/vectors/api/drone.json#get",
+      "symbol": "cy_drone_get",
+      "alias": null,
+      "rust": {
+        "module": "drone",
+        "fn": "get"
+      }
+    },
+    {
       "name": "angles.normalize",
       "kind": "query",
       "form": "call",
@@ -6725,7 +7577,7 @@
       "kind": "command",
       "form": "call",
       "since": "2.0",
-      "fact": "Adds fields the API does not cover to this tick's act; a key the API writes (v, type, tick, drive, forces, aim, scan, fire, status, log) is refused with E_ARGUMENT.",
+      "fact": "Adds fields the API does not cover to this tick's act; a key the API writes (v, type, tick, drive, forces, aim, scan, fire, drone, status, log) is refused with E_ARGUMENT.",
       "subsystem": "raw",
       "member": "extra",
       "path": [
@@ -7958,29 +8810,124 @@
       "fact": "The gap from your edge to the nearest wall (nav.wall_margin nearest); under gravity its floor is the ground, at your altitude."
     },
     {
-      "name": "energy",
-      "alias": "battery",
-      "fact": "The older name of battery."
+      "name": "drone-ready",
+      "type": "boolean",
+      "source": {
+        "derive": "drone_ready"
+      },
+      "fact": "A launch now would leave (drone.ready)."
     },
     {
-      "name": "max-energy",
-      "alias": "battery-capacity",
-      "fact": "The older name of battery-capacity."
+      "name": "drone-flying",
+      "type": "boolean",
+      "source": {
+        "derive": "drone_flying"
+      },
+      "fact": "Your drone is in the air (drone.in_flight)."
     },
     {
-      "name": "energy-fraction",
-      "alias": "battery-fraction",
-      "fact": "The older name of battery-fraction."
+      "name": "drone-age",
+      "type": "number",
+      "source": {
+        "derive": "drone_age"
+      },
+      "fact": "Seconds since your drone's newest report was made (drone.report age); 1000000000000 with no report."
     },
     {
-      "name": "fire-base",
-      "alias": "shot-cost-base",
-      "fact": "The older name of shot-cost-base."
+      "name": "drone-x",
+      "type": "number",
+      "source": {
+        "derive": "drone_x"
+      },
+      "fact": "The x of your drone's newest report; 0 with no report."
     },
     {
-      "name": "fire-per-power",
-      "alias": "shot-cost-per-power",
-      "fact": "The older name of shot-cost-per-power."
+      "name": "drone-y",
+      "type": "number",
+      "source": {
+        "derive": "drone_y"
+      },
+      "fact": "The y of your drone's newest report; 0 with no report."
+    },
+    {
+      "name": "drone-z",
+      "type": "number",
+      "source": {
+        "derive": "drone_z"
+      },
+      "fact": "The z of your drone's newest report; 0 with no report and in 2D."
+    },
+    {
+      "name": "drone-say",
+      "type": "number",
+      "source": {
+        "derive": "drone_say"
+      },
+      "fact": "The value your drone's program last said, as of its newest report; 0 with no report."
+    },
+    {
+      "name": "drone-sighting",
+      "type": "boolean",
+      "source": {
+        "derive": "drone_sighting"
+      },
+      "fact": "Your drone's newest report saw something (drone.sightings is not empty)."
+    },
+    {
+      "name": "drone-sighting-x",
+      "type": "number",
+      "source": {
+        "derive": "drone_sighting_x"
+      },
+      "fact": "The x of the world point of the newest report's nearest sighting (drone.sightings position), a robot or a drone; 0 with none."
+    },
+    {
+      "name": "drone-sighting-y",
+      "type": "number",
+      "source": {
+        "derive": "drone_sighting_y"
+      },
+      "fact": "The y of that point, as drone-sighting-x."
+    },
+    {
+      "name": "drone-sighting-z",
+      "type": "number",
+      "source": {
+        "derive": "drone_sighting_z"
+      },
+      "fact": "The z of that point, as drone-sighting-x; 0 in 2D."
+    },
+    {
+      "name": "hurt-shot",
+      "type": "number",
+      "source": {
+        "derive": "hurt_shot"
+      },
+      "fact": "Health shots that hit you took in the tick just simulated (me.hurt shot); 0 when none did."
+    },
+    {
+      "name": "hurt-burst",
+      "type": "number",
+      "source": {
+        "derive": "hurt_burst"
+      },
+      "fact": "Health shots that burst near you took (me.hurt burst), as hurt-shot."
+    },
+    {
+      "name": "hurt-collision",
+      "type": "number",
+      "source": {
+        "derive": "hurt_collision"
+      },
+      "fact": "Health collisions with robots took (me.hurt collision), as hurt-shot."
+    },
+    {
+      "name": "hurt-boundary",
+      "type": "number",
+      "source": {
+        "derive": "hurt_boundary"
+      },
+      "fact": "Health the boundary took (me.hurt boundary): the zone, the stall ring or the storm, as hurt-shot."
     }
   ],
   "cueTicks": 60,

@@ -32,12 +32,18 @@ execFileSync('cargo',['build','--manifest-path',path.join(source,'sdk/core/Cargo
 fs.mkdirSync(path.join(sdk,'lib'),{recursive:true});fs.mkdirSync(path.join(sdk,'include'),{recursive:true});
 fs.copyFileSync(path.join(source,'sdk/core/include/clunkyard.h'),path.join(sdk,'include/clunkyard.h'));
 for(const [from,to] of [[files.shared,files.installed],[files.static,files.static]])fs.copyFileSync(path.join(build,...(target?[target]:[]),'release',from),path.join(sdk,'lib',to));
+// Without the LLVM bitcode std's compiler-builtins objects embed: no linker
+// reads it, and Go 1.27 refuses an archive carrying it under the project or
+// TMPDIR, where a player's SDK sits (.clunkyard). As the image's (Dockerfile).
+if(platform==='linux')execFileSync(target?'aarch64-linux-gnu-objcopy':'objcopy',['--remove-section=.llvmbc','--remove-section=.llvmcmd',path.join(sdk,'lib',files.static)],{env});
 if(files.import)fs.copyFileSync(path.join(build,...(target?[target]:[]),'release',files.import),path.join(sdk,'lib',files.import));
 // Keep the compiler's ordinary -lclunkyard link name without archive symlinks.
 if(files.shared!==files.installed)fs.copyFileSync(path.join(build,...(target?[target]:[]),'release',files.shared),path.join(sdk,'lib',files.shared));
 fs.copyFileSync(path.join(source,'LICENSE'),path.join(sdk,'LICENSE'));
-fs.writeFileSync(path.join(sdk,'VERSION'),'2.0.0\n');
-const metadata={sdkVersion:'2.0.0',platform:`${platform}-${arch}`,arch,library:files.installed,staticLibrary:files.static,rustVersion,rustCompiler,...(target?{target,crossCompiled:true}:{}),sourceCommit,sourceDirty,...(platform==='darwin'?{minimumOS:env.MACOSX_DEPLOYMENT_TARGET}:{})};
+// The robot API version the core was generated for (protocol/v2/api.js).
+const apiVersion=/#define CY_API_VERSION "(\d+\.\d+\.\d+)"/.exec(fs.readFileSync(path.join(source,'sdk/core/include/clunkyard.h'),'utf8'))[1];
+fs.writeFileSync(path.join(sdk,'VERSION'),apiVersion+'\n');
+const metadata={sdkVersion:apiVersion,platform:`${platform}-${arch}`,arch,library:files.installed,staticLibrary:files.static,rustVersion,rustCompiler,...(target?{target,crossCompiled:true}:{}),sourceCommit,sourceDirty,...(platform==='darwin'?{minimumOS:env.MACOSX_DEPLOYMENT_TARGET}:{})};
 fs.writeFileSync(path.join(sdk,'platform.json'),JSON.stringify(metadata,null,2)+'\n');
 for(const binding of bindings){
   const directory=path.join(source,'sdk/bindings',binding);

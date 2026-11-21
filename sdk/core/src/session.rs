@@ -19,10 +19,15 @@ fn write(r: &mut Robot, line: &str) -> Result<(), Error> {
     r.port.write_frame(line.as_bytes()).map_err(|error| Error::internal(format!("cannot write the reply: {}", error.0)))
 }
 
-/// The ready reply, naming the binding.
-pub fn ready_line(name: &str, version: &str) -> String {
+/// The ready reply, naming the binding, with the drone program
+/// drone.program gave.
+pub fn ready_line(name: &str, version: &str, drone: Option<&(String, String)>) -> String {
     let sdk = Value::Object(vec![("name".into(), Value::String(name.into())), ("version".into(), Value::String(version.into()))]);
-    Value::Object(vec![("v".into(), Value::Number(2.0)), ("type".into(), Value::String("ready".into())), ("sdk".into(), sdk)]).to_json()
+    let mut ready = Value::Object(vec![("v".into(), Value::Number(2.0)), ("type".into(), Value::String("ready".into())), ("sdk".into(), sdk)]);
+    if let Some((language, source)) = drone {
+        ready.insert("drone", Value::Object(vec![("language".into(), Value::String(language.clone())), ("source".into(), Value::String(source.clone()))]));
+    }
+    ready.to_json()
 }
 
 /// A forfeit: the code cut to 64 code points and the message to 300, the
@@ -101,7 +106,7 @@ pub fn send(r: &mut Robot) -> Result<(), Error> {
         return Err(Error::phase("nothing to answer"));
     }
     let line = match r.event {
-        Some(Event::Hello) => ready_line(&r.binding, &r.binding_version),
+        Some(Event::Hello) => ready_line(&r.binding, &r.binding_version, r.drone_program.as_ref()),
         Some(Event::State) => match r.fault_tick {
             Some(tick) => empty_act(tick).to_json(),
             None => {

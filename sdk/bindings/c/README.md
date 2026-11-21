@@ -6,7 +6,7 @@ means absent, `CY_SHORT` asks for a larger buffer, and negative statuses are
 errors. `cy_last_error` gives the error text. Records and enum constants are
 declared in the header; the plain names alias the current record versions.
 
-Build with `cc -std=c17 -O2 -I/opt/clunkyard/sdk/include bot.c
+Build with `cc -std=gnu17 -O2 -I/opt/clunkyard/sdk/include bot.c
 /opt/clunkyard/sdk/lib/libclunkyard.a -lpthread -ldl -lm -o bot`.
 The library is linked statically, and only the robot executable is shipped.
 

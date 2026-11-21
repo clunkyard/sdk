@@ -1,6 +1,7 @@
 'use strict';
 // The robot core's wasm32 build (sdk/core/dist/clunkyard-core.wasm) in
-// process, for the DSL interpreters and later the JavaScript binding
+// process, for DSL robots, whose interpreter it also holds, and the
+// JavaScript binding
 // (docs/design/robot-core.md sections 1.4 and 4.2).
 //
 // Each robot gets its own instance and a memory-port session in it: lines go
@@ -193,6 +194,32 @@ class CoreRobot {
     return new Float64Array(this.exports.memory.buffer.slice(this.scratch, this.scratch + WORDS_SIZE));
   }
 
+  // Snapshot only protocol-visible contacts, in the core's order.
+  contacts(limit) {
+    const size = 72; // ABI 4 cy_contact_v1
+    this.reserve(8 + size * limit);
+    const symbol = 'cy_sensors_contacts_v1';
+    const status = this.check(symbol, this.invoke(symbol, this.handle, this.scratch + 8, limit, this.scratch));
+    const count = this.view().getUint32(this.scratch, true);
+    if (status !== OK) {
+      const error = new Error(`contact collection has ${count} entries; limit is ${limit}`);
+      error.code = 'DSL_CONTACT_LIMIT';
+      throw error;
+    }
+    const view = this.view(), contacts = [];
+    for (let i = 0; i < count; i++) {
+      const at = this.scratch + 8 + i * size;
+      contacts.push({
+        slot: view.getInt32(at, true), source: view.getInt32(at + 4, true),
+        range: view.getFloat64(at + 8, true), bearing: view.getFloat64(at + 16, true),
+        elevation: view.getFloat64(at + 24, true), bearingError: view.getFloat64(at + 32, true),
+        rangeError: view.getFloat64(at + 40, true), x: view.getFloat64(at + 48, true),
+        y: view.getFloat64(at + 56, true), z: view.getFloat64(at + 64, true),
+      });
+    }
+    return contacts;
+  }
+
   // A control's per-field setter (words.js CONTROLS): a number, text, or
   // nothing for a flag. The core clamps and writes the act.
   set(symbol, value) {
@@ -205,16 +232,92 @@ class CoreRobot {
     return this.check(symbol, status);
   }
 
+  // A command with number arguments, such as cy_drone_brief(index, value).
+  call(symbol, ...args) {
+    return this.check(symbol, this.invoke(symbol, this.handle, ...args));
+  }
+
   close() {
     this.exports.cy_close(this.handle);
     this.handle = 0;
   }
 }
 
-// The core, compiled once; robot() opens one robot on its own instance.
+// The DSL interpreter (sdk/core/src/ir.rs) on its own instance of the same
+// module, so a fault in a robot's core session never touches its program's
+// cells. One program a handle; clone() copies its cells for a dry run.
+const WORD_BYTES = WORDS_SIZE;
+class Interpreter {
+  constructor(module, ir, instance = null, handle = null) {
+    this.module = module;
+    this.ir = ir;
+    this.exports = instance || new WebAssembly.Instance(module, {}).exports;
+    this.scratchSize = 0;
+    this.scratch = 0;
+    if (handle) { this.handle = handle; return; }
+    const at = this.write(ir, 0);
+    this.handle = this.exports.cy_ir_load(at, ir.length);
+    const loaded = this.result();
+    if (loaded.error) throw new Error(`the DSL interpreter rejected the IR: ${loaded.error}`);
+  }
+
+  reserve(size) {
+    if (size <= this.scratchSize) return;
+    if (this.scratch) this.exports.cy_free(this.scratch, this.scratchSize);
+    this.scratchSize = Math.max(size, this.scratchSize * 2, 4096);
+    this.scratch = this.exports.cy_alloc(this.scratchSize);
+    if (!this.scratch) throw new Error('the DSL interpreter is out of memory');
+  }
+
+  write(bytes, offset) {
+    this.reserve(offset + bytes.length);
+    new Uint8Array(this.exports.memory.buffer).set(bytes, this.scratch + offset);
+    return this.scratch + offset;
+  }
+
+  result() {
+    for (;;) {
+      const status = this.exports.cy_ir_result(this.handle, this.scratch + 8, this.scratchSize - 8, this.scratch);
+      const length = new DataView(this.exports.memory.buffer).getUint32(this.scratch, true);
+      if (status === SHORT) { this.reserve(length + 8); continue; }
+      return JSON.parse(decoder.decode(new Uint8Array(this.exports.memory.buffer, this.scratch + 8, length)));
+    }
+  }
+
+  // One decision: the words record (a Float64Array), the contacts (an
+  // array of the core's records, or null when the program reads none), a
+  // value for each parameter slot and the operation budget. Gives
+  // { ops, set } or { ops, fault: { line, column, message } }.
+  decide(words, contacts, params, budget) {
+    const count = contacts ? contacts.length : -1;
+    const rows = new Float64Array(Math.max(0, count) * 10);
+    (contacts || []).forEach((c, i) => rows.set([c.slot, c.source, c.range, c.bearing, c.elevation, c.bearingError, c.rangeError, c.x, c.y, c.z], i * 10));
+    const paramBytes = new Uint8Array(params.buffer, params.byteOffset, params.byteLength);
+    const contactAt = WORD_BYTES, paramAt = contactAt + rows.byteLength;
+    this.reserve(paramAt + paramBytes.length + 8);
+    const w = this.write(new Uint8Array(words.buffer, words.byteOffset, WORD_BYTES), 0);
+    const c = this.write(new Uint8Array(rows.buffer), contactAt);
+    const p = this.write(paramBytes, paramAt);
+    const status = this.exports.cy_ir_decide(this.handle, w, c, count, p, params.length, budget);
+    if (status < 0) throw new Error(`the DSL interpreter refused a decision (status ${status})`);
+    return this.result();
+  }
+
+  // A copy of the program and its cells on the same instance.
+  clone() { return new Interpreter(this.module, this.ir, this.exports, this.exports.cy_ir_clone(this.handle)); }
+
+  close() {
+    if (this.handle) this.exports.cy_ir_free(this.handle);
+    if (this.scratch) this.exports.cy_free(this.scratch, this.scratchSize);
+    this.handle = this.scratch = this.scratchSize = 0;
+  }
+}
+
+// The core, compiled once; robot() opens one robot on its own instance and
+// interpreter() loads one DSL program on another.
 function load(source) {
   const module = compile(source);
-  return { module, robot: options => new CoreRobot(module, options) };
+  return { module, robot: options => new CoreRobot(module, options), interpreter: ir => new Interpreter(module, ir) };
 }
 
 let committed = null;
@@ -226,4 +329,4 @@ function loadDefault() {
   return committed;
 }
 
-module.exports = { load, loadDefault, compile, CoreRobot, CoreError, CoreFault, OK, NONE, SHORT };
+module.exports = { load, loadDefault, compile, CoreRobot, Interpreter, CoreError, CoreFault, OK, NONE, SHORT };

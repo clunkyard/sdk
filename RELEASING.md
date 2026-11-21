@@ -1,9 +1,15 @@
 # Release the player packages
 
-The three public packages are `@clunkyard/git`, `@clunkyard/sdk` and
-`@clunkyard/cli`. The application root stays private. Package versions are
-explicit release identities; the robot API remains 2.0.0, protocol 2 and Wasm
-ABI 4 unless a separately reviewed API change says otherwise.
+The two public packages are `@clunkyard/sdk` and `@clunkyard/cli`. The
+application root stays private. Each package's version
+is the one in its `package.json` and follows semver: new backward-compatible
+API or features take a minor, fixes a patch. A release with no version change
+still publishes changed bytes, as the next patch.
+
+The robot API has its own semver, in `protocol/v2/api.js`. The core reports it
+(`cy_version`) and refuses a binding of another major or a newer minor
+(`cy_open`); the SDK's `VERSION` and the game-kit release tags
+(`vMAJOR.MINOR.PATCH-kit.N`) carry it. The wire protocol is 2 and the Wasm ABI 4.
 
 ## Review exact bytes
 
@@ -23,7 +29,6 @@ after reviewing an archive.
 The npm package owner configures this exact identity for each package:
 
 ```sh
-npm trust github @clunkyard/git --repo clunkyard/sdk --file npm-release.yml --environment npm-release --allow-publish
 npm trust github @clunkyard/sdk --repo clunkyard/sdk --file npm-release.yml --environment npm-release --allow-publish
 npm trust github @clunkyard/cli --repo clunkyard/sdk --file npm-release.yml --environment npm-release --allow-publish
 ```
@@ -66,16 +71,10 @@ version instead of replacing bytes. `npm-publication` records the outcome.
 Verify the public registry archive and a fresh anonymous installation before
 updating player instructions or claiming release delivery.
 
-## Existing staged candidates and new names
+## Staged versions and new names
 
-The earlier stage-only workflow produced pending CLI 2.2.0 and 2.2.1 candidates.
-They remain unpublished and are outside the normal release path. Staged and
-published versions share npm's unique version index: direct publication cannot
-reuse a version that is still staged. Never silently approve, reject or replace
-one of these candidates. The first direct OIDC cutover therefore uses CLI
-2.2.2, Git 2.0.2 and SDK 2.0.1. These packaging/provenance bootstrap patches keep
-all runtime bytes except package metadata unchanged, including the SDK's API
-and core version, and do not change existing starter dependency locks.
+Staged and published versions share npm's version index: the staged CLI
+2.2.0 and 2.2.1 cannot be published or reused.
 
 New package names require owner bootstrap before a trusted publisher can be
 configured. Review their exact archive and use npm's supported owner flow;

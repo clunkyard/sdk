@@ -1,10 +1,10 @@
 # Generated from protocol/v2/api.json by protocol/v2/codegen/bindings/python.js; do not edit. Run `make api`.
-"""The Clunkyard robot API 2.0.0 over the core's C ABI, generated from protocol/v2/api.json."""
+"""The Clunkyard robot API 2.1.0 over the core's C ABI, generated from protocol/v2/api.json."""
 from ctypes import POINTER, Structure, byref, c_char_p, c_double, c_int32, c_uint32, c_void_p, create_string_buffer
 from ._core import lib as _lib, check as _check, Error
 
-VERSION = "2.0.0"
-API = (2, 0)
+VERSION = "2.1.0"
+API = (2, 1)
 OK = 0
 NONE = 1
 SHORT = 2
@@ -15,7 +15,7 @@ E_PHASE = -4
 E_VERSION = -5
 E_INTERNAL = -6
 
-_E_SOURCE = {"scan": 1, "proximity": 2, "faint": 3, "beam": 4, "muzzle": 5, "motion": 6, "ping": 7}
+_E_SOURCE = {"scan": 1, "proximity": 2, "faint": 3, "beam": 4, "muzzle": 5, "motion": 6, "ping": 7, "launch": 8, "drone": 9}
 _N_SOURCE = {value: wire for wire, value in _E_SOURCE.items()}
 _E_MODE = {"2d": 1, "3d": 2}
 _N_MODE = {value: wire for wire, value in _E_MODE.items()}
@@ -33,6 +33,10 @@ _E_COMPUTE_UNIT = {"operations": 1, "fuel": 2, "cpu-ms": 3}
 _N_COMPUTE_UNIT = {value: wire for wire, value in _E_COMPUTE_UNIT.items()}
 _E_EVENT = {"hello": 1, "state": 2, "end": 3}
 _N_EVENT = {value: wire for wire, value in _E_EVENT.items()}
+_E_REPORT_STATE = {"flying": 1, "lost": 2, "ended": 3}
+_N_REPORT_STATE = {value: wire for wire, value in _E_REPORT_STATE.items()}
+_E_SIGHTING_KIND = {"robot": 1, "drone": 2}
+_N_SIGHTING_KIND = {value: wire for wire, value in _E_SIGHTING_KIND.items()}
 
 _PD, _PI, _PU = POINTER(c_double), POINTER(c_int32), POINTER(c_uint32)
 
@@ -145,6 +149,11 @@ class Applied(_Record):
     _fields_ = [("force", Vec3), ("torque", Rotation), ("brake", c_double)]
     _names = ("force", "torque", "brake",)
 
+class Hurt(_Record):
+    """The health you lost in the tick just simulated, by what took it, after armour; all 0 when you lost none. Never who or where it came from."""
+    _fields_ = [("shot", c_double), ("burst", c_double), ("collision", c_double), ("boundary", c_double)]
+    _names = ("shot", "burst", "collision", "boundary",)
+
 class Scan(_Record):
     """The scan that produced this tick's contacts: where the scanner points now, after slewing toward your previous act's scan."""
     _fields_ = [("heading", c_double), ("pitch", c_double), ("arc", c_double), ("range", c_double)]
@@ -230,6 +239,18 @@ class Pickup(_Record):
     _names = ("kind", "expires_tick", "amount", "position",)
     kind = property(lambda self: _N_PICKUP_KIND.get(self._kind))
 
+class Report(_Record):
+    """Your drone's newest report, made at tick and delivered a report period later."""
+    _fields_ = [("_state", c_int32), ("tick", c_int32), ("flares", c_int32), ("reserved", c_int32), ("age", c_double), ("say", c_double), ("heading", c_double), ("pitch", c_double), ("position", Vec3)]
+    _names = ("state", "tick", "flares", "age", "say", "heading", "pitch", "position",)
+    state = property(lambda self: _N_REPORT_STATE.get(self._state))
+
+class DroneSighting(_Record):
+    """One thing your drone saw, as its noisy scanner measured it."""
+    _fields_ = [("_kind", c_int32), ("tick", c_int32), ("range", c_double), ("bearing", c_double), ("elevation", c_double), ("bearing_error", c_double), ("range_error", c_double), ("position", Vec3)]
+    _names = ("kind", "tick", "range", "bearing", "elevation", "bearing_error", "range_error", "position",)
+    kind = property(lambda self: _N_SIGHTING_KIND.get(self._kind))
+
 class Compute(_Record):
     """How the match charges compute against the battery."""
     _fields_ = [("k", c_double), ("quanta", c_int32), ("_unit", c_int32)]
@@ -262,6 +283,7 @@ _fn("cy_me_attitude", 1, c_void_p, POINTER(Attitude))
 _fn("cy_me_grounded", 0, c_void_p, _PI)
 _fn("cy_me_altitude", 0, c_void_p, _PD)
 _fn("cy_me_wall_contact", 0, c_void_p, POINTER(Vec3))
+_fn("cy_me_hurt", 1, c_void_p, POINTER(Hurt))
 _fn("cy_me_applied", 1, c_void_p, POINTER(Applied))
 _fn("cy_me_hull_mounts", 0, c_void_p, _PI)
 _fn("cy_me_to_mount", 0, c_void_p, c_double, c_double, POINTER(Direction))
@@ -360,6 +382,22 @@ _fn("cy_nav_field_distance", 0, c_void_p, POINTER(Vec3), POINTER(Vec3), _PD)
 _fn("cy_score_me", 0, c_void_p, _PD)
 _fn("cy_score_best", 0, c_void_p, _PD)
 _fn("cy_score_armour", 0, c_void_p, _PD)
+_fn("cy_drone_has", 0, c_void_p, _PI)
+_fn("cy_drone_ready", 0, c_void_p, _PI)
+_fn("cy_drone_in_flight", 0, c_void_p, _PI)
+_fn("cy_drone_launches_left", 0, c_void_p, _PI)
+_fn("cy_drone_report", 1, c_void_p, POINTER(Report))
+_fn("cy_drone_sightings", 1, c_void_p, POINTER(DroneSighting), c_uint32, _PU)
+_fn("cy_drone_launch", 0, c_void_p)
+_fn("cy_drone_launch_heading", 0, c_void_p, c_double)
+_fn("cy_drone_launch_pitch", 0, c_void_p, c_double)
+_fn("cy_drone_launch_param", 0, c_void_p, c_double)
+_fn("cy_drone_brief", 0, c_void_p, c_int32, c_double)
+_fn("cy_drone_program", 0, c_void_p, c_char_p, c_uint32, c_char_p, c_uint32)
+_fn("cy_drone_get_launch", 0, c_void_p, _PD)
+_fn("cy_drone_get_launch_heading", 0, c_void_p, _PD)
+_fn("cy_drone_get_launch_pitch", 0, c_void_p, _PD)
+_fn("cy_drone_get_launch_param", 0, c_void_p, _PD)
 _fn("cy_angles_normalize", 0, c_double, _PD)
 _fn("cy_angles_angle_diff", 0, c_double, c_double, _PD)
 _fn("cy_angles_bearing_to", 0, POINTER(Vec3), POINTER(Vec3), _PD)
@@ -518,6 +556,10 @@ class _Me:
     @property
     def wall_contact(self):
         return _rec(_c.cy_me_wall_contact, (self._h,), Vec3)
+
+    @property
+    def hurt(self):
+        return _rec(_c.cy_me_hurt, (self._h,), Hurt)
 
     @property
     def applied(self):
@@ -827,6 +869,58 @@ class _Score:
     def armour(self):
         return _num(_c.cy_score_armour, (self._h,), c_double)
 
+class _Drone:
+    """Your drone, when the match has drones (hello.drones): its launch and its newest report. Off, it has no program, no launches and no report."""
+    __slots__ = ("_h",)
+
+    def __init__(self, robot):
+        self._h = robot
+
+    @property
+    def has(self):
+        return _bool(_c.cy_drone_has, (self._h,))
+
+    @property
+    def ready(self):
+        return _bool(_c.cy_drone_ready, (self._h,))
+
+    @property
+    def in_flight(self):
+        return _bool(_c.cy_drone_in_flight, (self._h,))
+
+    @property
+    def launches_left(self):
+        return _num(_c.cy_drone_launches_left, (self._h,), c_int32)
+
+    @property
+    def report(self):
+        return _rec(_c.cy_drone_report, (self._h,), Report)
+
+    @property
+    def sightings(self):
+        return _list(_c.cy_drone_sightings, (self._h,), DroneSighting)
+
+    def launch(self, heading=None, pitch=None, param=None):
+        if heading is not None:
+            _do(_c.cy_drone_launch_heading, (self._h, heading))
+        if pitch is not None:
+            _do(_c.cy_drone_launch_pitch, (self._h, pitch))
+        if param is not None:
+            _do(_c.cy_drone_launch_param, (self._h, param))
+        _do(_c.cy_drone_launch, (self._h,))
+
+    def brief(self, index, value):
+        return _do(_c.cy_drone_brief, (self._h, index, value))
+
+    def program(self, language, source):
+        return _do(_c.cy_drone_program, (self._h, *_utf8(language), *_utf8(source)))
+
+    _fields = {"launch": (_c.cy_drone_get_launch, False), "heading": (_c.cy_drone_get_launch_heading, False), "pitch": (_c.cy_drone_get_launch_pitch, False), "param": (_c.cy_drone_get_launch_param, False)}
+
+    def get(self, field):
+        """The field's value as set this tick, or None."""
+        return _get(self._h, self._fields, field)
+
 class _Angles:
     """Angle and vector arithmetic in the core's maths, so every language agrees bit for bit."""
     __slots__ = ("_h",)
@@ -963,6 +1057,7 @@ def attach(robot, handle):
     robot.tracker = _Tracker(handle)
     robot.nav = _Nav(handle)
     robot.score = _Score(handle)
+    robot.drone = _Drone(handle)
     robot.angles = angles
     robot.status = _Status(handle)
     robot.debug = _Debug(handle)
