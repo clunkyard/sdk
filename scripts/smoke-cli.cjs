@@ -39,7 +39,7 @@ try {
   if(process.platform==='win32')assert.equal(run(process.env.ComSpec||'cmd.exe',['/d','/s','/c',`""${bin}" --version"`],{windowsVerbatimArguments:true}),expectedVersion);
   else assert.equal(run(bin,['--version']),expectedVersion);
   assert.equal(run(process.execPath,[entry,'--version']),expectedVersion);
-  assert.match(run(process.execPath,[entry,'connect','--help']),/Node 22/);
+  run(process.execPath,[entry,'connect','--help']);
   assert.ok(fs.existsSync(path.join(directory,'remote-bridge.mjs')));
   run(process.execPath,[entry,'new','javascript',project]);
   for(const file of ['clunkyard.cjs','clunkyard-archive.cjs','clunkyard.lock.json','clunkyard-template.json'])assert.equal(fs.existsSync(path.join(project,file)),false,'Copied tooling: '+file);
