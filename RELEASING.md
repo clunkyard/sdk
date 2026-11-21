@@ -17,7 +17,7 @@ Review source changes, licences, package contents and installed-package tests
 before changing `packages/*/package.json`. Dispatch **Review npm packages** on
 `main` with `publish=false` and `verify_oidc=false` for review. CI packs once on
 Ubuntu/Node 24 and tests those same tarballs on Linux, macOS and Windows with
-Node 20 and 24. All six jobs must pass.
+Node 24 and 26. All six jobs must pass.
 
 Download `npm-reviewed`: `packages.json` records each archive's SHA-256, npm
 integrity and canonical source commit. Each `qualification-*` artifact records

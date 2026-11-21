@@ -1,6 +1,6 @@
 {
   "v": 1,
-  "sourceCommit": "32f064afe3dcf10f90914797312dc871c962a1cd",
+  "sourceCommit": "c5becce34d7a2af2fa2f75821abedcebb3255eb5",
   "sourceDirty": false,
   "playerDerivation": {
     "packages": [
@@ -47,7 +47,7 @@
     {
       "path": ".github/workflows/npm-release.yml",
       "bytes": 4448,
-      "sha256": "d8e8cf130228752a24f577bb9e262ed5ac02608949eb0a68688783b98b2d3611"
+      "sha256": "01b50fcf11ea3d5d7eeb90b8a80bc0c057ab7a4e6f6ba6ef0f15b0ff81124ba4"
     },
     {
       "path": ".github/workflows/player-native.yml",
@@ -562,7 +562,7 @@
     {
       "path": "RELEASING.md",
       "bytes": 8265,
-      "sha256": "ada272ce850cc0fc3b3b6ae1b74a150b7b8f835a8a2d5438bcab60885803824a"
+      "sha256": "04525993b26a60241936aefb1a615f85f27cf50fca8a777984a4d616a461ae33"
     },
     {
       "path": "scripts/core-notices.cjs",
@@ -602,7 +602,7 @@
     {
       "path": "scripts/publish.cjs",
       "bytes": 6441,
-      "sha256": "9b209f371c069723a3609b17840d0cc55824662c195168d88b27e600ae73c43e"
+      "sha256": "10050e63779628a254cb4cda3fa8c0ba22d6aadf4689f9c995b15de8f2e680c9"
     },
     {
       "path": "scripts/qualify.cjs",

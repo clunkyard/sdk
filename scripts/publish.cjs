@@ -6,7 +6,7 @@
 const fs=require('node:fs'),path=require('node:path');
 const {execFileSync}=require('node:child_process');
 const names=['@clunkyard/sdk','@clunkyard/cli'];
-const matrix=[['ubuntu-24.04','linux'],['macos-latest','darwin'],['windows-latest','win32']].flatMap(([label,platform])=>[20,24].map(node=>({directory:`qualification-${label}-node${node}`,platform,node})));
+const matrix=[['ubuntu-24.04','linux'],['macos-latest','darwin'],['windows-latest','win32']].flatMap(([label,platform])=>[24,26].map(node=>({directory:`qualification-${label}-node${node}`,platform,node})));
 const json=file=>JSON.parse(fs.readFileSync(file,'utf8'));
 function assertTrustedWorkflow(env){
   if(env.GITHUB_ACTIONS!=='true'||env.GITHUB_REPOSITORY!=='clunkyard/sdk'||env.GITHUB_REF!=='refs/heads/main'||env.GITHUB_EVENT_NAME!=='workflow_dispatch'||env.GITHUB_WORKFLOW_REF!=='clunkyard/sdk/.github/workflows/npm-release.yml@refs/heads/main'||env.NPM_RELEASE_ENVIRONMENT!=='npm-release'||!env.ACTIONS_ID_TOKEN_REQUEST_URL||!env.ACTIONS_ID_TOKEN_REQUEST_TOKEN)throw Error('Use the main-branch npm-release GitHub Actions job with OIDC.');
