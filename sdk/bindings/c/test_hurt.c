@@ -21,14 +21,5 @@ static void turn(cy_robot *robot) {
 }
 
 int main(void) {
-  cy_robot *robot = 0;
-  if (cy_open(CY_API_MAJOR, CY_API_MINOR, "clunkyard-c", 11, CY_API_VERSION, sizeof CY_API_VERSION - 1, &robot) < 0) return 1;
-  int32_t event;
-  for (;;) {
-    if (cy_session_next(robot, &event) != CY_OK || event == CY_EVENT_END) break;
-    if (event == CY_EVENT_STATE) turn(robot);
-    cy_session_send(robot);
-  }
-  cy_close(robot);
-  return 0;
+  return cy_run(turn);
 }

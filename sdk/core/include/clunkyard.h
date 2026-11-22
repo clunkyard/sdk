@@ -1,7 +1,7 @@
 /* Generated from protocol/v2/api.json by protocol/v2/codegen/c.js; do not edit. Run `make api`.
  *
  * libclunkyard: the Clunkyard robot core, API 2.1.0 (separate from wire protocol 2).
- * One opaque handle per robot. Every function returns a CY_ status:
+ * One opaque handle per robot. ABI functions return a CY_ status:
  * CY_OK, CY_NONE for absent (not an error), CY_SHORT for a buffer too
  * short, or a negative error, whose message cy_last_error gives. Results
  * come back through out-parameters; records are copied out into memory
@@ -1214,6 +1214,33 @@ typedef cy_compute_v1 cy_compute;
 #define cy_drone_sightings cy_drone_sightings_v1
 #define cy_angles_to_chassis cy_angles_to_chassis_v1
 #define cy_angles_from_chassis cy_angles_from_chassis_v1
+
+/* Runs a native C robot on stdin/stdout, invoking turn once per state.
+ * Pass the result back from main as the process exit status. */
+static inline int cy_run(void (*turn)(cy_robot *)) {
+  const char binding[] = "clunkyard-c";
+  cy_robot *robot = 0;
+  if (cy_open(CY_API_MAJOR, CY_API_MINOR, binding, sizeof binding - 1,
+              CY_API_VERSION, sizeof CY_API_VERSION - 1, &robot) != CY_OK) {
+    return 1;
+  }
+
+  for (;;) {
+    int32_t event;
+    int32_t status = cy_session_next(robot, &event);
+    if (status == CY_OK) {
+      if (event == CY_EVENT_END) break;
+      if (event == CY_EVENT_STATE) turn(robot);
+    } else if (status != CY_E_INTERNAL) {
+      break;
+    }
+    /* The core can still send an empty act after a failed state decode. */
+    if (cy_session_send(robot) < 0) break;
+  }
+
+  cy_close(robot);
+  return 0;
+}
 
 #ifdef __cplusplus
 }

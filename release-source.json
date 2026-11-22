@@ -1,6 +1,6 @@
 {
   "v": 1,
-  "sourceCommit": "512ff450c462a5411a8065da4724879e2963d5e4",
+  "sourceCommit": "34a6730d4d28bf94e933664c9d629dbd5d4ea6fe",
   "sourceDirty": false,
   "playerDerivation": {
     "packages": [
@@ -13,8 +13,8 @@
       {
         "name": "@clunkyard/cli",
         "canonicalVersion": "2.3.0",
-        "version": "2.3.0",
-        "contentSHA256": "49e141cb6c9eb5320ee940bbd8c3326d823e784f8ff2eecd2aa048d3fae68f50"
+        "version": "2.3.1",
+        "contentSHA256": "8c423276297c056fb9ff346b43beac010e47d542bf43a6d930a5e82af5604d5b"
       }
     ],
     "catalogueSHA256": "15394236af5fb362312b884d2049eff2ddc8593d1c8c34df2ce6ca986aa6a8dc"
@@ -112,7 +112,7 @@
     {
       "path": "packages/cli/package.json",
       "bytes": 835,
-      "sha256": "e9ceb784c062d65858f9ca53cce4c5d152e800e1f7592a304825adb0171b43be"
+      "sha256": "e12c1b4dd575a6a3c6e516d2e1380a845c0c467cf423646536d77d86bedb19e4"
     },
     {
       "path": "packages/cli/project.cjs",
@@ -661,8 +661,8 @@
     },
     {
       "path": "sdk/bindings/c/README.md",
-      "bytes": 2441,
-      "sha256": "aaffac5edc53dd64450b8a01210e4ef8492765c3fe763decd1cdfef0272d3f59"
+      "bytes": 2350,
+      "sha256": "a7426bb7aac9506647cad2fef24284b9d25f5f48db02692b607922c1530f7d3a"
     },
     {
       "path": "sdk/bindings/c/test_conformance.c",
@@ -671,8 +671,8 @@
     },
     {
       "path": "sdk/bindings/c/test_hurt.c",
-      "bytes": 1138,
-      "sha256": "a084849df59c3ab191860d513511d8793401c9cd54275802b8d5e47da86b0a7f"
+      "bytes": 791,
+      "sha256": "cd71f1c7eb6243763e63eebbc96be1e576d2e11702058bb0e9b7d68ce06b49a8"
     },
     {
       "path": "sdk/bindings/cpp/clunkyard.hpp",
@@ -816,8 +816,8 @@
     },
     {
       "path": "sdk/core/include/clunkyard.h",
-      "bytes": 55019,
-      "sha256": "69cb5c6bb776be8f7f12cea9a97fdfbddee0e1ba93be54ab6aa6b3890c655602"
+      "bytes": 55856,
+      "sha256": "e884e0aeeb50aaa8448c2ba57fadf469373e99cb4e69609b6ad2d2e05b638866"
     },
     {
       "path": "sdk/core/notices/rust-Apache-2.0.txt",
