@@ -17,7 +17,7 @@
         "contentSHA256": "8c423276297c056fb9ff346b43beac010e47d542bf43a6d930a5e82af5604d5b"
       }
     ],
-    "catalogueSHA256": "15394236af5fb362312b884d2049eff2ddc8593d1c8c34df2ce6ca986aa6a8dc"
+    "catalogueSHA256": "b29f6de912054af8541b421bba50c7e31b57401559c369d082fa1407c2a3f8ed"
   },
   "packages": [
     "sdk",
@@ -81,8 +81,8 @@
     },
     {
       "path": "packages/cli/catalogue.json",
-      "bytes": 95826,
-      "sha256": "15394236af5fb362312b884d2049eff2ddc8593d1c8c34df2ce6ca986aa6a8dc"
+      "bytes": 95825,
+      "sha256": "b29f6de912054af8541b421bba50c7e31b57401559c369d082fa1407c2a3f8ed"
     },
     {
       "path": "packages/cli/cli.cjs",
